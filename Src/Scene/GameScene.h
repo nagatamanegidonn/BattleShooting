@@ -18,4 +18,7 @@ public:
 
 private:
 
+	//デバッグ用の描画
+	void DrawDebug(void);
+
 };
