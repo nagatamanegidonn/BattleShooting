@@ -9,6 +9,8 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/Camera.h"
 
+#include "../Object/Player/Player.h"
+
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -22,9 +24,17 @@ GameScene::~GameScene(void)
 void GameScene::Init(void)
 {
 
+	// 初期化: i = 1、条件式: i <= 5、更新: i++
+	for (int i = 1; i <= 1; i++) {
+		auto  player = std::make_shared<Player>();
+		player->Init();
+
+		players_.push_back(player);
+
+	}
+
 	// カメラモード：定点カメラ
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
-
 }
 
 void GameScene::Update(void)
@@ -37,19 +47,32 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 
+	//プレイヤーの更新
+	for (auto p : players_)
+	{
+		p->Update();
+	}
+
 }
 
 void GameScene::Draw(void)
 {
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xff0000, true);
+	//DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xff0000, true);
 	
+	//プレイヤーの描画
+	for (auto p : players_)
+	{
+		p->Draw();
+	}
+
 	//デバッグ描画
-	DrawDebug();
+	//DrawDebug();
 
 }
 
 void GameScene::Release(void)
 {
+	
 }
 
 

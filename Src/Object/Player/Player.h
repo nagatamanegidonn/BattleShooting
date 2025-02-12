@@ -1,0 +1,88 @@
+#pragma once
+
+#include<vector>
+#include <map>
+#include <functional>
+#include "../Common/Transform.h"
+
+//#include "Controller.h"
+
+class Player
+{
+public:
+
+	// スピード
+	static constexpr float SPEED_MOVE = 5.0f;
+
+	// 状態
+	enum class STATE
+	{
+		NONE,
+		PLAY,
+		DEAD,
+		VICTORY,
+		END
+	};
+
+
+    Player();  // コンストラクタ
+    ~Player(); // デストラクタ
+
+    void Init();  // 初期化
+    void Update();  // 更新
+    void Draw();  // 描画
+
+private:
+
+	// 状態管理
+	STATE state_;
+
+	// 状態管理(状態遷移時初期処理)
+	std::map<STATE, std::function<void(void)>> stateChanges_;
+	// 状態管理(更新ステップ)
+	std::function<void(void)> stateUpdate_;
+
+
+	// 状態遷移
+	void ChangeState(STATE state);
+	void ChangeStateNone(void);
+	void ChangeStatePlay(void);
+	void ChangeStateDead(void);
+	void ChangeStateEnd(void);
+	void ChangeStateVictory(void);
+
+
+	// 更新ステップ
+	void UpdateNone(void);
+	void UpdatePlay(void);
+	void UpdateDead(void);
+	void UpdateEnd(void);
+	void UpdateVictory(void);
+
+
+	//	最終的な移動量
+	VECTOR movedPos_;
+	VECTOR movePow_;
+	//操作：移動
+	void ProcessMove(void);
+	void Move(void);
+
+	//操作：回転
+	void ProcessTurn(void);
+	void Turn(VECTOR axis);
+
+	// 操作：移動ブースト
+	void ProcessBoost(void);
+
+	// 操作：弾発射
+	//void ProcessShot(void);
+	// 自機の弾を作成
+	//void CreateShot(void);
+
+
+    // モデル制御の基本情報
+    Transform transform_;
+
+
+};
+
