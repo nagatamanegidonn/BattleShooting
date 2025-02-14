@@ -67,16 +67,16 @@ void Controller::IsCommnd(void)
 		break;
 	case 2:
 		isControl_[static_cast<int>(MODE::FORWARD)] = (input.IsNew(KEY_INPUT_T));
-		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_F));
-		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_G));
-		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_H));
+		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_G));
+		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_H));
+		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_F));
 		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_N)));
 		break;
 	case 3:
 		isControl_[static_cast<int>(MODE::FORWARD)] = (input.IsNew(KEY_INPUT_I));
-		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_J));
-		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_K));
-		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_L));
+		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_K));
+		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_L));
+		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_J));
 		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_M)));
 		break;
 	}
