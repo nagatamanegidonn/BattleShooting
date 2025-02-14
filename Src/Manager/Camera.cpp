@@ -1,5 +1,8 @@
 #include "../Utility/AsoUtility.h"
 #include "../Manager/InputManager.h"
+
+#include "../Object/Common/Transform.h"
+
 #include "Camera.h"
 
 Camera::Camera(void)
@@ -38,6 +41,9 @@ void Camera::SetBeforeDraw(void)
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
 		break;
+	case Camera::MODE::FOLLOW:
+		SetBeforeDrawFollow();
+		break;
 	}
 
 	// カメラの設定(位置と注視点による制御)
@@ -49,21 +55,49 @@ void Camera::SetBeforeDraw(void)
 
 }
 
+#pragma region mode_による描画方法
+
 void Camera::SetBeforeDrawFixedPoint(void)
 {
 	// 何もしない
 }
-
 void Camera::SetBeforeDrawFree(void)
 {
 }
+void Camera::SetBeforeDrawFollow(void)
+{
+	// 追従対象の位置
+	VECTOR followPos = followTransform_->pos;
+	// 追従対象の向き
+	Quaternion followRot = followTransform_->quaRot;
+	// 追従対象からカメラまでの相対座標
+	VECTOR relativeCPos = followRot.PosAxis(RELATIVE_F2C_POS_FOLLOW);
+	// カメラ位置の更新
+	pos_ = VAdd(followPos, relativeCPos);
+	// カメラ位置から注視点までの相対座標
+	VECTOR relativeTPos = followRot.PosAxis(RELATIVE_C2T_POS);
+	// 注視点の更新
+	targetPos_ = VAdd(pos_, relativeTPos);
+	// カメラの上方向
+	cameraUp_ = followRot.PosAxis(rot_.GetUp());
+}
+
+
+#pragma endregion
+
+
 
 void Camera::Draw(void)
 {
 }
-
 void Camera::Release(void)
 {
+}
+
+
+void Camera::SetFollow(const Transform* follow)
+{
+	followTransform_ = follow;
 }
 
 VECTOR Camera::GetPos(void) const
@@ -86,6 +120,8 @@ void Camera::ChangeMode(MODE mode)
 	case Camera::MODE::FIXED_POINT:
 		break;
 	case Camera::MODE::FREE:
+		break;
+	case Camera::MODE::FOLLOW:
 		break;
 	}
 

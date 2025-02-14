@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Src\Object\Player\Controller.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
+    <ClCompile Include="Src\Object\Shot\ShotBase.cpp" />
+    <ClCompile Include="Src\Object\Shot\ShotPlayer.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
     <ClCompile Include="Src\Common\IntVector3.cpp" />
     <ClCompile Include="Src\Object\Common\Transform.cpp" />
@@ -44,6 +46,8 @@
   <ItemGroup>
     <ClInclude Include="Src\Object\Player\Controller.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
+    <ClInclude Include="Src\Object\Shot\ShotBase.h" />
+    <ClInclude Include="Src\Object\Shot\ShotPlayer.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Common\IntVector3.h" />
     <ClInclude Include="Src\Object\Common\Transform.h" />

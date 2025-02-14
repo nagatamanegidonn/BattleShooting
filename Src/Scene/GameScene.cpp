@@ -9,6 +9,7 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/Camera.h"
 
+#include "../Object/Grid.h"
 #include "../Object/Player/Player.h"
 
 #include "GameScene.h"
@@ -23,18 +24,48 @@ GameScene::~GameScene(void)
 
 void GameScene::Init(void)
 {
+	float size = 100.0f;
+
+	VECTOR sPos[4] = {
+		{-size,0.0f,size}//左上
+		,{size,0.0f,size}//右上
+		,{-size,0.0f,-size}//左下
+		,{size,0.0f,-size}//右上 
+	};
+
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 1; i <= 1; i++) {
+	for (int i = 0; i < PLAYER_SIZE; i++) {
 		auto  player = std::make_shared<Player>();
-		player->Init();
+		player->Init(sPos[i], i);
 
 		players_.push_back(player);
 
+		//各プレイヤーのスクリーンの作成
+		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y/2, true);
+
 	}
 
+	stage_ = new Grid;
+	stage_->Init();
+
+	Camera* camera = SceneManager::GetInstance().GetCamera();
+
 	// カメラモード：定点カメラ
-	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
+	camera->ChangeMode(Camera::MODE::FIXED_POINT);
+
+	int c = 0;
+	for (auto p : players_)
+	{
+		// カメラ
+		camera_[c] = new Camera();
+		camera_[c]->Init();
+
+		camera_[c]->ChangeMode(Camera::MODE::FOLLOW);
+		camera_[c]->SetFollow(&p->GetTransform());
+		c++;
+	}
+
 }
 
 void GameScene::Update(void)
@@ -47,32 +78,96 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 
+	stage_->Update();
+
 	//プレイヤーの更新
 	for (auto p : players_)
 	{
 		p->Update();
 	}
 
+	for (auto& camera : camera_)
+	{
+		camera->Update();
+	}
 }
 
 void GameScene::Draw(void)
 {
-	//DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xff0000, true);
-	
-	//プレイヤーの描画
-	for (auto p : players_)
+	for (int i = 0; i < PLAYER_SIZE; i++) 
 	{
-		p->Draw();
+		// 設定したいスクリーンを作成する
+		SetDrawScreen(screenH[i]);
+
+		// 画面を初期化
+		ClearDrawScreen();
+
+		// カメラ設定
+		camera_[i]->SetBeforeDraw();
+
+#pragma region ゲームシーンの描画
+
+		// 描画
+		stage_->Draw();
+
+		//プレイヤーの描画
+		for (auto& p : players_)
+		{
+			p->Draw();
+		}
+
+		//デバッグ描画
+		//DrawDebug();
+
+#pragma endregion
+
+		//つなぎ
+		SetDrawScreen(DX_SCREEN_BACK);
+
 	}
 
-	//デバッグ描画
-	//DrawDebug();
+	// 画面を初期化
+	ClearDrawScreen();
+
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+	int x = 0;
+	int y = 0;
+
+	for (auto screen : screenH)
+	{
+		DrawGraph(x, y, screen, true);
+
+		if (x >= cx && y >= cy)
+		{
+			x += cx;
+		}
+		else if (x >= cx && y >= 0)
+		{
+			x -= cx;
+			y += cy;
+		}
+		else if (x >= 0 && y >= 0)
+		{
+			x += cx;
+		}
+	}
+
+	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
+	SetDrawScreen(DX_SCREEN_BACK);
 
 }
 
 void GameScene::Release(void)
 {
-	
+	for (int i = 0; i < PLAYER_SIZE; i++) {
+		camera_[i]->Release();
+		delete camera_[i];
+	}
+
+
+	stage_->Release();
 }
 
 

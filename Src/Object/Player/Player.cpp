@@ -1,9 +1,13 @@
 
+#include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../../Manager/ResourceManager.h"
 
 #include "../../Utility/AsoUtility.h"
 
+#include "../Shot/ShotPlayer.h"
+
+#include "Controller.h"
 #include "Player.h"
 
 Player::Player()
@@ -22,8 +26,12 @@ Player::~Player()
 {
 }
 
-void Player::Init()
+void Player::Init(VECTOR startPos, int playerNo)
 {
+
+	controller_ = std::make_shared<Controller>();
+	controller_->Init(playerNo);
+
 	// モデル制御の基本情報
 	transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
@@ -31,19 +39,27 @@ void Player::Init()
 
 	float scale = 10.0f;
 	transform_.scl = { scale, scale, scale };
-	transform_.pos = { 0.0f, 0.0f, 0.0f };
+	transform_.pos = startPos;
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
-		AsoUtility::Deg2RadF(180.0f),
+		AsoUtility::Deg2RadF(0.0f),
 		0.0f
 	);
 	transform_.quaRotLocal = Quaternion();
 	transform_.Update();
 
-
+	//変数：移動関係
 	movedPos_ = AsoUtility::VECTOR_ZERO;
 	movePow_ = AsoUtility::VECTOR_ZERO;
+
+	//変数：回転関係
+	direction_= AsoUtility::VECTOR_ZERO;
+	direction_.y = ROT_POW;
+
+	//変数：攻撃関係
+	//弾発射後の硬直時間セット
+	deleyShot_ = TIME_DELAY_SHOT;
 
 
 	// 初期状態
@@ -54,10 +70,18 @@ void Player::Init()
 
 void Player::Update()
 {
+	controller_->Update();
+
 	// 更新ステップ
 	stateUpdate_();
 
 	transform_.Update();
+
+	size_t size = shots_.size();
+	for (int i = 0; i < size; i++)
+	{
+		shots_[i]->Update();
+	}
 }
 
 void Player::Draw()
@@ -66,6 +90,11 @@ void Player::Draw()
 	// モデルの描画
 	MV1DrawModel(transform_.modelId);
 
+	size_t size = shots_.size();
+	for (int i = 0; i < size; i++)
+	{
+		shots_[i]->Draw();
+	}
 }
 
 
@@ -119,16 +148,18 @@ void Player::UpdatePlay()
 	ProcessTurn();
 	ProcessMove();
 
+	ProcessShot();
 
 	// 現在座標を起点に移動後座標を決める
 	movedPos_ = VAdd(transform_.pos, movePow_);
 
+	//移動後の位置に問題がある確認
 	// 衝突(カプセル)
 	//CollisionCapsule();
 	// 衝突(重力)
 	//CollisionGravity();
 	
-	// 移動
+	// 移動後の位置に問題がなければ移動
 	transform_.pos = movedPos_;
 
 }
@@ -154,11 +185,27 @@ void Player::ProcessMove(void)
 }
 void Player::Move(void)
 {
+	auto& input = InputManager::GetInstance();
+
 	movePow_ = AsoUtility::VECTOR_ZERO;
+	
+	// 前方向を取得(仮)
+	VECTOR forward = AsoUtility::VECTOR_ZERO;
 
+	
 
-	// 前方向を取得
-	VECTOR forward = transform_.GetForward();
+	if (controller_->GetisControl(Controller::MODE::FORWARD)) { forward = transform_.GetForward(); }
+	if (controller_->GetisControl(Controller::MODE::BACK)) { forward = transform_.GetBack(); }
+
+	/*for (auto& key : controlKey_[DIR::UP])
+	{
+		if (input.IsNew(key)) {forward = transform_.GetForward(); }
+	}
+	for (auto& key : controlKey_[DIR::DOWN])
+	{
+		if (input.IsNew(key)) { forward = transform_.GetBack(); }
+	}*/
+
 	// 移動
 	movePow_ =
 		VScale(forward, SPEED_MOVE);
@@ -171,14 +218,29 @@ void Player::ProcessTurn(void)
 }
 void Player::Turn(VECTOR axis)
 {
-	VECTOR addAxis = AsoUtility::VECTOR_ZERO;
+
+	auto& input = InputManager::GetInstance();
+
+	bool isMove = (controller_->GetisControl(Controller::MODE::FORWARD) 
+		|| controller_->GetisControl(Controller::MODE::BACK));
+	
+	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = -ROT_POW; }
+	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = ROT_POW; }
+
+	VECTOR addAxis = direction_;
+
+	if (controller_->GetisControl(Controller::MODE::BACK))
+	{
+		addAxis.y *= -1;
+	}
+
 
 	//左回転
 	//addAxis.y = -1.0f;
 	//右回転
-	addAxis.y = 1.0f;
+	//addAxis.y = 1.0f;
 
-	if (!AsoUtility::EqualsVZero(addAxis))
+	if (!AsoUtility::EqualsVZero(addAxis)&& isMove)
 	{
 		//今回回転させたい回転量をクォータニオンで作る
 		Quaternion rotPow = Quaternion();
@@ -201,4 +263,58 @@ void Player::Turn(VECTOR axis)
 
 	}
 
+}
+
+void Player::ProcessShot(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+
+	if ((controller_->GetisControl(Controller::MODE::ATTACK)
+		&& deleyShot_ <= 0.0f))
+	{
+
+		// 弾を生成(方向は仮で正面方向)
+		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
+		// 弾を指定位置から、指定方向に発射させる
+		CreateShot();
+
+
+		// 弾発射後の硬直時間セット
+		deleyShot_ = TIME_DELAY_SHOT;
+	}
+
+
+	// 弾発射後の硬直時間を減らしていく
+	if (deleyShot_ > 0.0f)
+	{
+		deleyShot_ -= SceneManager::GetInstance().GetDeltaTime();
+	}
+}
+void Player::CreateShot(void)
+{
+	// 弾の生成フラグ
+	bool isCreate = false;
+
+	for (auto v : shots_)
+	{
+		if (v->GetState() == ShotPlayer::STATE::END)
+		{
+			// 以前に生成したインスタンスを使い回し
+			v->Create(transform_.pos, transform_.GetForward());
+			isCreate = true;
+			break;
+		}
+	}
+	if (!isCreate)
+	{
+		// 自機の前方方向
+		auto dir = transform_.GetForward();
+		// 新しいインスタンスを生成
+		ShotPlayer* newShot = new ShotPlayer();
+		newShot->Create(transform_.pos, transform_.GetForward());
+
+		// 弾の管理配列に追加
+		shots_.push_back(newShot);
+	}
 }
