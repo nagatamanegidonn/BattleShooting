@@ -7,8 +7,8 @@ class Application
 public:
 
 	// スクリーンサイズ
-	static constexpr int SCREEN_SIZE_X = 1200;
-	static constexpr int SCREEN_SIZE_Y = 900;
+	static constexpr int SCREEN_SIZE_X = 880;
+	static constexpr int SCREEN_SIZE_Y = 660;
 
 	// データパス関連
 	//-------------------------------------------
@@ -38,6 +38,12 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
+	/// <summary>
+	/// ゲームを終了するか否か
+	/// </summary>
+	/// <param name="flag">ゲーム終了フラグ</param>
+	void SetGameEnd(bool flag);
+
 private:
 
 	// 静的インスタンス
@@ -48,6 +54,9 @@ private:
 
 	// 解放失敗
 	bool isReleaseFail_;
+
+	// ゲーム終了フラグ
+	bool isGameEnd_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

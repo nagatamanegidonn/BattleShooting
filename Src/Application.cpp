@@ -62,9 +62,13 @@ void Application::Run(void)
 	auto& sceneManager = SceneManager::GetInstance();
 
 	// ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && isGameEnd_ == false)
 	{
 
+#ifdef _DEBUG
+		// デバッグ時のみ、Escapeキー入力時にゲーム終了処理
+		SetGameEnd((CheckHitKey(KEY_INPUT_ESCAPE) == 1) ? true : false);
+#endif
 		inputManager.Update();
 		sceneManager.Update();
 
@@ -107,4 +111,15 @@ Application::Application(void)
 {
 	isInitFail_ = false;
 	isReleaseFail_ = false;
+	isGameEnd_ = false;
+}
+
+
+/// <summary>
+/// ゲームを終了するか否か
+/// </summary>
+/// <param name="flag">ゲーム終了フラグ</param>
+void Application::SetGameEnd(bool flag)
+{
+	isGameEnd_ = flag;
 }
