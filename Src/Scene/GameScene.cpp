@@ -22,8 +22,26 @@ GameScene::~GameScene(void)
 {
 }
 
+void GameScene::AsyncPreLoad(void)
+{
+	//非同期読み込みを有効にする
+	SetUseASyncLoadFlag(true);
+
+	// 初期化: i = 1、条件式: i <= 5、更新: i++
+	for (int i = 0; i < PLAYER_SIZE; i++) {
+		auto  player = std::make_shared<Player>();
+		players_.push_back(player);
+
+		camera_[i] = new Camera();
+	}
+
+	stage_ = new Grid;
+}
 void GameScene::Init(void)
 {
+	//非同期処理を無効にする
+	SetUseASyncLoadFlag(false);
+
 	float size = 100.0f;
 
 	VECTOR sPos[4] = {
@@ -36,21 +54,16 @@ void GameScene::Init(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_SIZE; i++) {
-		auto  player = std::make_shared<Player>();
-		player->Init(sPos[i], i);
-
-		players_.push_back(player);
+		players_[i]->Init(sPos[i], i);
 
 		//各プレイヤーのスクリーンの作成
 		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y/2, true);
 
 	}
 
-	stage_ = new Grid;
 	stage_->Init();
 
 	Camera* camera = SceneManager::GetInstance().GetCamera();
-
 	// カメラモード：定点カメラ
 	camera->ChangeMode(Camera::MODE::FIXED_POINT);
 
@@ -58,7 +71,6 @@ void GameScene::Init(void)
 	for (auto p : players_)
 	{
 		// カメラ
-		camera_[c] = new Camera();
 		camera_[c]->Init();
 
 		camera_[c]->ChangeMode(Camera::MODE::FOLLOW);
@@ -70,6 +82,11 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
@@ -94,6 +111,13 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		
+		return;
+	}
+
 	for (int i = 0; i < PLAYER_SIZE; i++) 
 	{
 		// 設定したいスクリーンを作成する

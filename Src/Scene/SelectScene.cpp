@@ -19,8 +19,15 @@ SelectScene::~SelectScene(void)
 {
 }
 
+void SelectScene::AsyncPreLoad(void)
+{
+	//非同期読み込みを有効にする
+	SetUseASyncLoadFlag(true);
+}
 void SelectScene::Init(void)
 {
+	//非同期読み込みを有効にする
+	SetUseASyncLoadFlag(false);
 
 	// カメラモード：定点カメラ
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);

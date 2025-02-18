@@ -13,7 +13,8 @@ public:
 	{
 		NONE, 
 		FADE_OUT,	// ™X‚ÉˆÃ“]
-		FADE_IN		// ™X‚É–¾“]
+		FADE_IN,	// ™X‚É–¾“]
+		LOADING,
 	};
 
 	// ó‘Ô‚ÌŽæ“¾
