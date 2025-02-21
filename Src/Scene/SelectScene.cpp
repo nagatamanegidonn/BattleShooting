@@ -26,8 +26,8 @@ void SelectScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
-	pos[0] = AsoUtility::VECTOR_ZERO;
-	pos[1] = AsoUtility::VECTOR_ZERO;
+	//pos[0] = AsoUtility::VECTOR_ZERO;
+	//pos[1] = AsoUtility::VECTOR_ZERO;
 
 	pos[0].x = Application::SCREEN_SIZE_X / 3;
 	pos[0].y = Application::SCREEN_SIZE_Y / 2;
