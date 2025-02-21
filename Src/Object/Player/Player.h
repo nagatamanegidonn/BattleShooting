@@ -12,9 +12,14 @@
 class ShotPlayer;
 class Controller;
 
+class Camera;
+
 class Player
 {
 public:
+
+	// 回転完了までの時間
+	static constexpr float TIME_ROT = 0.1f;
 
 	// スピード
 	static constexpr float SPEED_MOVE = 5.0f;
@@ -25,6 +30,7 @@ public:
 	static constexpr float TIME_DELAY_SHOT = 0.2f;
 
 
+	
 	// 状態
 	enum class STATE
 	{
@@ -36,7 +42,7 @@ public:
 	};
 
 
-    Player();  // コンストラクタ
+    Player(Camera& camera);  // コンストラクタ
     ~Player(); // デストラクタ
 
     void Init(VECTOR startPos,int playerNo);  // 初期化
@@ -50,6 +56,9 @@ public:
 
 
 private:
+	//自身のカメラ
+	Camera& camera_;
+
 
 	std::shared_ptr<Controller> controller_;
 
@@ -91,6 +100,7 @@ private:
 	void ProcessTurn(void);
 	void Turn(VECTOR axis);
 
+
 	// 操作：移動ブースト
 	void ProcessBoost(void);
 
@@ -104,6 +114,12 @@ private:
 	// 自機の弾を発射
 	void CreateShot(void);
 
+	//ステータス
+	int playerId_;	//弾の種類やモデルを決める変数
+	int playerHp_;
+	int playerMaxHp_;
+	int ridesHp_;
+	int ridesMaxHp_;
 
     // モデル制御の基本情報
     Transform transform_;

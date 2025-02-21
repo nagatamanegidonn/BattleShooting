@@ -29,10 +29,10 @@ void GameScene::AsyncPreLoad(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_SIZE; i++) {
-		auto  player = std::make_shared<Player>();
-		players_.push_back(player);
-
 		camera_[i] = new Camera();
+
+		auto  player = std::make_shared<Player>(*camera_[i]);
+		players_.push_back(player);
 	}
 
 	// 複数画像
@@ -74,7 +74,7 @@ void GameScene::Init(void)
 		players_[i]->Init(sPos[i], i);
 
 		//各プレイヤーのスクリーンの作成
-		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y/2, true);
+		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y, true);
 
 	}
 
@@ -130,8 +130,7 @@ void GameScene::Draw(void)
 {
 	//ロードが完了したか判断
 	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
-	{
-		
+	{	
 		return;
 	}
 
@@ -176,6 +175,7 @@ void GameScene::Draw(void)
 	int x = 0;
 	int y = 0;
 
+	//描画場所
 	for (auto screen : screenH)
 	{
 		DrawGraph(x, y, screen, true);

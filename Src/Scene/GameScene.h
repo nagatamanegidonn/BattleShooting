@@ -13,7 +13,7 @@ class GameScene : public SceneBase
 {
 public:
 
-	static constexpr int PLAYER_SIZE = 4;
+	static constexpr int PLAYER_SIZE = 2;
 
 
 	// コンストラクタ

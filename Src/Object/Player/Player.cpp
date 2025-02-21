@@ -2,6 +2,7 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../../Manager/ResourceManager.h"
+#include "../../Manager/Camera.h"
 
 #include "../../Utility/AsoUtility.h"
 
@@ -10,7 +11,8 @@
 #include "Controller.h"
 #include "Player.h"
 
-Player::Player()
+
+Player::Player(Camera& camera) :camera_(camera)
 {
 	// 状態管理
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
@@ -19,8 +21,13 @@ Player::Player()
 	stateChanges_.emplace(STATE::END, std::bind(&Player::ChangeStateEnd, this));
 	stateChanges_.emplace(STATE::VICTORY, std::bind(&Player::ChangeStateVictory, this));
 
+	//変数：移動関係
+	movedPos_ = AsoUtility::VECTOR_ZERO;
+	movePow_ = AsoUtility::VECTOR_ZERO;
 
-
+	//変数：回転関係
+	direction_ = AsoUtility::VECTOR_ZERO;
+	direction_.y = ROT_POW;
 }
 Player::~Player()
 {
@@ -55,7 +62,6 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 	//変数：回転関係
 	direction_= AsoUtility::VECTOR_ZERO;
-	direction_.y = ROT_POW;
 
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
@@ -182,6 +188,29 @@ void Player::UpdateVictory()
 void Player::ProcessMove(void)
 {
 	Move();
+
+	InputManager& ins = InputManager::GetInstance();
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+
+	// 左スティックの横軸
+	auto leftStickX = ins.GetJPadInputState(jno).AKeyLX;
+	// 左スティックの縦軸
+	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
+
+
+
+	VECTOR dir = AsoUtility::VECTOR_ZERO;
+	float rotRad = 0.0f;
+
+	if ((leftStickY < 0.0f) || (ins.IsNew(KEY_INPUT_W))) { dir = VAdd(dir, AsoUtility::DIR_F); }
+	if ((leftStickX < 0.0f) || (ins.IsNew(KEY_INPUT_A))) { dir = VAdd(dir, AsoUtility::DIR_L); }
+	if ((leftStickY > 0.0f) || (ins.IsNew(KEY_INPUT_S))) { dir = VAdd(dir, AsoUtility::DIR_B); }
+	if ((leftStickX > 0.0f) || (ins.IsNew(KEY_INPUT_D))) { dir = VAdd(dir, AsoUtility::DIR_R); }
+
+
+	//movePow_ = AsoUtility::VECTOR_ZERO;
+
+
 }
 void Player::Move(void)
 {
@@ -224,6 +253,8 @@ void Player::Turn(VECTOR axis)
 	bool isMove = (controller_->GetisControl(Controller::MODE::FORWARD) 
 		|| controller_->GetisControl(Controller::MODE::BACK));
 	
+	direction_ = AsoUtility::VECTOR_ZERO;
+
 	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = -ROT_POW; }
 	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = ROT_POW; }
 
@@ -240,7 +271,7 @@ void Player::Turn(VECTOR axis)
 	//右回転
 	//addAxis.y = 1.0f;
 
-	if (!AsoUtility::EqualsVZero(addAxis)&& isMove)
+	if (!AsoUtility::EqualsVZero(addAxis))
 	{
 		//今回回転させたい回転量をクォータニオンで作る
 		Quaternion rotPow = Quaternion();
@@ -264,6 +295,7 @@ void Player::Turn(VECTOR axis)
 	}
 
 }
+
 
 void Player::ProcessShot(void)
 {
