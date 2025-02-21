@@ -1,4 +1,5 @@
 #include <chrono>
+#include <thread>
 #include <DxLib.h>
 #include "../Common/Fader.h"
 
@@ -130,6 +131,13 @@ void SceneManager::Draw(void)
 	{
 		scene_->LoadingDraw();
 	}
+
+	// デバック用描画
+#ifdef _DEBUG
+	SetFontSize(16);
+	 // 非同期読み込みの数を描画
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "非同期読み込みの数 %d", GetASyncLoadNum());
+#endif
 }
 
 void SceneManager::Destroy(void)
@@ -171,6 +179,7 @@ float SceneManager::GetDeltaTime(void) const
 	return deltaTime_;
 }
 
+
 Camera* SceneManager::GetCamera(void) const
 {
 	return camera_;
@@ -178,8 +187,18 @@ Camera* SceneManager::GetCamera(void) const
 
 bool SceneManager::IsLoading(void) const
 {
-	return (fader_->GetState() == Fader::STATE::LOADING);
+	if (fader_->GetState() == Fader::STATE::LOADING)
+	{
+		return true;
+	}
+
+	return false;
 }
+//
+//bool SceneManager::IsLoading(void) const
+//{
+//	return (fader_->GetState() == Fader::STATE::LOADING);
+//}
 
 SceneManager::SceneManager(void)
 {

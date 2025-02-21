@@ -1,4 +1,6 @@
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
+
 #include "Manager/ResourceManager.h"
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
@@ -42,6 +44,9 @@ void Application::Init(void)
 		isInitFail_ = true;
 		return;
 	}
+
+	//Effekseerの初期化を行う
+	InitEffekseer();
 
 	// キー制御初期化
 	SetUseDirectInputFlag(true);
@@ -87,6 +92,9 @@ void Application::Destroy(void)
 	ResourceManager::GetInstance().Destroy();
 	SceneManager::GetInstance().Destroy();
 	
+	// Effekseerを終了する。
+	Effkseer_End();
+
 	// DxLib終了
 	if (DxLib_End() == -1)
 	{
@@ -122,4 +130,14 @@ Application::Application(void)
 void Application::SetGameEnd(bool flag)
 {
 	isGameEnd_ = flag;
+}
+
+void Application::InitEffekseer(void)
+{
+	if (Effekseer_Init(8000) == -1)
+	{
+		DxLib_End();
+	}
+	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 }

@@ -35,6 +35,23 @@ void GameScene::AsyncPreLoad(void)
 		camera_[i] = new Camera();
 	}
 
+	// •¡”‰æ‘œ
+	handleIds_ = new int[10 * 6];
+	LoadDivGraph(
+		"Alphabet.png",
+		10 * 6,
+		10, 6,
+		32, 192 / 6,
+		&handleIds_[0]);
+	// •¡”‰æ‘œ
+	handleIds_2 = new int[10 * 6];
+	LoadDivGraph(
+		"Alphabet.png",
+		10 * 6,
+		10, 6,
+		32, 192 / 6,
+		&handleIds_2[0]);
+
 	stage_ = new Grid;
 }
 void GameScene::Init(void)
@@ -185,6 +202,22 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
+	int num = 10 * 6;
+	for (int i = 0; i < num; i++)
+	{
+		DeleteGraph(handleIds_[i]);
+	}
+	delete[] handleIds_;
+	
+	num = 10 * 6;
+	for (int i = 0; i < num; i++)
+	{
+		DeleteGraph(handleIds_2[i]);
+	}
+	delete[] handleIds_2;
+
+
+
 	for (int i = 0; i < PLAYER_SIZE; i++) {
 		camera_[i]->Release();
 		delete camera_[i];

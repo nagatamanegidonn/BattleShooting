@@ -41,4 +41,7 @@ private:
 	//デバッグ用の描画
 	void DrawDebug(void);
 
+
+	int* handleIds_;
+	int* handleIds_2;
 };
