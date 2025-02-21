@@ -68,4 +68,6 @@ private:
 	// デストラクタも同様
 	~Application(void) = default;
 
+	//Effekseerの初期化
+	void InitEffekseer(void);
 };

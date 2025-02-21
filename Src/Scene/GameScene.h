@@ -22,6 +22,7 @@ public:
 	// デストラクタ
 	~GameScene(void);
 
+	void AsyncPreLoad(void) override;
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
@@ -40,4 +41,7 @@ private:
 	//デバッグ用の描画
 	void DrawDebug(void);
 
+
+	int* handleIds_;
+	int* handleIds_2;
 };

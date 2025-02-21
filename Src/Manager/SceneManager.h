@@ -45,6 +45,9 @@ public:
 	// カメラの取得
 	Camera* GetCamera(void) const;
 
+	// ロード中か調べる
+	bool IsLoading(void) const;
+
 private:
 
 	// 静的インスタンス

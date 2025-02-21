@@ -5,6 +5,7 @@
 
 Controller::Controller()
 {
+	modeId_ = 0;
 }
 Controller::~Controller()
 {

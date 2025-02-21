@@ -1,4 +1,5 @@
 #include <chrono>
+#include <thread>
 #include <DxLib.h>
 #include "../Common/Fader.h"
 
@@ -98,10 +99,9 @@ void SceneManager::Update(void)
 	{
 		Fade();
 	}
-	else
-	{
-		scene_->Update();
-	}
+
+
+	scene_->Update();
 
 	// ƒJƒƒ‰XV
 	camera_->Update();
@@ -127,6 +127,17 @@ void SceneManager::Draw(void)
 	// ˆÃ“]E–¾“]
 	fader_->Draw();
 
+	if (fader_->GetState() == Fader::STATE::LOADING)
+	{
+		scene_->LoadingDraw();
+	}
+
+	// ƒfƒoƒbƒN—p•`‰æ
+#ifdef _DEBUG
+	SetFontSize(16);
+	 // ”ñ“¯Šú“Ç‚Ýž‚Ý‚Ì”‚ð•`‰æ
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "”ñ“¯Šú“Ç‚Ýž‚Ý‚Ì” %d", GetASyncLoadNum());
+#endif
 }
 
 void SceneManager::Destroy(void)
@@ -168,10 +179,26 @@ float SceneManager::GetDeltaTime(void) const
 	return deltaTime_;
 }
 
+
 Camera* SceneManager::GetCamera(void) const
 {
 	return camera_;
 }
+
+bool SceneManager::IsLoading(void) const
+{
+	if (fader_->GetState() == Fader::STATE::LOADING)
+	{
+		return true;
+	}
+
+	return false;
+}
+//
+//bool SceneManager::IsLoading(void) const
+//{
+//	return (fader_->GetState() == Fader::STATE::LOADING);
+//}
 
 SceneManager::SceneManager(void)
 {
@@ -230,7 +257,8 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	}
 
-	scene_->Init();
+	//Init‚Ì•Ï‚í‚è‚ÉAsyncPreLoad
+	scene_->AsyncPreLoad();
 
 	ResetDeltaTime();
 
@@ -259,8 +287,23 @@ void SceneManager::Fade(void)
 		{
 			// Š®‘S‚ÉˆÃ“]‚µ‚Ä‚©‚çƒV[ƒ“‘JˆÚ
 			DoChangeScene(waitSceneId_);
+			// ˆÃ“]‚©‚ç  ‚Ö
+			fader_->SetFade(Fader::STATE::LOADING);
+		}
+		break;
+	case Fader::STATE::LOADING:
+		// ˆÃ“]’†
+
+		//ƒV[ƒ“‚ª‚·‚×‚Ä“Ç‚Ýž‚ß‚½‚©Šm”F
+		if (scene_->IsLoad())
+		{
+
+			//‰Šú‰»
+			scene_->Init();
+
 			// ˆÃ“]‚©‚ç–¾“]‚Ö
 			fader_->SetFade(Fader::STATE::FADE_IN);
+
 		}
 		break;
 	}
