@@ -134,38 +134,58 @@ void GameScene::Draw(void)
 		return;
 	}
 
-	for (int i = 0; i < PLAYER_SIZE; i++) 
-	{
-		// 設定したいスクリーンを作成する
-		SetDrawScreen(screenH[i]);
-
-		// 画面を初期化
-		ClearDrawScreen();
-
-		// カメラ設定
-		camera_[i]->SetBeforeDraw();
 
 #pragma region ゲームシーンの描画
 
-		// 描画
-		stage_->Draw();
+	// 描画
+	stage_->Draw();
 
-		//プレイヤーの描画
-		for (auto& p : players_)
-		{
-			p->Draw();
-		}
-
-		//デバッグ描画
-		//DrawDebug();
-
-#pragma endregion
-
-		//つなぎ
-		SetDrawScreen(DX_SCREEN_BACK);
-
+	//プレイヤーの描画
+	for (auto& p : players_)
+	{
+		p->Draw();
 	}
 
+	//デバッグ描画
+	//DrawDebug();
+
+#pragma endregion
+	return;
+
+
+//	for (int i = 0; i < PLAYER_SIZE; i++) 
+//	{
+//		// 設定したいスクリーンを作成する
+//		SetDrawScreen(screenH[i]);
+//
+//		// 画面を初期化
+//		ClearDrawScreen();
+//
+//		// カメラ設定
+//		camera_[i]->SetBeforeDraw();
+////
+//#pragma region ゲームシーンの描画
+//
+//		// 描画
+//		stage_->Draw();
+//
+//		//プレイヤーの描画
+//		for (auto& p : players_)
+//		{
+//			p->Draw();
+//		}
+//
+//		//デバッグ描画
+//		//DrawDebug();
+//
+//#pragma endregion
+//
+//		//つなぎ
+//		SetDrawScreen(DX_SCREEN_BACK);
+//
+//	}
+	
+	SetDrawScreen(DX_SCREEN_BACK);
 	// 画面を初期化
 	ClearDrawScreen();
 
@@ -176,7 +196,7 @@ void GameScene::Draw(void)
 	int y = 0;
 
 	//描画場所
-	for (auto screen : screenH)
+	/*for (auto screen : screenH)
 	{
 		DrawGraph(x, y, screen, true);
 
@@ -193,7 +213,8 @@ void GameScene::Draw(void)
 		{
 			x += cx;
 		}
-	}
+	}*/
+
 
 	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
 	SetDrawScreen(DX_SCREEN_BACK);

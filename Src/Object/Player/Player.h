@@ -124,6 +124,10 @@ private:
     // モデル制御の基本情報
     Transform transform_;
 
+	// 頂点情報
+	VERTEX3D vertexs_[6];
+	// 描画用の四角頂点を作成
+	void MakeSquereVertex(void);
 
 };
 

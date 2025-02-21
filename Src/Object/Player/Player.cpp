@@ -28,6 +28,7 @@ Player::Player(Camera& camera) :camera_(camera)
 	//変数：回転関係
 	direction_ = AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
+
 }
 Player::~Player()
 {
@@ -62,6 +63,10 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 	//変数：回転関係
 	direction_= AsoUtility::VECTOR_ZERO;
+	direction_.y = ROT_POW;
+
+	//矢印の作成
+	MakeSquereVertex();
 
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
@@ -95,6 +100,55 @@ void Player::Draw()
 
 	// モデルの描画
 	MV1DrawModel(transform_.modelId);
+	
+
+#pragma region 矢印の描画（仮）
+
+	VECTOR addAxis = VScale(direction_, 10);
+
+
+	if (controller_->GetisControl(Controller::MODE::BACK))
+	{
+		addAxis.y *= -1;
+	}
+
+	//今回回転させたい回転量をクォータニオンで作る
+	Quaternion rotPow = Quaternion();
+
+	rotPow = rotPow.Mult(
+		Quaternion::AngleAxis(
+			AsoUtility::Deg2RadF(addAxis.z), AsoUtility::AXIS_Z
+		));
+	rotPow = rotPow.Mult(
+		Quaternion::AngleAxis(
+			AsoUtility::Deg2RadF(addAxis.x), AsoUtility::AXIS_X
+		));
+	rotPow = rotPow.Mult(
+		Quaternion::AngleAxis(
+			AsoUtility::Deg2RadF(addAxis.y), AsoUtility::AXIS_Y
+		));
+
+	// 回転諒を加える(合成)
+	auto trnQut = transform_.quaRot;
+	trnQut = trnQut.Mult(rotPow);
+
+
+	// メッシュの描画
+	VECTOR zero = VAdd(transform_.pos, VScale(trnQut.GetLeft(), 40));
+	VECTOR one = VAdd(transform_.pos, VScale(trnQut.GetForward(), 80));
+	VECTOR two = VAdd(transform_.pos, VScale(trnQut.GetForward(), 20));
+	VECTOR three = VAdd(transform_.pos, VScale(trnQut.GetRight(), 40));
+
+	DrawSphere3D(zero, 10, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(one, 10, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(two, 10, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(three, 10, 10, 0xff0000, 0xff0000, false);
+
+	DrawTriangle3D(zero, one, two, 0x0000ff, true);
+	DrawTriangle3D( two,one, three, 0x0000ff, true);
+
+#pragma endregion
+
 
 	size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
@@ -253,10 +307,9 @@ void Player::Turn(VECTOR axis)
 	bool isMove = (controller_->GetisControl(Controller::MODE::FORWARD) 
 		|| controller_->GetisControl(Controller::MODE::BACK));
 	
-	direction_ = AsoUtility::VECTOR_ZERO;
 
-	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = -ROT_POW; }
-	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = ROT_POW; }
+	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = ROT_POW; }
+	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = -ROT_POW; }
 
 	VECTOR addAxis = direction_;
 
@@ -271,7 +324,7 @@ void Player::Turn(VECTOR axis)
 	//右回転
 	//addAxis.y = 1.0f;
 
-	if (!AsoUtility::EqualsVZero(addAxis))
+	if (!AsoUtility::EqualsVZero(addAxis) && isMove)
 	{
 		//今回回転させたい回転量をクォータニオンで作る
 		Quaternion rotPow = Quaternion();
@@ -349,4 +402,9 @@ void Player::CreateShot(void)
 		// 弾の管理配列に追加
 		shots_.push_back(newShot);
 	}
+}
+
+void Player::MakeSquereVertex(void)
+{
+	
 }

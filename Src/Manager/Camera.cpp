@@ -36,7 +36,26 @@ void Camera::SetBeforeDraw(void)
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
+
+		//カメラの上方向更新
+		cameraUp_ = rot_.GetForward();
+		pos_ = { 0.0f, -1000.0f, 0.0f };
+		targetPos_ = { 0.0f, -100.0f, 0.0f };
+
+		/*rot_ = Quaternion::Identity();
+
+		Quaternion rotPow = Quaternion();
+
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(90.0f), AsoUtility::AXIS_X
+			));
+		
+		 回転諒を加える(合成)
+		rot_ = rot_.Mult(rotPow);
 		SetBeforeDrawFixedPoint();
+		pos_ = { 0.0f, 1000.0f , 0.0f};
+		targetPos_ = { 0.0f, 0.0f, 0.0f };*/
 		break;
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
@@ -63,6 +82,71 @@ void Camera::SetBeforeDrawFixedPoint(void)
 }
 void Camera::SetBeforeDrawFree(void)
 {
+	auto& ins = InputManager::GetInstance();
+	// WASDでカメラの位置を変える
+	float movePow = 3.0f;
+
+	VECTOR moveDir = AsoUtility::VECTOR_ZERO;
+	if (ins.IsNew(KEY_INPUT_W)) { moveDir = AsoUtility::DIR_F; }
+	if (ins.IsNew(KEY_INPUT_A)) { moveDir = AsoUtility::DIR_L; }
+	if (ins.IsNew(KEY_INPUT_S)) { moveDir = AsoUtility::DIR_B; }
+	if (ins.IsNew(KEY_INPUT_D)) { moveDir = AsoUtility::DIR_R; }
+
+	//回転軸と量決め
+	const float ROT_POW = 1.0f;
+	VECTOR axisDeg = AsoUtility::VECTOR_ZERO;
+
+	if (ins.IsNew(KEY_INPUT_DOWN)) { axisDeg.x = ROT_POW; }
+	if (ins.IsNew(KEY_INPUT_UP)) { axisDeg.x = -ROT_POW; }
+	if (ins.IsNew(KEY_INPUT_RIGHT)) { axisDeg.y = ROT_POW; }
+	if (ins.IsNew(KEY_INPUT_LEFT)) { axisDeg.y = -ROT_POW; }
+
+	if (!AsoUtility::EqualsVZero(axisDeg))
+	{
+		//今回回転させたい回転量をクォータニオンで作る
+		Quaternion rotPow = Quaternion();
+
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(axisDeg.z), AsoUtility::AXIS_Z
+			));
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(axisDeg.x), AsoUtility::AXIS_X
+			));
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(axisDeg.y), AsoUtility::AXIS_Y
+			));
+
+		// 回転諒を加える(合成)
+		rot_ = rot_.Mult(rotPow);
+
+		// 注視点の相対座標を回転させる
+		VECTOR rotLocalPos = rot_.PosAxis(RELATIVE_C2T_POS);
+		//相対座標をワールド座標にする（注視点の更新）
+		targetPos_ = VAdd(pos_, rotLocalPos);
+
+		//カメラの上方向更新
+		cameraUp_ = rot_.GetUp();
+	}
+
+	if (!AsoUtility::EqualsVZero(moveDir))
+	{
+		//　移動＝座標＋移動量
+		//移動量＝方向×スピード
+
+		//入力された方向をかめらの回転情報を使って
+		//カメラの進行方向に変換する
+		VECTOR direction = rot_.PosAxis(moveDir);
+		//移動量
+		const float speed = SPEED / 2;
+		VECTOR movePow = VScale(direction, speed);
+		//
+		pos_ = VAdd(pos_, movePow);
+		targetPos_ = VAdd(targetPos_, movePow);
+
+	}
 }
 void Camera::SetBeforeDrawFollow(void)
 {
