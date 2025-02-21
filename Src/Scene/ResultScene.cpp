@@ -42,6 +42,13 @@ void ResultScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
+	if (ins.IsTrgDown(KEY_INPUT_BACK))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+
+	}
+
+
 }
 
 void ResultScene::Draw(void)
