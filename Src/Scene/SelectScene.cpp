@@ -42,7 +42,10 @@ void SelectScene::Init(void)
 	pos[1].x = (Application::SCREEN_SIZE_X / 3) * 2;
 	pos[1].y = Application::SCREEN_SIZE_Y / 2;
 
-	startP1 = startP2 = false;
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
+	{
+		start[ii] = false;
+	}
 }
 
 void SelectScene::Update(void)
@@ -54,9 +57,18 @@ void SelectScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 	}
 
-	// プレイヤー１とプレイヤー２が準備完了ボタンを押してスペースを押すとゲームシーンに移行
-	if (startP1 && startP2 && ins.IsTrgDown(KEY_INPUT_SPACE)) {
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
+	{
+		// プレイヤー１とプレイヤー２が準備完了ボタンを押してスペースを押すとゲームシーンに移行
+		if (start[ii] && ins.IsTrgDown(KEY_INPUT_SPACE)) {
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+		}
+	}
+
+	// BACKSPACE
+	if (ins.IsTrgDown(KEY_INPUT_BACK))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
 	//カーソル移動
@@ -86,12 +98,12 @@ void SelectScene::Draw(void)
 
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
-	if (startP1) {
+	if (start[0]) {
 		DrawString(0, 0, "p1", RGB(0, 0, 255), true);
 	}
 
 	//プレイヤー１が準備完了したかどうか
-	if (startP2) {
+	if (start[1]) {
 		DrawString(0, 0, "p2", RGB(0, 0, 255), true);
 	}
 
@@ -114,46 +126,46 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 {
 	//------------------------------------------
 
-	if (startP1 == false)
+	if (start[0] == false)
 	{
 		if (CheckHitKey(KEY_INPUT_W))
 		{
-			P1.y -= 5;
+			P1.y -= MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_S))
 		{
-			P1.y += 5;
+			P1.y += MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_D))
 		{
-			P1.x += 5;
+			P1.x += MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_A))
 		{
-			P1.x -= 5;
+			P1.x -= MOVE;
 		}
 	}
 
 
 	//------------------------------------------
 
-	if (startP2 == false)
+	if (start[1] == false)
 	{
 		if (CheckHitKey(KEY_INPUT_UP))
 		{
-			P2.y -= 5;
+			P2.y -= MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_DOWN))
 		{
-			P2.y += 5;
+			P2.y += MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_RIGHT))
 		{
-			P2.x += 5;
+			P2.x += MOVE;
 		}
 		if (CheckHitKey(KEY_INPUT_LEFT))
 		{
-			P2.x -= 5;
+			P2.x -= MOVE;
 		}
 	}
 
@@ -178,13 +190,13 @@ void SelectScene::Collision(void)
 			// true == 準備完了 / false == 準備中
 			if (ins.IsTrgDown(KEY_INPUT_1))
 			{
-				if (startP1 == false)
+				if (start[0] == false)
 				{
-					startP1 = true;
+					start[0] = true;
 				}
 				else
 				{
-					startP1 = false;
+					start[0] = false;
 				}
 			}
 		}
@@ -202,13 +214,13 @@ void SelectScene::Collision(void)
 			// true == 準備完了 / false == 準備中
 			if (ins.IsTrgDown(KEY_INPUT_2))
 			{
-				if (startP2 == false)
+				if (start[1] == false)
 				{
-					startP2 = true;
+					start[1] = true;
 				}
 				else
 				{
-					startP2 = false;
+					start[1] = false;
 				}
 			}
 		}

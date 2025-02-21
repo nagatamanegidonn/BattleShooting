@@ -6,6 +6,7 @@ class SelectScene : public SceneBase
 public:
 	static constexpr int PLAYER_MAX = 2;
 	static constexpr int SIZE = 20;
+	static constexpr int MOVE = 4;
 
 	// コンストラクタ
 	SelectScene(void);
@@ -27,7 +28,6 @@ public:
 private:
 	VECTOR pos[PLAYER_MAX];
 
-	bool startP1;
-	bool startP2;
+	bool start[PLAYER_MAX];
 
 };
