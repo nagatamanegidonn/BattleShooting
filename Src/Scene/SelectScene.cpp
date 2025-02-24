@@ -46,6 +46,8 @@ void SelectScene::Init(void)
 	{
 		start[ii] = false;
 	}
+
+	for(int ii = 0; ii < PLAYER_MAX; ii++)chara[ii] = CHARA::E_CHARA_NON;
 }
 
 void SelectScene::Update(void)
@@ -88,13 +90,10 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-	for (int ii = 1; ii <= 4; ii++) {
-		DrawBox(
-			180 * (1 * ii),
-			Application::SCREEN_SIZE_Y / 2 - 50,
-			(180 * (1 * ii)) + 100,
-			(Application::SCREEN_SIZE_Y / 2) + 50, 0x000fff, true);
-	}
+
+	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
+	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
+
 
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
@@ -114,6 +113,29 @@ void SelectScene::Draw(void)
 	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
 	//-----------------------------------------------------
 
+	switch (chara[0])
+	{
+	case E_CHARA_NON:
+		break;
+	case E_CHARA1:
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "プイレヤー１/キャラクター１", RGB(0, 0, 255), true);
+		break;
+	case E_CHARA2:
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "プイレヤー１/キャラクター2", RGB(0, 0, 255), true);
+		break;
+	}
+
+	switch (chara[1])
+	{
+	case E_CHARA_NON:
+		break;
+	case E_CHARA1:
+		DrawString(0, Application::SCREEN_SIZE_Y / 2 + 50 , "プイレヤー２/キャラクター１", RGB(0, 0, 255), true);
+		break;
+	case E_CHARA2:
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 + 50, "プイレヤー２/キャラクター2", RGB(0, 0, 255), true);
+		break;
+	}
 }
 
 void SelectScene::Release(void)
@@ -178,12 +200,12 @@ void SelectScene::Collision(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	for (int ii = 1; ii <= 4; ii++)
+	for (int ii = 0; ii < CHARACTER_MAX; ii++)
 	{
-		if (pos[0].x < (180 * (1 * ii)) + 100 &&
-			pos[0].x > 180 * (1 * ii) &&
-			pos[0].y < (Application::SCREEN_SIZE_Y / 2) + 50 &&
-			pos[0].y > Application::SCREEN_SIZE_Y / 2 - 50)
+		if (pos[0].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
+			pos[0].x > ii * (Application::SCREEN_SIZE_X / 2) &&
+			pos[0].y < Application::SCREEN_SIZE_Y / 2 &&
+			pos[0].y > 0)
 		{
 			// シーン遷移
 			// プレイヤー１が準備完了しているかどうか
@@ -193,22 +215,33 @@ void SelectScene::Collision(void)
 				if (start[0] == false)
 				{
 					start[0] = true;
+
+
+					if (ii == 0)
+					{
+						chara[0] = E_CHARA1;
+					}
+					else if (ii == 1)
+					{
+						chara[0] = E_CHARA2;
+					}
 				}
 				else
 				{
 					start[0] = false;
+					chara[0] = E_CHARA_NON;
 				}
 			}
 		}
 	}
 
 
-	for (int ii = 1; ii <= 4; ii++)
+	for (int ii = 0; ii < CHARACTER_MAX; ii++)
 	{
-		if (pos[1].x < (180 * (1 * ii)) + 100 &&
-			pos[1].x > 180 * (1 * ii) &&
-			pos[1].y < (Application::SCREEN_SIZE_Y / 2) + 50 &&
-			pos[1].y > Application::SCREEN_SIZE_Y / 2 - 50)
+		if (pos[1].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
+			pos[1].x > ii * (Application::SCREEN_SIZE_X / 2) &&
+			pos[1].y < Application::SCREEN_SIZE_Y / 2 &&
+			pos[1].y > 0)
 		{
 			// プレイヤー２が準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
@@ -217,12 +250,51 @@ void SelectScene::Collision(void)
 				if (start[1] == false)
 				{
 					start[1] = true;
+
+					if (ii == 0)
+					{
+						chara[1] = E_CHARA1;
+					}
+					else if (ii == 1)
+					{
+						chara[1] = E_CHARA2;
+					}
 				}
 				else
 				{
 					start[1] = false;
+					chara[1] = E_CHARA_NON;
 				}
 			}
+		}
+	}
+
+	//-------------------------------------------------------------------
+	// カーソルと画面端の当たり判定
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
+	{
+		// 左
+		if (pos[ii].x - SIZE < 0)
+		{
+			pos[ii].x += MOVE;
+		}
+
+		// 右
+		if (pos[ii].x + SIZE > Application::SCREEN_SIZE_X)
+		{
+			pos[ii].x -= MOVE;
+		}
+
+		// 上
+		if (pos[ii].y - SIZE < 0)
+		{
+			pos[ii].y += MOVE;
+		}
+
+		// 下
+		if (pos[ii].y + SIZE > Application::SCREEN_SIZE_Y)
+		{
+			pos[ii].y -= MOVE;
 		}
 	}
 }

@@ -4,9 +4,18 @@
 class SelectScene : public SceneBase
 {
 public:
-	static constexpr int PLAYER_MAX = 2;
-	static constexpr int SIZE = 20;
-	static constexpr int MOVE = 4;
+	static constexpr int PLAYER_MAX = 2;		// プレイヤーの最大数
+	static constexpr int SIZE = 20;				// カーソルの半径
+	static constexpr int MOVE = 4;				// カーソルの移動速度
+	static constexpr int CHARACTER_MAX = 2;
+
+	enum CHARA
+	{
+		E_CHARA_NON,
+		E_CHARA1,
+		E_CHARA2,
+	};
+
 
 	// コンストラクタ
 	SelectScene(void);
@@ -20,14 +29,21 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+	// カーソルの移動処理
 	void GetMove(VECTOR& P1, VECTOR& P2);
 
+	// 当たり判定
 	void Collision(void);
 
 
 private:
+
+	int chara[PLAYER_MAX];
+
+	// カーソル座標
 	VECTOR pos[PLAYER_MAX];
 
+	// キャラクター選択が完了しているかどうかの確認用
 	bool start[PLAYER_MAX];
 
 };

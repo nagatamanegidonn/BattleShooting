@@ -1,12 +1,10 @@
-﻿  SceneManager.cpp
-  SelectScene.cpp
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(111,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(111,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(111,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(111,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(114,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(114,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(114,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(114,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  コードを生成中...
+﻿  SelectScene.cpp
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(110,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(110,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(110,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(110,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(113,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(113,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(113,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(113,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   BaseProject.vcxproj -> C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\x64\Debug\BaseProject.exe
