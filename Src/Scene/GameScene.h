@@ -37,7 +37,8 @@ private:
 
 	Grid* stage_;
 
-
+	// 衝突判定
+	void Collision(void);
 	//デバッグ用の描画
 	void DrawDebug(void);
 

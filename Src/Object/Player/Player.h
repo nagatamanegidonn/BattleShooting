@@ -51,6 +51,11 @@ public:
 
 	//プレイヤーのTransform情報
 	const Transform& GetTransform(void) const { return transform_; }
+	const int& GetRideMaxHp(void) const { return ridesMaxHp_; }
+	const int& GetRideHp(void) const { return ridesHp_; }
+	const void RideDamage(int damage);
+	VECTOR& GetPos(int id);
+
 	// 弾
 	const std::vector<ShotPlayer*>& GetShots(void) const { return shots_; }
 
@@ -120,6 +125,9 @@ private:
 	int playerMaxHp_;
 	int ridesHp_;
 	int ridesMaxHp_;
+
+	VECTOR rideAttrckPos_;
+	VECTOR rideDamagePos_;
 
     // モデル制御の基本情報
     Transform transform_;
