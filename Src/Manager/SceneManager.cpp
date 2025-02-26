@@ -44,6 +44,8 @@ void SceneManager::Init(void)
 	scene_ = new TitleScene();
 	scene_->Init();
 
+
+
 	isSceneChanging_ = false;
 
 	// デルタタイム
