@@ -205,7 +205,11 @@ VECTOR Camera::GetPos(void) const
 
 //ƒJƒƒ‰‚ÌƒY[ƒ€
 void Camera::FadeIn(void)
-{
+{	
+	if (pos_.y > -200.0f)
+	{
+		return;
+	}
 	pos_.y++;
 }
 void Camera::FadeOut(void)

@@ -134,6 +134,7 @@ private:
 
     // ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
     Transform transform_;
+    Transform transDir_;
 
 	// ’¸“_î•ñ
 	VERTEX3D vertexs_[6];
