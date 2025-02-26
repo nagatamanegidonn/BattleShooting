@@ -33,21 +33,20 @@ void SelectScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
-	pos[0] = AsoUtility::VECTOR_ZERO;
-	pos[1] = AsoUtility::VECTOR_ZERO;
-
-	pos[0].x = Application::SCREEN_SIZE_X / 3;
-	pos[0].y = Application::SCREEN_SIZE_Y / 2;
-
-	pos[1].x = (Application::SCREEN_SIZE_X / 3) * 2;
-	pos[1].y = Application::SCREEN_SIZE_Y / 2;
-
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
-		start[ii] = false;
-	}
+		kPos[ii] = AsoUtility::VECTOR_ZERO;
 
-	for(int ii = 0; ii < PLAYER_MAX; ii++)chara[ii] = CHARA::E_CHARA_NON;
+		// カーソルの初期座標
+		kPos[ii].x = Application::SCREEN_SIZE_X / 4 + ((Application::SCREEN_SIZE_X / 4 * 2) * ii);
+		kPos[ii].y = Application::SCREEN_SIZE_Y / 2;
+
+		pPos[ii].x = Application::SCREEN_SIZE_X / 4 + ((Application::SCREEN_SIZE_X / 4 * 2) * ii);
+		pPos[ii].y = Application::SCREEN_SIZE_Y / 4 * 3;
+
+		start[ii] = false;
+		chara[ii] = CHARA::E_CHARA_NON;
+	}
 }
 
 void SelectScene::Update(void)
@@ -73,8 +72,8 @@ void SelectScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
-	//カーソル移動
-	GetMove(pos[0], pos[1]);
+	// カーソル移動
+	GetMove(kPos[0], kPos[1]);
 
 	// キャラ選択時の当たり判定
 	Collision();
@@ -89,30 +88,42 @@ void SelectScene::Draw(void)
 	//背景
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
-	//キャラ選択
-
+	//キャラ
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
 
-
-	//プレイヤー１が準備完了したかどうか
-	SetFontSize(25);
-	if (start[0]) {
-		DrawString(0, 0, "p1", RGB(0, 0, 255), true);
-	}
-
-	//プレイヤー１が準備完了したかどうか
-	if (start[1]) {
-		DrawString(0, 0, "p2", RGB(0, 0, 255), true);
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
+	{
+		DrawBox(pPos[ii].x - 150, pPos[ii].y - 150, pPos[ii].x + 150, pPos[ii].y + 150, 0x0ffff0, true);
+		if (start[ii])
+		{
+			DrawBox(pPos[ii].x - 140, pPos[ii].y - 140, pPos[ii].x + 140, pPos[ii].y + 140, 0x0f0f0f, true);
+		}
 	}
 
 	//プレイヤー１のカーソル（仮）
-	DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
+	if (start[0] == false)
+	{
+		DrawBox(kPos[0].x - SIZE, kPos[0].y - SIZE, kPos[0].x + SIZE, kPos[0].y + SIZE, 0x000000, true);
+	}
+	else 
+	{
+		DrawBox(kPos[0].x - SIZE, kPos[0].y - SIZE, kPos[0].x + SIZE, kPos[0].y + SIZE, 0xffffff, true);
+	}
 
 	//プレイヤー２のカーソル（仮）
-	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	//-----------------------------------------------------
+	if (start[1] == false)
+	{
+		DrawBox(kPos[1].x - SIZE, kPos[1].y - SIZE, kPos[1].x + SIZE, kPos[1].y + SIZE, 0x000000, true);
+	}
+	else
+	{
+		DrawBox(kPos[1].x - SIZE, kPos[1].y - SIZE, kPos[1].x + SIZE, kPos[1].y + SIZE, 0xffffff, true);
+	}
 
+	SetFontSize(25);
+
+	// プレイヤー１のキャラの状態
 	switch (chara[0])
 	{
 	case E_CHARA_NON:
@@ -125,6 +136,7 @@ void SelectScene::Draw(void)
 		break;
 	}
 
+	// プレイヤー２のキャラの状態
 	switch (chara[1])
 	{
 	case E_CHARA_NON:
@@ -136,6 +148,8 @@ void SelectScene::Draw(void)
 		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 + 50, "プイレヤー２/キャラクター2", RGB(0, 0, 255), true);
 		break;
 	}
+
+	//-----------------------------------------------------
 }
 
 void SelectScene::Release(void)
@@ -148,6 +162,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 {
 	//------------------------------------------
 
+	InputManager& ins = InputManager::GetInstance();
 	if (start[0] == false)
 	{
 		if (CheckHitKey(KEY_INPUT_W))
@@ -167,7 +182,6 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 			P1.x -= MOVE;
 		}
 	}
-
 
 	//------------------------------------------
 
@@ -191,7 +205,6 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 		}
 	}
 
-
 	//------------------------------------------
 }
 
@@ -202,70 +215,71 @@ void SelectScene::Collision(void)
 
 	for (int ii = 0; ii < CHARACTER_MAX; ii++)
 	{
-		if (pos[0].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
-			pos[0].x > ii * (Application::SCREEN_SIZE_X / 2) &&
-			pos[0].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[0].y > 0)
+		if (kPos[0].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
+			kPos[0].x > ii * (Application::SCREEN_SIZE_X / 2) &&
+			kPos[0].y < Application::SCREEN_SIZE_Y / 2 &&
+			kPos[0].y > 0 &&
+			ins.IsTrgDown(KEY_INPUT_1))
 		{
 			// シーン遷移
 			// プレイヤー１が準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_1))
+			if (start[0] == false)
 			{
-				if (start[0] == false)
+				start[0] = true;
+
+				// どちらのキャラを選択したかどうか
+				if (ii == 0)
 				{
-					start[0] = true;
-
-
-					if (ii == 0)
-					{
-						chara[0] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[0] = E_CHARA2;
-					}
+					chara[0] = E_CHARA1;
 				}
-				else
+				else if (ii == 1)
 				{
-					start[0] = false;
-					chara[0] = E_CHARA_NON;
+					chara[0] = E_CHARA2;
 				}
 			}
+			else
+			{
+				// 準備完了していない状態
+				start[0] = false;
+				chara[0] = E_CHARA_NON;
+			}
+			
 		}
 	}
 
 
 	for (int ii = 0; ii < CHARACTER_MAX; ii++)
 	{
-		if (pos[1].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
-			pos[1].x > ii * (Application::SCREEN_SIZE_X / 2) &&
-			pos[1].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[1].y > 0)
+		if (kPos[1].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
+			kPos[1].x > ii * (Application::SCREEN_SIZE_X / 2) &&
+			kPos[1].y < Application::SCREEN_SIZE_Y / 2 &&
+			kPos[1].y > 0 &&
+			ins.IsTrgDown(KEY_INPUT_2))
 		{
 			// プレイヤー２が準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_2))
+			if (start[1] == false)
 			{
-				if (start[1] == false)
-				{
-					start[1] = true;
+				start[1] = true;
 
-					if (ii == 0)
-					{
-						chara[1] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[1] = E_CHARA2;
-					}
-				}
-				else
+				// どちらのキャラを選択したかどうか
+				if (ii == 0)
 				{
-					start[1] = false;
-					chara[1] = E_CHARA_NON;
+					chara[1] = E_CHARA1;
+				}
+				else if (ii == 1)
+				{
+					chara[1] = E_CHARA2;
 				}
 			}
+			else
+			{
+				// 準備完了していない状態
+				start[1] = false;
+				chara[1] = E_CHARA_NON;
+			}
+			
 		}
 	}
 
@@ -274,27 +288,27 @@ void SelectScene::Collision(void)
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		// 左
-		if (pos[ii].x - SIZE < 0)
+		if (kPos[ii].x - SIZE < 0)
 		{
-			pos[ii].x += MOVE;
+			kPos[ii].x += MOVE;
 		}
 
 		// 右
-		if (pos[ii].x + SIZE > Application::SCREEN_SIZE_X)
+		if (kPos[ii].x + SIZE > Application::SCREEN_SIZE_X)
 		{
-			pos[ii].x -= MOVE;
+			kPos[ii].x -= MOVE;
 		}
 
 		// 上
-		if (pos[ii].y - SIZE < 0)
+		if (kPos[ii].y - SIZE < 0)
 		{
-			pos[ii].y += MOVE;
+			kPos[ii].y += MOVE;
 		}
 
 		// 下
-		if (pos[ii].y + SIZE > Application::SCREEN_SIZE_Y)
+		if (kPos[ii].y + SIZE > Application::SCREEN_SIZE_Y)
 		{
-			pos[ii].y -= MOVE;
+			kPos[ii].y -= MOVE;
 		}
 	}
 }
