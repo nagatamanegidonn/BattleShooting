@@ -5,6 +5,7 @@
 #include "SceneBase.h"
 
 class Player;
+class BackGround;
 class Grid;
 class Camera;
 
@@ -36,6 +37,9 @@ private:
 	int screenH[PLAYER_SIZE];
 
 	Grid* stage_;
+	
+	//背景インスタンス
+	BackGround* backGround_;
 
 
 	//デバッグ用の描画

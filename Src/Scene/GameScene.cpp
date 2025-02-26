@@ -9,6 +9,7 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/Camera.h"
 
+#include "../Object/BackGround.h"
 #include "../Object/Grid.h"
 #include "../Object/Player/Player.h"
 
@@ -53,6 +54,8 @@ void GameScene::AsyncPreLoad(void)
 		&handleIds_2[0]);
 
 	stage_ = new Grid;
+
+	backGround_ = new BackGround;
 }
 void GameScene::Init(void)
 {
@@ -79,6 +82,9 @@ void GameScene::Init(void)
 	}
 
 	stage_->Init();
+
+	//”wŒi‰Šú‰»
+	backGround_->Init();
 
 	Camera* camera = SceneManager::GetInstance().GetCamera();
 	// ƒJƒƒ‰ƒ‚[ƒhF’è“_ƒJƒƒ‰
@@ -112,7 +118,7 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 	}
 
-	stage_->Update();
+	/*stage_->Update();*/
 
 	//ƒvƒŒƒCƒ„[‚ÌXV
 	for (auto p : players_)
@@ -139,6 +145,9 @@ void GameScene::Draw(void)
 
 	// •`‰æ
 	stage_->Draw();
+
+	//”wŒi•`‰æ
+	backGround_->Draw();
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	for (auto& p : players_)
@@ -246,6 +255,10 @@ void GameScene::Release(void)
 
 
 	stage_->Release();
+
+	//”wŒi‰ð•úˆ—
+	backGround_->Release();
+	delete backGround_;
 }
 
 
