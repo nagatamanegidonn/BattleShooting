@@ -19,9 +19,4 @@ public:
 
 private:
 
-	bool next;
-	int select;
-
-	int cnt;
-
 };

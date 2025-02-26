@@ -1,5 +1,3 @@
-#include "../Application.h"
-
 #include "../Utility/AsoUtility.h"
 #include "../Manager/InputManager.h"
 
@@ -38,19 +36,32 @@ void Camera::SetBeforeDraw(void)
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
+
 		//カメラの上方向更新
 		cameraUp_ = rot_.GetForward();
 		pos_ = { 0.0f, 1000.0f, 0.0f };
 		targetPos_ = { 0.0f, -100.0f, 0.0f };
+
+		/*rot_ = Quaternion::Identity();
+
+		Quaternion rotPow = Quaternion();
+
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(90.0f), AsoUtility::AXIS_X
+			));
+		
+		 回転諒を加える(合成)
+		rot_ = rot_.Mult(rotPow);
+		SetBeforeDrawFixedPoint();
+		pos_ = { 0.0f, 1000.0f , 0.0f};
+		targetPos_ = { 0.0f, 0.0f, 0.0f };*/
 		break;
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();
 		break;
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
-		break;
-	case Camera::MODE::FOLLOW_POINT:
-		SetBeforeDrawFollowPoint();
 		break;
 	}
 
@@ -154,27 +165,9 @@ void Camera::SetBeforeDrawFollow(void)
 	// カメラの上方向
 	cameraUp_ = followRot.PosAxis(rot_.GetUp());
 }
-void Camera::SetBeforeDrawFollowPoint(void)
-{
-	// 追従対象の位置
-	VECTOR followPos = followTransform_->pos;
-	VECTOR followSubPos = followSubTransform_->pos;
-	followPos.y = 0.0f;
-	followSubPos.y = 0.0f;
 
 	//カメラの上方向更新
 	cameraUp_ = rot_.GetForward();
-
-	VECTOR cPos= VScale(VAdd(followPos, followSubPos), 0.5f);
-	cPos.y = pos_.y;
-
-	pos_ = cPos;
-	targetPos_ = pos_;
-	targetPos_.y = -100.0f;
-
-
-}
-
 
 #pragma endregion
 
@@ -192,11 +185,6 @@ void Camera::SetFollow(const Transform* follow)
 {
 	followTransform_ = follow;
 }
-void Camera::SetSubFollow(const Transform* follow)
-{
-	followSubTransform_ = follow;
-}
-
 
 VECTOR Camera::GetPos(void) const
 {

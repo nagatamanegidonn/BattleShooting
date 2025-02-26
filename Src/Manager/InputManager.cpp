@@ -308,14 +308,6 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		idx = static_cast<int>(JOYPAD_BTN::L_TRIGGER);
 		ret.ButtonsNew[idx] = x.LeftTrigger; // L_TRIGGER
 
-		// 右肩ボタン (R1)新規
-		idx = static_cast<int>(JOYPAD_BTN::R_BOTTUN);  // Rボタンのボタンコード（R1）
-		ret.ButtonsNew[idx] = d.Buttons[5];  // R1 ボタン（通常はインデックス5）
-		// 左肩ボタン (L1)新規
-		idx = static_cast<int>(JOYPAD_BTN::L_BOTTUN);  // Rボタンのボタンコード（R1）
-		ret.ButtonsNew[idx] = d.Buttons[4];  // R1 ボタン（通常はインデックス5）
-
-
 		// 左スティック
 		ret.AKeyLX = d.X;
 		ret.AKeyLY = d.Y;

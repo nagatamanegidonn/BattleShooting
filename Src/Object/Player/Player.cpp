@@ -1,6 +1,4 @@
 
-#include "../../Application.h"
-
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../../Manager/ResourceManager.h"
@@ -67,34 +65,6 @@ void Player::Init(VECTOR startPos, int playerNo)
 	);
 	transform_.Update();
 
-
-	// モデル制御の基本情報
-	transDir_.SetModel(MV1LoadModel("Data/Model/Dir/Dir.mv1"));
-	if (playerNo == 0)
-	{
-		MV1SetMaterialDifColor(transDir_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-		MV1SetMaterialEmiColor(transDir_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-	}
-	else
-	{
-		MV1SetMaterialDifColor(transDir_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-		MV1SetMaterialEmiColor(transDir_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-	}
-	transDir_.scl = { 0.1f, 0.1f, 0.1f };
-	transDir_.pos = startPos;
-
-	transDir_.quaRot = Quaternion::Euler(
-		0.0f,
-		AsoUtility::Deg2RadF(180.0f),
-		0.0f
-	);
-	transDir_.quaRotLocal = Quaternion::Euler(
-		0.0f,
-		AsoUtility::Deg2RadF(180.0f),
-		0.0f
-	);
-	transDir_.Update();
-
 	//変数：移動関係
 	movedPos_ = AsoUtility::VECTOR_ZERO;
 	movePow_ = AsoUtility::VECTOR_ZERO;
@@ -139,7 +109,6 @@ void Player::Update()
 	stateUpdate_();
 
 	transform_.Update();
-	transDir_.Update();
 
 	/*size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
@@ -168,10 +137,7 @@ void Player::Draw()
 		}
 	}
 	MV1DrawModel(transform_.modelId);
-
-	DrawSphere3D(rideAttrckPos_, 10, 10, 0xff0000, 0xffff00, false);
-	DrawSphere3D(rideDamagePos_, 20, 10, 0xff0000, 0x00ffff, false);
-
+	
 
 #pragma region 矢印の描画（仮）
 
@@ -180,7 +146,7 @@ void Player::Draw()
 
 	if (controller_->GetisControl(Controller::MODE::BACK))
 	{
-		//addAxis.y *= -1;
+		addAxis.y *= -1;
 	}
 
 	//今回回転させたい回転量をクォータニオンで作る
@@ -203,28 +169,20 @@ void Player::Draw()
 	auto trnQut = transform_.quaRot;
 	trnQut = trnQut.Mult(rotPow);
 
-	transDir_.pos = VAdd(transform_.pos, VScale(trnQut.GetForward(), 40));
-	transDir_.quaRot = trnQut;
-	transDir_.Update();
-	// ３Ｄモデルの描画
-	MV1DrawModel(transDir_.modelId);
-
-
-	auto c = MV1GetMaterialDifColor(transDir_.modelId, 0);
 
 	// メッシュの描画
-	/*VECTOR zero = VAdd(transform_.pos, VScale(trnQut.GetLeft(), 40));
+	VECTOR zero = VAdd(transform_.pos, VScale(trnQut.GetLeft(), 40));
 	VECTOR one = VAdd(transform_.pos, VScale(trnQut.GetForward(), 80));
 	VECTOR two = VAdd(transform_.pos, VScale(trnQut.GetForward(), 20));
-	VECTOR three = VAdd(transform_.pos, VScale(trnQut.GetRight(), 40));*/
+	VECTOR three = VAdd(transform_.pos, VScale(trnQut.GetRight(), 40));
 
-	/*DrawSphere3D(zero, 10, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(zero, 10, 10, 0xff0000, 0xff0000, false);
 	DrawSphere3D(one, 10, 10, 0xff0000, 0xff0000, false);
 	DrawSphere3D(two, 10, 10, 0xff0000, 0xff0000, false);
-	DrawSphere3D(three, 10, 10, 0xff0000, 0xff0000, false);*/
+	DrawSphere3D(three, 10, 10, 0xff0000, 0xff0000, false);
 
-	//DrawTriangle3D(zero, one, two, 0x0000ff, true);
-	//DrawTriangle3D( two,one, three, 0x0000ff, true);
+	DrawTriangle3D(zero, one, two, 0x0000ff, true);
+	DrawTriangle3D( two,one, three, 0x0000ff, true);
 
 #pragma endregion
 
@@ -323,10 +281,6 @@ void Player::UpdateNone()
 }
 void Player::UpdatePlay()
 {
-	if (invincibleTime_ > 0.0f)
-	{
-		invincibleTime_ -= SceneManager::GetInstance().GetDeltaTime();
-	}
 
 
 	ProcessTurn();

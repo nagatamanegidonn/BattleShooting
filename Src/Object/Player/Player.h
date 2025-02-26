@@ -134,15 +134,8 @@ private:
 	int ridesHp_;
 	int ridesMaxHp_;
 
-	float damageTime_;		//移動不可能の時間
-	float invincibleTime_;	//無敵時間
-
-	VECTOR rideAttrckPos_;
-	VECTOR rideDamagePos_;
-
     // モデル制御の基本情報
     Transform transform_;
-    Transform transDir_;
 
 	// 頂点情報
 	VERTEX3D vertexs_[6];

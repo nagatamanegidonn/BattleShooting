@@ -88,6 +88,10 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Rock/Rock23.mv1");
 	resourcesMap_.emplace(SRC::ROCK02, res);
 
+	//”wŒi’¬
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BackGround/BackGround.mv1");
+	resourcesMap_.emplace(SRC::BACKGROUND, res);
+
 	// Ž©‹@•¬ŽË
 	res = Resource(Resource::TYPE::EFFEKSEER, Application::PATH_EFFECT + "Jet.efkefc");
 	resourcesMap_.emplace(SRC::JET, res);
