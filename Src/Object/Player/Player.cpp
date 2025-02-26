@@ -65,6 +65,12 @@ void Player::Init(VECTOR startPos, int playerNo)
 	direction_= AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
 
+	rideAttrckPos_ = transform_.pos;
+	rideDamagePos_ = transform_.pos;
+
+	//ステータス変数
+	ridesMaxHp_ = ridesHp_ = 10;
+
 	//矢印の作成
 	MakeSquereVertex();
 
@@ -93,6 +99,9 @@ void Player::Update()
 	{
 		shots_[i]->Update();
 	}
+
+	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 20));
+	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 20));
 }
 
 void Player::Draw()
@@ -101,6 +110,9 @@ void Player::Draw()
 	// モデルの描画
 	MV1DrawModel(transform_.modelId);
 	
+	DrawSphere3D(rideAttrckPos_, 10, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(rideDamagePos_, 20, 10, 0xff0000, 0x00ffff, false);
+
 
 #pragma region 矢印の描画（仮）
 
@@ -155,6 +167,33 @@ void Player::Draw()
 	{
 		shots_[i]->Draw();
 	}
+}
+
+const void Player::RideDamage(int damage)
+{
+	//体力を減らす
+	ridesHp_ -= damage;
+	//無敵時間を設定
+
+}
+
+VECTOR& Player::GetPos(int id)
+{
+	switch (id)
+	{
+	case 0://乗り物のdamage位置
+		return rideDamagePos_;
+		break;
+	case 1://乗り物の攻撃地点
+		return rideAttrckPos_;
+		break;
+	case 2:
+		return transform_.pos;
+		break;
+	}
+
+	return transform_.pos;
+	// TODO: return ステートメントをここに挿入します
 }
 
 
