@@ -10,6 +10,7 @@
 #include "../Manager/Camera.h"
 
 #include "../Object/Grid.h"
+#include "../Object/Shot/ShotPlayer.h"
 #include "../Object/Player/Player.h"
 
 #include "GameScene.h"
@@ -314,6 +315,13 @@ void GameScene::Collision(void)
 	//プレイヤーの更新
 	for (auto& plyer : players_)
 	{
+		auto shots = plyer->GetShots();
+		for (auto& s : shots)
+		{
+			s->Update();
+		}
+
+
 		for (auto& vsPlyer : players_)
 		{
 			//戦っているプレイヤーが自身だったらコンテニュー
@@ -326,7 +334,7 @@ void GameScene::Collision(void)
 			int cx = Application::SCREEN_SIZE_X / 2;
 			int cy = Application::SCREEN_SIZE_Y / 2;
 
-
+			//カメラの判定
 			if (((cx + screenSize > pos2D.x) && (cy + screenSize > pos2D.y)
 				&& (cx - screenSize < pos2D.x) && (cy - screenSize < pos2D.y))
 				&& ((cx + screenSize > posVS2D.x) && (cy + screenSize > posVS2D.y)
@@ -335,7 +343,7 @@ void GameScene::Collision(void)
 				SceneManager::GetInstance().GetCamera()->FadeIn();
 			}
 
-			// イベントシーン突入エリアとの衝突判定
+			// playerとの衝突判定
 			VECTOR diff = VSub(
 				plyer->GetPos(0),
 				vsPlyer->GetPos(1));
@@ -344,6 +352,11 @@ void GameScene::Collision(void)
 			{
 				//plyerに相手のマシンの攻撃が当たっている
 				plyer->RideDamage(1);
+				//ふっ飛ばし処理
+				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
+				plyer->SetJump(dir);
+				dir = VScale(dir, -1);
+				vsPlyer->SetJump(dir);
 			}
 		}
 	}
@@ -358,7 +371,7 @@ void GameScene::DrawDebug(void)
 	int cy = Application::SCREEN_SIZE_Y / 2;
 
 
-	int plyNum= 1;
+	int plyNum= -1;
 	//プレイヤーの更新
 	for (auto& plyer : players_)
 	{

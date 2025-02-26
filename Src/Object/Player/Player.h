@@ -36,6 +36,7 @@ public:
 	{
 		NONE,
 		PLAY,
+		JUMP,
 		DEAD,
 		VICTORY,
 		END
@@ -54,6 +55,7 @@ public:
 	const int& GetRideMaxHp(void) const { return ridesMaxHp_; }
 	const int& GetRideHp(void) const { return ridesHp_; }
 	const void RideDamage(int damage);
+	const void SetJump(VECTOR vec);
 	VECTOR& GetPos(int id);
 
 	// 弾
@@ -79,6 +81,7 @@ private:
 	void ChangeState(STATE state);
 	void ChangeStateNone(void);
 	void ChangeStatePlay(void);
+	void ChangeStateJump(void);
 	void ChangeStateDead(void);
 	void ChangeStateEnd(void);
 	void ChangeStateVictory(void);
@@ -87,6 +90,7 @@ private:
 	// 更新ステップ
 	void UpdateNone(void);
 	void UpdatePlay(void);
+	void UpdateJump(void);
 	void UpdateDead(void);
 	void UpdateEnd(void);
 	void UpdateVictory(void);
@@ -118,6 +122,10 @@ private:
 	void ProcessShot(void);
 	// 自機の弾を発射
 	void CreateShot(void);
+
+	//ふっ飛ばし関係
+	float jumpTime_;
+	VECTOR jumpDir_;
 
 	//ステータス
 	int playerId_;	//弾の種類やモデルを決める変数

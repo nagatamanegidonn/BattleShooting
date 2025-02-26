@@ -40,7 +40,7 @@ void Camera::SetBeforeDraw(void)
 	case Camera::MODE::FIXED_POINT:
 		//カメラの上方向更新
 		cameraUp_ = rot_.GetForward();
-		pos_ = { 0.0f, -1000.0f, 0.0f };
+		pos_ = { 0.0f, 1000.0f, 0.0f };
 		targetPos_ = { 0.0f, -100.0f, 0.0f };
 		break;
 	case Camera::MODE::FREE:
@@ -163,7 +163,7 @@ void Camera::SetBeforeDrawFollowPoint(void)
 	followSubPos.y = 0.0f;
 
 	//カメラの上方向更新
-	cameraUp_ = rot_.GetBack();
+	cameraUp_ = rot_.GetForward();
 
 	VECTOR cPos= VScale(VAdd(followPos, followSubPos), 0.5f);
 	cPos.y = pos_.y;
@@ -206,15 +206,15 @@ VECTOR Camera::GetPos(void) const
 //カメラのズーム
 void Camera::FadeIn(void)
 {	
-	if (pos_.y > -200.0f)
+	if (pos_.y < 200.0f)
 	{
 		return;
 	}
-	pos_.y++;
+	pos_.y--;
 }
 void Camera::FadeOut(void)
 {
-	pos_.y--;
+	pos_.y++;
 }
 
 void Camera::ChangeMode(MODE mode)
@@ -236,7 +236,7 @@ void Camera::ChangeMode(MODE mode)
 	case Camera::MODE::FOLLOW:
 		break;
 	case Camera::MODE::FOLLOW_POINT:
-		pos_ = { 0.0f, -500.0f, 0.0f };
+		pos_ = { 0.0f, 500.0f, 0.0f };
 		break;
 	}
 

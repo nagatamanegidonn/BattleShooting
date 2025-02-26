@@ -19,9 +19,11 @@ Player::Player(Camera& camera) :camera_(camera)
 	// 状態管理
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
 	stateChanges_.emplace(STATE::PLAY, std::bind(&Player::ChangeStatePlay, this));
+	stateChanges_.emplace(STATE::JUMP, std::bind(&Player::ChangeStateJump, this));
 	stateChanges_.emplace(STATE::DEAD, std::bind(&Player::ChangeStateDead, this));
 	stateChanges_.emplace(STATE::END, std::bind(&Player::ChangeStateEnd, this));
 	stateChanges_.emplace(STATE::VICTORY, std::bind(&Player::ChangeStateVictory, this));
+
 
 	//変数：移動関係
 	movedPos_ = AsoUtility::VECTOR_ZERO;
@@ -43,20 +45,26 @@ void Player::Init(VECTOR startPos, int playerNo)
 	controller_->Init(playerNo);
 
 	// モデル制御の基本情報
-	transform_.SetModel(
+	transform_.SetModel(MV1LoadModel("Data/Model/P1/キノコ.mv1"));
+	/*transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::PLAYER_SHIP));
+			ResourceManager::SRC::PLAYER_SHIP));*/
 
-	float scale = 10.0f;
+	//float scale = 10.0f;
+	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
 	transform_.pos = startPos;
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
-		AsoUtility::Deg2RadF(180.0f),
+		AsoUtility::Deg2RadF(0.0f),
 		0.0f
 	);
-	transform_.quaRotLocal = Quaternion();
+	transform_.quaRotLocal = Quaternion::Euler(
+		0.0f,
+		AsoUtility::Deg2RadF(90.0f),
+		AsoUtility::Deg2RadF(0.0f)
+	);
 	transform_.Update();
 
 
@@ -95,6 +103,10 @@ void Player::Init(VECTOR startPos, int playerNo)
 	direction_= AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
 
+	//ふっ飛ばし関係
+	jumpTime_ = 0.0f;
+	jumpDir_ = AsoUtility::VECTOR_ZERO;
+
 	//ステータス
 	damageTime_ = 0.0f;
 	invincibleTime_ = 0.0f;
@@ -129,11 +141,11 @@ void Player::Update()
 	transform_.Update();
 	transDir_.Update();
 
-	size_t size = shots_.size();
+	/*size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
 	{
 		shots_[i]->Update();
-	}
+	}*/
 
 	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 0));
 	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 20));
@@ -145,8 +157,8 @@ void Player::Draw()
 	// モデルの描画
 	// 視野範囲内：ディフューズカラーを赤色にする
 
-	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 0.0f, 1.0f));
-	MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 0.0f, 1.0f));
+	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+	MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
 	if (invincibleTime_ > 0.0f)
 	{
 		if (invincibleTime_ / 0.5f >= 0.1f)
@@ -224,6 +236,7 @@ void Player::Draw()
 	}
 }
 
+//織物へのダメージ
 const void Player::RideDamage(int damage)
 {
 	if (invincibleTime_ > 0.0f)
@@ -234,6 +247,12 @@ const void Player::RideDamage(int damage)
 	ridesHp_ -= damage;
 	//無敵時間を設定
 	invincibleTime_ = 3.0f;
+}
+const void Player::SetJump(VECTOR vec)
+{
+	ChangeState(STATE::JUMP);
+	jumpDir_ = vec;
+	jumpTime_ = 1.0f;
 }
 
 VECTOR& Player::GetPos(int id)
@@ -255,7 +274,6 @@ VECTOR& Player::GetPos(int id)
 	// TODO: return ステートメントをここに挿入します
 }
 
-
 #pragma region 変数state_による関数stateUpdate_の変更
 
 void Player::ChangeState(STATE state)
@@ -275,6 +293,10 @@ void Player::ChangeStateNone()
 void Player::ChangeStatePlay()
 {
 	stateUpdate_ = std::bind(&Player::UpdatePlay, this);
+}
+void Player::ChangeStateJump(void)
+{
+	stateUpdate_ = std::bind(&Player::UpdateJump, this);
 }
 void Player::ChangeStateDead()
 {
@@ -325,6 +347,31 @@ void Player::UpdatePlay()
 	transform_.pos = movedPos_;
 
 }
+void Player::UpdateJump(void)
+{
+	if (invincibleTime_ > 0.0f)
+	{
+		invincibleTime_ -= SceneManager::GetInstance().GetDeltaTime();
+	}
+	if (jumpTime_ > 0.0f)
+	{
+		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		if (jumpTime_ <= 0.0f)
+		{
+			ChangeState(STATE::PLAY);
+			return;
+		}
+	}
+
+	// 移動
+	movePow_ =
+		VScale(jumpDir_, SPEED_MOVE * jumpTime_);
+
+	// 現在座標を起点に移動後座標を決める
+	movedPos_ = VAdd(transform_.pos, movePow_);
+	// 移動後の位置に問題がなければ移動
+	transform_.pos = movedPos_;
+}
 void Player::UpdateDead()
 {
 
@@ -339,7 +386,6 @@ void Player::UpdateVictory()
 }
 
 #pragma endregion
-
 
 void Player::ProcessMove(void)
 {
@@ -397,6 +443,7 @@ void Player::Move(void)
 
 }
 
+
 void Player::ProcessTurn(void)
 {
 	Turn(AsoUtility::VECTOR_ONE);
@@ -410,8 +457,8 @@ void Player::Turn(VECTOR axis)
 		|| controller_->GetisControl(Controller::MODE::BACK));
 	
 
-	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = ROT_POW; }
-	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = -ROT_POW; }
+	if (controller_->GetisControl(Controller::MODE::LEFT)) { direction_.y = -ROT_POW; }
+	if (controller_->GetisControl(Controller::MODE::RIGHT)) { direction_.y = ROT_POW; }
 
 	VECTOR addAxis = direction_;
 
