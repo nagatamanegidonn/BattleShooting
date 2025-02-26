@@ -51,11 +51,6 @@ public:
 
 	//プレイヤーのTransform情報
 	const Transform& GetTransform(void) const { return transform_; }
-	const int& GetRideMaxHp(void) const { return ridesMaxHp_; }
-	const int& GetRideHp(void) const { return ridesHp_; }
-	const void RideDamage(int damage);
-	VECTOR& GetPos(int id);
-
 	// 弾
 	const std::vector<ShotPlayer*>& GetShots(void) const { return shots_; }
 
@@ -126,15 +121,8 @@ private:
 	int ridesHp_;
 	int ridesMaxHp_;
 
-	float damageTime_;		//移動不可能の時間
-	float invincibleTime_;	//無敵時間
-
-	VECTOR rideAttrckPos_;
-	VECTOR rideDamagePos_;
-
     // モデル制御の基本情報
     Transform transform_;
-    Transform transDir_;
 
 	// 頂点情報
 	VERTEX3D vertexs_[6];

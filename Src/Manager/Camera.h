@@ -35,7 +35,6 @@ public:
 		FIXED_POINT,	// 定点カメラ
 		FREE,			// フリーモード
 		FOLLOW,			// 追従モード
-		FOLLOW_POINT,	// 追従モード
 	};
 
 	Camera(void);
@@ -48,19 +47,14 @@ public:
 	void SetBeforeDrawFixedPoint(void);
 	void SetBeforeDrawFree(void);
 	void SetBeforeDrawFollow(void);
-	void SetBeforeDrawFollowPoint(void);
 	void Draw(void);
 
 	void Release(void);
 
 	// 追従対象の設定
 	void SetFollow(const Transform* follow);
-	void SetSubFollow(const Transform* follow);
 
 	VECTOR GetPos(void) const;
-
-	void FadeIn(void);
-	void FadeOut(void);
 
 	// カメラモードの変更
 	void ChangeMode(MODE mode);
@@ -84,7 +78,6 @@ private:
 
 	// 追従対象
 	const Transform* followTransform_;
-	const Transform* followSubTransform_;
 
 	// カメラを初期位置に戻す
 	void SetDefault(void);

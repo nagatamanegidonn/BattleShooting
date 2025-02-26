@@ -21,7 +21,6 @@ void ResultScene::AsyncPreLoad(void)
 {
 	//非同期読み込みを有効にする
 	SetUseASyncLoadFlag(true);
-
 }
 void ResultScene::Init(void)
 {
@@ -31,9 +30,6 @@ void ResultScene::Init(void)
 	// カメラモード：定点カメラ
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
-	next = false;
-	select = 0;
-
 }
 
 void ResultScene::Update(void)
@@ -41,57 +37,23 @@ void ResultScene::Update(void)
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE) && next == false)
+	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		next = true;
-	}
-	if (next)
-	{
-		if (ins.IsTrgDown(KEY_INPUT_LEFT))
-		{
-			select = 1;
-		}
-		if (ins.IsTrgDown(KEY_INPUT_RIGHT))
-		{
-			select = 2;
-		}
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
-	if (select == 1)
+	if (ins.IsTrgDown(KEY_INPUT_BACK))
 	{
-		if (ins.IsTrgDown(KEY_INPUT_SPACE))
-		{
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-		}
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+
 	}
-	if(select == 2)
-	{
-		if (ins.IsTrgDown(KEY_INPUT_SPACE))
-		{
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
-		}
-	}
+
+
 }
 
 void ResultScene::Draw(void)
 {
-	if (next == true)
-	{
-		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xffffff, true);
-		SetFontSize(25);
-		if (select == 1) {
-			DrawString(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 2, "タイトル", RGB(0, 0, 0), true);
-		}
-		else if(select == 2)
-		{
-			DrawString(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 2, "キャラ選択に戻る", RGB(0, 0, 0), true);
-		}
-		SetFontSize(16);
-	}
-	else if(next == false)
-	{
-		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x0ff0ff, true);
-	}
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x0000ff, true);
 
 	int cx = Application::SCREEN_SIZE_X / 2;
 	int cy = Application::SCREEN_SIZE_Y / 2;

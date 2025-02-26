@@ -5,6 +5,7 @@
 #include "SceneBase.h"
 
 class Player;
+class BackGround;
 class Grid;
 class Camera;
 
@@ -36,9 +37,11 @@ private:
 	int screenH[PLAYER_SIZE];
 
 	Grid* stage_;
+	
+	//背景インスタンス
+	BackGround* backGround_;
 
-	// 衝突判定
-	void Collision(void);
+
 	//デバッグ用の描画
 	void DrawDebug(void);
 
