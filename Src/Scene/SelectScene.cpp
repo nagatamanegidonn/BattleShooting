@@ -33,20 +33,19 @@ void SelectScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
-	pos[0] = AsoUtility::VECTOR_ZERO;
-	pos[1] = AsoUtility::VECTOR_ZERO;
-
-	pos[0].x = Application::SCREEN_SIZE_X / 3;
-	pos[0].y = Application::SCREEN_SIZE_Y / 2;
-
-	pos[1].x = (Application::SCREEN_SIZE_X / 3) * 2;
-	pos[1].y = Application::SCREEN_SIZE_Y / 2;
-
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
-		start[ii] = false;
+		pos[ii] = AsoUtility::VECTOR_ZERO;
+
+		// カーソルの初期座標
+		pos[ii].x = Application::SCREEN_SIZE_X / 4 + ((Application::SCREEN_SIZE_X / 4 * 2) * ii);
+		pos[ii].y = Application::SCREEN_SIZE_Y / 2;
 	}
 
+	// 準備未完了の状態に初期化
+	for (int ii = 0; ii < PLAYER_MAX; ii++)start[ii] = false;
+	
+	// キャラが未選択状態に初期化
 	for(int ii = 0; ii < PLAYER_MAX; ii++)chara[ii] = CHARA::E_CHARA_NON;
 }
 
@@ -73,7 +72,7 @@ void SelectScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
-	//カーソル移動
+	// カーソル移動
 	GetMove(pos[0], pos[1]);
 
 	// キャラ選択時の当たり判定
@@ -89,30 +88,36 @@ void SelectScene::Draw(void)
 	//背景
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
-	//キャラ選択
-
+	//キャラ
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
 
 
 	//プレイヤー１が準備完了したかどうか
-	SetFontSize(25);
-	if (start[0]) {
-		DrawString(0, 0, "p1", RGB(0, 0, 255), true);
-	}
-
-	//プレイヤー１が準備完了したかどうか
-	if (start[1]) {
-		DrawString(0, 0, "p2", RGB(0, 0, 255), true);
-	}
 
 	//プレイヤー１のカーソル（仮）
-	DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
+	if (start[0] == false)
+	{
+		DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
+	}
+	else 
+	{
+		DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0xffffff, true);
+	}
 
 	//プレイヤー２のカーソル（仮）
-	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	//-----------------------------------------------------
+	if (start[1] == false)
+	{
+		DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
+	}
+	else
+	{
+		DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0xffffff, true);
+	}
 
+	SetFontSize(25);
+
+	// プレイヤー１のキャラの状態
 	switch (chara[0])
 	{
 	case E_CHARA_NON:
@@ -125,6 +130,7 @@ void SelectScene::Draw(void)
 		break;
 	}
 
+	// プレイヤー２のキャラの状態
 	switch (chara[1])
 	{
 	case E_CHARA_NON:
@@ -136,6 +142,8 @@ void SelectScene::Draw(void)
 		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 + 50, "プイレヤー２/キャラクター2", RGB(0, 0, 255), true);
 		break;
 	}
+
+	//-----------------------------------------------------
 }
 
 void SelectScene::Release(void)
@@ -168,7 +176,6 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 		}
 	}
 
-
 	//------------------------------------------
 
 	if (start[1] == false)
@@ -191,7 +198,6 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 		}
 	}
 
-
 	//------------------------------------------
 }
 
@@ -205,33 +211,33 @@ void SelectScene::Collision(void)
 		if (pos[0].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
 			pos[0].x > ii * (Application::SCREEN_SIZE_X / 2) &&
 			pos[0].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[0].y > 0)
+			pos[0].y > 0 &&
+			ins.IsTrgDown(KEY_INPUT_1))
 		{
 			// シーン遷移
 			// プレイヤー１が準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_1))
+			if (start[0] == false)
 			{
-				if (start[0] == false)
+				start[0] = true;
+
+				// どちらのキャラを選択したかどうか
+				if (ii == 0)
 				{
-					start[0] = true;
-
-
-					if (ii == 0)
-					{
-						chara[0] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[0] = E_CHARA2;
-					}
+					chara[0] = E_CHARA1;
 				}
-				else
+				else if (ii == 1)
 				{
-					start[0] = false;
-					chara[0] = E_CHARA_NON;
+					chara[0] = E_CHARA2;
 				}
 			}
+			else
+			{
+				// 準備完了していない状態
+				start[0] = false;
+				chara[0] = E_CHARA_NON;
+			}
+			
 		}
 	}
 
@@ -241,31 +247,32 @@ void SelectScene::Collision(void)
 		if (pos[1].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
 			pos[1].x > ii * (Application::SCREEN_SIZE_X / 2) &&
 			pos[1].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[1].y > 0)
+			pos[1].y > 0 &&
+			ins.IsTrgDown(KEY_INPUT_2))
 		{
 			// プレイヤー２が準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_2))
+			if (start[1] == false)
 			{
-				if (start[1] == false)
-				{
-					start[1] = true;
+				start[1] = true;
 
-					if (ii == 0)
-					{
-						chara[1] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[1] = E_CHARA2;
-					}
-				}
-				else
+				// どちらのキャラを選択したかどうか
+				if (ii == 0)
 				{
-					start[1] = false;
-					chara[1] = E_CHARA_NON;
+					chara[1] = E_CHARA1;
+				}
+				else if (ii == 1)
+				{
+					chara[1] = E_CHARA2;
 				}
 			}
+			else
+			{
+				// 準備完了していない状態
+				start[1] = false;
+				chara[1] = E_CHARA_NON;
+			}
+			
 		}
 	}
 
