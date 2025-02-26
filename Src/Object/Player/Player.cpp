@@ -135,7 +135,7 @@ void Player::Update()
 		shots_[i]->Update();
 	}
 
-	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 20));
+	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 0));
 	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 20));
 }
 
@@ -146,11 +146,13 @@ void Player::Draw()
 	// 視野範囲内：ディフューズカラーを赤色にする
 
 	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 0.0f, 1.0f));
+	MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 0.0f, 1.0f));
 	if (invincibleTime_ > 0.0f)
 	{
-		if (static_cast<int>(invincibleTime_) % 2 == 0)
+		if (invincibleTime_ / 0.5f >= 0.1f)
 		{
 			MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+			MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		}
 	}
 	MV1DrawModel(transform_.modelId);
