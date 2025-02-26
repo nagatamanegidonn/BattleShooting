@@ -1,4 +1,6 @@
 
+#include "../../Application.h"
+
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../../Manager/ResourceManager.h"
@@ -51,7 +53,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
-		AsoUtility::Deg2RadF(0.0f),
+		AsoUtility::Deg2RadF(180.0f),
 		0.0f
 	);
 	transform_.quaRotLocal = Quaternion();
@@ -64,6 +66,10 @@ void Player::Init(VECTOR startPos, int playerNo)
 	//変数：回転関係
 	direction_= AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
+
+	//ステータス
+	damageTime_ = 0.0f;
+	invincibleTime_ = 0.0f;
 
 	rideAttrckPos_ = transform_.pos;
 	rideDamagePos_ = transform_.pos;
@@ -108,9 +114,19 @@ void Player::Draw()
 {
 
 	// モデルの描画
+	// 視野範囲内：ディフューズカラーを赤色にする
+
+	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+	if (invincibleTime_ > 0.0f)
+	{
+		if (static_cast<int>(invincibleTime_) % 2 == 0)
+		{
+			MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		}
+	}
 	MV1DrawModel(transform_.modelId);
-	
-	DrawSphere3D(rideAttrckPos_, 10, 10, 0xff0000, 0xff0000, false);
+
+	DrawSphere3D(rideAttrckPos_, 10, 10, 0xff0000, 0xffff00, false);
 	DrawSphere3D(rideDamagePos_, 20, 10, 0xff0000, 0x00ffff, false);
 
 
@@ -171,10 +187,14 @@ void Player::Draw()
 
 const void Player::RideDamage(int damage)
 {
+	if (invincibleTime_ > 0.0f)
+	{
+		return;
+	}
 	//体力を減らす
 	ridesHp_ -= damage;
 	//無敵時間を設定
-
+	invincibleTime_ = 3.0f;
 }
 
 VECTOR& Player::GetPos(int id)
@@ -242,6 +262,10 @@ void Player::UpdateNone()
 }
 void Player::UpdatePlay()
 {
+	if (invincibleTime_ > 0.0f)
+	{
+		invincibleTime_ -= SceneManager::GetInstance().GetDeltaTime();
+	}
 
 
 	ProcessTurn();

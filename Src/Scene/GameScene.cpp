@@ -82,11 +82,21 @@ void GameScene::Init(void)
 
 	Camera* camera = SceneManager::GetInstance().GetCamera();
 	// カメラモード：定点カメラ
-	camera->ChangeMode(Camera::MODE::FIXED_POINT);
+	camera->ChangeMode(Camera::MODE::FOLLOW_POINT);
 
 	int c = 0;
 	for (auto p : players_)
 	{
+		//本体カメラの設定
+		if (c == 0)
+		{
+			camera->SetFollow(&p->GetTransform());
+		}
+		else//2つ目以降なら
+		{
+			camera->SetSubFollow(&p->GetTransform());
+		}
+
 		// カメラ
 		camera_[c]->Init();
 
@@ -123,10 +133,27 @@ void GameScene::Update(void)
 	// 衝突判定
 	Collision();
 
+	//プレイヤーのカメラ更新
 	for (auto& camera : camera_)
 	{
 		camera->Update();
 	}
+
+	// カメラ衝突チェック
+	Camera* camera = SceneManager::GetInstance().GetCamera();
+	// カメラモード：
+	//camera->ChangeMode(Camera::MODE::FIXED_POINT);
+
+	//VECTOR pos2D = ConvWorldPosToScreenPos(shotEvent_->GetPos());
+	//if (pos2D.z <= 0.0f || pos2D.z >= 1.0f)
+	//{
+	//	isBreak_ = true;
+
+	//	// 爆発状態へ
+	//	SceneManager::GetInstance().GetCamera()->ChangeMode(
+	//		Camera::MODE::SHAKE);
+	//}
+
 }
 
 void GameScene::Draw(void)
@@ -143,11 +170,44 @@ void GameScene::Draw(void)
 	// 描画
 	stage_->Draw();
 
+	int screenSize = 100;
+	int mx = Application::SCREEN_SIZE_X - screenSize;
+	int my = Application::SCREEN_SIZE_Y - screenSize;
+
+	int cx = Application::SCREEN_SIZE_X - screenSize;
+	int cy = Application::SCREEN_SIZE_Y - screenSize;
+
+
 	//プレイヤーの描画
 	for (auto& p : players_)
 	{
 		p->Draw();
+
+		VECTOR pos2D = ConvWorldPosToScreenPos(p->GetTransform().pos);
+		DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
+
+		if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
+		{
+			SceneManager::GetInstance().GetCamera()->FadeOut();
+		}
 	}
+
+	/*int screenSize = 100;
+	int mx = Application::SCREEN_SIZE_X - screenSize;
+	int my = Application::SCREEN_SIZE_Y - screenSize;
+
+	int cx = Application::SCREEN_SIZE_X - screenSize;
+	int cy = Application::SCREEN_SIZE_Y - screenSize;
+
+	if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
+	{
+		SceneManager::GetInstance().GetCamera()->FadeOut();
+	}
+	else if ((cx + screenSize < pos2D.x) || (cy + screenSize < pos2D.y)
+		|| (cy - screenSize > pos2D.x) || (cy - screenSize > pos2D.y))
+	{
+		SceneManager::GetInstance().GetCamera()->FadeIn();
+	}*/
 
 	//デバッグ描画
 	DrawDebug();
@@ -191,9 +251,6 @@ void GameScene::Draw(void)
 	SetDrawScreen(DX_SCREEN_BACK);
 	// 画面を初期化
 	ClearDrawScreen();
-
-	int cx = Application::SCREEN_SIZE_X / 2;
-	int cy = Application::SCREEN_SIZE_Y / 2;
 
 	int x = 0;
 	int y = 0;
@@ -262,6 +319,22 @@ void GameScene::Collision(void)
 			//戦っているプレイヤーが自身だったらコンテニュー
 			if (plyer == vsPlyer) { continue; }
 
+
+			VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
+			VECTOR posVS2D = ConvWorldPosToScreenPos(vsPlyer->GetTransform().pos);
+			int screenSize = 100;
+			int cx = Application::SCREEN_SIZE_X / 2;
+			int cy = Application::SCREEN_SIZE_Y / 2;
+
+
+			if (((cx + screenSize > pos2D.x) && (cy + screenSize > pos2D.y)
+				&& (cx - screenSize < pos2D.x) && (cy - screenSize < pos2D.y))
+				&& ((cx + screenSize > posVS2D.x) && (cy + screenSize > posVS2D.y)
+					&& (cx - screenSize < posVS2D.x) && (cy - screenSize < posVS2D.y)))
+			{
+				SceneManager::GetInstance().GetCamera()->FadeIn();
+			}
+
 			// イベントシーン突入エリアとの衝突判定
 			VECTOR diff = VSub(
 				plyer->GetPos(0),
@@ -275,29 +348,6 @@ void GameScene::Collision(void)
 		}
 	}
 
-	//// 自機とステージの当たり判定
-	//if (player_->IsDestroy())
-	//{
-	//	// 一定時間経過後、リスタート
-	//	stepShipDestroy_ += SceneManager::GetInstance().GetDeltaTime();
-	//	if (stepShipDestroy_ > TIME_RESTART)//時間がたったらリセット
-	//	{
-	//		SceneManager::GetInstance().ChangeScene(
-	//			SceneManager::SCENE_ID::GAME);
-	//	}
-	//}
-	//else
-	//{
-	//	// ダンジョン(岩)
-	//	auto info = MV1CollCheck_Sphere(stage_->GetModelIdStage(), -1,
-	//		playerShip_->GetTransform().pos, PlayerShip::COLLISION_RADIUS);
-	//	if (info.HitNum >= 1)
-	//	{
-	//		playerShip_->Destroy();
-	//	}
-	//	// 当たり判定結果ポリゴン配列の後始末をする
-	//	MV1CollResultPolyDimTerminate(info);
-	//}
 }
 
 //デバッグ描画
@@ -316,6 +366,15 @@ void GameScene::DrawDebug(void)
 		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideMaxHp()), 50, 0x000000, true);
 		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideHp()), 50, 0x00ff00, true);
 
+		VECTOR pos = plyer->GetTransform().pos;
+		if (plyNum == 1)
+		{
+			DrawFormatString(0, 16, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+		}
+		else
+		{
+			DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+		}
 		plyNum *= -1;
 	}
 

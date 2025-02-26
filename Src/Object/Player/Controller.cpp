@@ -61,33 +61,44 @@ void Controller::IsCommnd(void)
 		// 左スティックの縦軸
 		auto leftStickY = input.GetJPadInputState(jno).AKeyLY;
 
-		isControl_[static_cast<int>(MODE::FORWARD)] = ((leftStickY < 0.0f) || (input.IsNew(KEY_INPUT_W)));
-		isControl_[static_cast<int>(MODE::BACK)] = ((leftStickY > 0.0f) || (input.IsNew(KEY_INPUT_S)));
-		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_D)));
-		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_A)));
-		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_V)));
+		isControl_[static_cast<int>(MODE::FORWARD)] = ((input.IsNew(KEY_INPUT_W)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)));
+		isControl_[static_cast<int>(MODE::BACK)] = ((input.IsNew(KEY_INPUT_S)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN)));
+		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_D)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_BOTTUN)));
+		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_A)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_BOTTUN)));
+		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_V)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_TRIGGER)));
 	}
-		break;
+	break;
 	case 1:
-		isControl_[static_cast<int>(MODE::FORWARD)] = (input.IsNew(KEY_INPUT_UP));
-		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_DOWN));
-		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_RIGHT));
-		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_LEFT));
-		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_B)));
-		break;
+	{
+		InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
+
+		// 左スティックの横軸
+		auto leftStickX = input.GetJPadInputState(jno).AKeyLX;
+		// 左スティックの縦軸
+		auto leftStickY = input.GetJPadInputState(jno).AKeyLY;
+
+		isControl_[static_cast<int>(MODE::FORWARD)] = ((input.IsNew(KEY_INPUT_UP)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)));
+		isControl_[static_cast<int>(MODE::BACK)] = ((input.IsNew(KEY_INPUT_DOWN)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN)));
+		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_RIGHT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_BOTTUN)));
+		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_LEFT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_BOTTUN)));
+		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_B)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_TRIGGER)));
+	}
+	break;
 	case 2:
-		isControl_[static_cast<int>(MODE::FORWARD)] = (input.IsNew(KEY_INPUT_T));
-		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_G));
-		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_H));
-		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_F));
-		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_N)));
-		break;
-	case 3:
-		isControl_[static_cast<int>(MODE::FORWARD)] = (input.IsNew(KEY_INPUT_I));
-		isControl_[static_cast<int>(MODE::BACK)] = (input.IsNew(KEY_INPUT_K));
-		isControl_[static_cast<int>(MODE::RIGHT)] = (input.IsNew(KEY_INPUT_L));
-		isControl_[static_cast<int>(MODE::LEFT)] = (input.IsNew(KEY_INPUT_J));
-		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_M)));
-		break;
+	{
+		InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD3);
+
+		// 左スティックの横軸
+		auto leftStickX = input.GetJPadInputState(jno).AKeyLX;
+		// 左スティックの縦軸
+		auto leftStickY = input.GetJPadInputState(jno).AKeyLY;
+
+		isControl_[static_cast<int>(MODE::FORWARD)] = ((leftStickY < 0.0f) || (input.IsNew(KEY_INPUT_UP)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)));
+		isControl_[static_cast<int>(MODE::BACK)] = ((leftStickY > 0.0f) || (input.IsNew(KEY_INPUT_DOWN)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN)));
+		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_RIGHT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_BOTTUN)));
+		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_LEFT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_BOTTUN)));
+		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_Z)) || (input.IsNew(KEY_INPUT_B)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_TRIGGER)));
+	}
+	break;
 	}
 }

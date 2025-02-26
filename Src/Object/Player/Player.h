@@ -126,6 +126,9 @@ private:
 	int ridesHp_;
 	int ridesMaxHp_;
 
+	float damageTime_;		//ˆÚ“®•s‰Â”\‚ÌŽžŠÔ
+	float invincibleTime_;	//–³“GŽžŠÔ
+
 	VECTOR rideAttrckPos_;
 	VECTOR rideDamagePos_;
 
