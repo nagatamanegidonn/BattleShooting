@@ -120,6 +120,9 @@ void GameScene::Update(void)
 		p->Update();
 	}
 
+	// 衝突判定
+	Collision();
+
 	for (auto& camera : camera_)
 	{
 		camera->Update();
@@ -147,7 +150,7 @@ void GameScene::Draw(void)
 	}
 
 	//デバッグ描画
-	//DrawDebug();
+	DrawDebug();
 
 #pragma endregion
 	return;
@@ -249,12 +252,76 @@ void GameScene::Release(void)
 }
 
 
+void GameScene::Collision(void)
+{
+	//プレイヤーの更新
+	for (auto& plyer : players_)
+	{
+		for (auto& vsPlyer : players_)
+		{
+			//戦っているプレイヤーが自身だったらコンテニュー
+			if (plyer == vsPlyer) { continue; }
+
+			// イベントシーン突入エリアとの衝突判定
+			VECTOR diff = VSub(
+				plyer->GetPos(0),
+				vsPlyer->GetPos(1));
+			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+			if (disPow < 20 * 10)
+			{
+				//plyerに相手のマシンの攻撃が当たっている
+				plyer->RideDamage(1);
+			}
+		}
+	}
+
+	//// 自機とステージの当たり判定
+	//if (player_->IsDestroy())
+	//{
+	//	// 一定時間経過後、リスタート
+	//	stepShipDestroy_ += SceneManager::GetInstance().GetDeltaTime();
+	//	if (stepShipDestroy_ > TIME_RESTART)//時間がたったらリセット
+	//	{
+	//		SceneManager::GetInstance().ChangeScene(
+	//			SceneManager::SCENE_ID::GAME);
+	//	}
+	//}
+	//else
+	//{
+	//	// ダンジョン(岩)
+	//	auto info = MV1CollCheck_Sphere(stage_->GetModelIdStage(), -1,
+	//		playerShip_->GetTransform().pos, PlayerShip::COLLISION_RADIUS);
+	//	if (info.HitNum >= 1)
+	//	{
+	//		playerShip_->Destroy();
+	//	}
+	//	// 当たり判定結果ポリゴン配列の後始末をする
+	//	MV1CollResultPolyDimTerminate(info);
+	//}
+}
+
 //デバッグ描画
 void GameScene::DrawDebug(void)
 {
 
 	int cx = Application::SCREEN_SIZE_X / 2;
 	int cy = Application::SCREEN_SIZE_Y / 2;
+
+
+	int plyNum= 1;
+	//プレイヤーの更新
+	for (auto& plyer : players_)
+	{
+		int cx2 = cx + (20 * plyNum);
+		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideMaxHp()), 50, 0x000000, true);
+		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideHp()), 50, 0x00ff00, true);
+
+		plyNum *= -1;
+	}
+
+
+
+	return;
 
 	//メッセージ
 	std::string msg = "Game Scene";

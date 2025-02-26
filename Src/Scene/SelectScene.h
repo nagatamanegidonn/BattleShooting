@@ -42,7 +42,9 @@ private:
 	CHARA chara[PLAYER_MAX];
 
 	// カーソル座標
-	VECTOR pos[PLAYER_MAX];
+	VECTOR kPos[PLAYER_MAX];
+
+	VECTOR pPos[PLAYER_MAX];
 
 	// キャラクター選択が完了しているかどうかの確認用
 	bool start[PLAYER_MAX];
