@@ -183,16 +183,6 @@ void GameScene::Draw(void)
 	int cx = Application::SCREEN_SIZE_X - screenSize;
 	int cy = Application::SCREEN_SIZE_Y - screenSize;
 
-	//”wŒi•`‰æ
-	backGround_->Draw();
-
-	int screenSize = 100;
-	int mx = Application::SCREEN_SIZE_X - screenSize;
-	int my = Application::SCREEN_SIZE_Y - screenSize;
-
-	int cx = Application::SCREEN_SIZE_X - screenSize;
-	int cy = Application::SCREEN_SIZE_Y - screenSize;
-
 
 	//”wŒi•`‰æ
 	backGround_->Draw();
@@ -374,6 +364,18 @@ void GameScene::Collision(void)
 			{
 				//plyer‚É‘ŠŽè‚Ìƒ}ƒVƒ“‚ÌUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
 				plyer->RideDamage(1);
+				//‚Ó‚Á”ò‚Î‚µˆ—
+				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
+				plyer->SetJump(dir);
+				dir = VScale(dir, -1);//ƒtƒbƒg‹´‚Ì•ûŒü‚ð”½“]
+				vsPlyer->SetJump(dir);
+			}
+
+			//UŒ‚‰ÓŠ‚ªÕ“Ë
+			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
+			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+			if (disPow < 10 * 10)
+			{
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
 				plyer->SetJump(dir);

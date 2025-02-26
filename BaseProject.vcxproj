@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\DirModel.cpp" />
     <ClCompile Include="Src\Object\BackGround.cpp" />
     <ClCompile Include="Src\Object\Player\Controller.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\DirModel.h" />
     <ClInclude Include="Src\Object\BackGround.h" />
     <ClInclude Include="Src\Object\Player\Controller.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />

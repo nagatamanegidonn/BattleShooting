@@ -11,6 +11,7 @@
 
 class ShotPlayer;
 class Controller;
+class DirModel;
 
 class Camera;
 
@@ -68,6 +69,7 @@ private:
 
 
 	std::shared_ptr<Controller> controller_;
+	std::shared_ptr<DirModel> dirModel_;
 
 	// ó‘ÔŠÇ—
 	STATE state_;
@@ -133,6 +135,12 @@ private:
 	int playerMaxHp_;
 	int ridesHp_;
 	int ridesMaxHp_;
+
+	float damageTime_;
+	float invincibleTime_;
+
+	VECTOR rideDamagePos_;
+	VECTOR rideAttrckPos_;
 
     // ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
     Transform transform_;

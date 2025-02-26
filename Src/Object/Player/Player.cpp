@@ -9,6 +9,7 @@
 #include "../Shot/ShotPlayer.h"
 
 #include "Controller.h"
+#include "DirModel.h"
 #include "Player.h"
 
 
@@ -42,6 +43,9 @@ void Player::Init(VECTOR startPos, int playerNo)
 	controller_ = std::make_shared<Controller>();
 	controller_->Init(playerNo);
 
+	dirModel_ = std::make_shared<DirModel>();
+	dirModel_->Init(playerNo);
+
 	// モデル制御の基本情報
 	transform_.SetModel(MV1LoadModel("Data/Model/P1/キノコ.mv1"));
 	/*transform_.SetModel(
@@ -60,7 +64,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 	);
 	transform_.quaRotLocal = Quaternion::Euler(
 		0.0f,
-		AsoUtility::Deg2RadF(90.0f),
+		AsoUtility::Deg2RadF(-90.0f),
 		AsoUtility::Deg2RadF(0.0f)
 	);
 	transform_.Update();
@@ -130,7 +134,7 @@ void Player::Draw()
 	MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
 	if (invincibleTime_ > 0.0f)
 	{
-		if (invincibleTime_ / 0.5f >= 0.1f)
+		if (invincibleTime_ >= 0.1f)
 		{
 			MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 			MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -143,11 +147,6 @@ void Player::Draw()
 
 	VECTOR addAxis = VScale(direction_, 10);
 
-
-	if (controller_->GetisControl(Controller::MODE::BACK))
-	{
-		addAxis.y *= -1;
-	}
 
 	//今回回転させたい回転量をクォータニオンで作る
 	Quaternion rotPow = Quaternion();
@@ -176,13 +175,12 @@ void Player::Draw()
 	VECTOR two = VAdd(transform_.pos, VScale(trnQut.GetForward(), 20));
 	VECTOR three = VAdd(transform_.pos, VScale(trnQut.GetRight(), 40));
 
-	DrawSphere3D(zero, 10, 10, 0xff0000, 0xff0000, false);
-	DrawSphere3D(one, 10, 10, 0xff0000, 0xff0000, false);
-	DrawSphere3D(two, 10, 10, 0xff0000, 0xff0000, false);
-	DrawSphere3D(three, 10, 10, 0xff0000, 0xff0000, false);
+	dirModel_->SyncModel(VAdd(transform_.pos, VScale(trnQut.GetForward(), 40)), trnQut);
+	dirModel_->Draw();
 
-	DrawTriangle3D(zero, one, two, 0x0000ff, true);
-	DrawTriangle3D( two,one, three, 0x0000ff, true);
+
+	//DrawTriangle3D(zero, one, two, 0x0000ff, true);
+	//DrawTriangle3D( two,one, three, 0x0000ff, true);
 
 #pragma endregion
 
@@ -204,7 +202,7 @@ const void Player::RideDamage(int damage)
 	//体力を減らす
 	ridesHp_ -= damage;
 	//無敵時間を設定
-	invincibleTime_ = 3.0f;
+	invincibleTime_ = 1.0f;
 }
 const void Player::SetJump(VECTOR vec)
 {

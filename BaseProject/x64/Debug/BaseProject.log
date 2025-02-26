@@ -1,4 +1,4 @@
-﻿  BackGround.cpp
-  GameScene.cpp
-  コードを生成中...
-  BaseProject.vcxproj -> C:\Users\0re32\Desktop\BattleShooting\x64\Debug\BaseProject.exe
+﻿  GameScene.cpp
+C:\Users\nsaga\OneDrive\デスクトップ\春コン2025\Src\Scene\GameScene.cpp(196,28): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\nsaga\OneDrive\デスクトップ\春コン2025\Src\Scene\GameScene.cpp(196,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  BaseProject.vcxproj -> C:\Users\nsaga\OneDrive\デスクトップ\春コン2025\x64\Debug\BaseProject.exe

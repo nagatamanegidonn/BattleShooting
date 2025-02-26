@@ -63,6 +63,9 @@ void Camera::SetBeforeDraw(void)
 	case Camera::MODE::FOLLOW:
 		SetBeforeDrawFollow();
 		break;
+	case Camera::MODE::FOLLOW_POINT:
+		SetBeforeDrawFollowPoint();
+		break;
 	}
 
 	// カメラの設定(位置と注視点による制御)
@@ -165,9 +168,23 @@ void Camera::SetBeforeDrawFollow(void)
 	// カメラの上方向
 	cameraUp_ = followRot.PosAxis(rot_.GetUp());
 }
+void Camera::SetBeforeDrawFollowPoint(void)
+{
 
 	//カメラの上方向更新
 	cameraUp_ = rot_.GetForward();
+
+	// 追従対象の位置
+	VECTOR followPos = followTransform_->pos;
+	VECTOR followSubPos = followSubTransform_->pos;
+
+	VECTOR cPos = VScale(VAdd(followPos, followSubPos), 0.5f);
+	cPos.y = pos_.y;
+
+	pos_ = cPos;
+	targetPos_ = pos_;
+	targetPos_.y = -100.0f;
+}
 
 #pragma endregion
 
@@ -184,6 +201,10 @@ void Camera::Release(void)
 void Camera::SetFollow(const Transform* follow)
 {
 	followTransform_ = follow;
+}
+void Camera::SetSubFollow(const Transform* follow)
+{
+	followSubTransform_ = follow;
 }
 
 VECTOR Camera::GetPos(void) const
