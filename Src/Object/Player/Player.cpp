@@ -89,7 +89,8 @@ void Player::Init(VECTOR startPos, int playerNo)
 	rideDamagePos_ = transform_.pos;
 
 	//ステータス変数
-	ridesMaxHp_ = ridesHp_ = 10;
+	//HPもとは１０
+	ridesMaxHp_ = ridesHp_ = 3;
 
 	//矢印の作成
 	MakeSquereVertex();
@@ -112,6 +113,7 @@ void Player::Update()
 	// 更新ステップ
 	stateUpdate_();
 
+
 	transform_.Update();
 
 	/*size_t size = shots_.size();
@@ -121,7 +123,7 @@ void Player::Update()
 	}*/
 
 	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 0));
-	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 20));
+	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 40));
 }
 
 void Player::Draw()
@@ -185,6 +187,9 @@ void Player::Draw()
 #pragma endregion
 
 
+	DrawSphere3D(rideAttrckPos_, 20, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(rideDamagePos_, 30, 10, 0x0000ff, 0x0000ff, false);
+
 	size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
 	{
@@ -192,7 +197,7 @@ void Player::Draw()
 	}
 }
 
-//織物へのダメージ
+//乗り物へのダメージ
 const void Player::RideDamage(int damage)
 {
 	if (invincibleTime_ > 0.0f)
@@ -206,9 +211,13 @@ const void Player::RideDamage(int damage)
 }
 const void Player::SetJump(VECTOR vec)
 {
-	ChangeState(STATE::JUMP);
-	jumpDir_ = vec;
-	jumpTime_ = 1.0f;
+	//操作可能状態なら吹っ飛ばす
+	if (state_ == STATE::PLAY)
+	{
+		ChangeState(STATE::JUMP);
+		jumpDir_ = vec;
+		jumpTime_ = 1.0f;
+	}
 }
 
 VECTOR& Player::GetPos(int id)
@@ -310,6 +319,12 @@ void Player::UpdateJump(void)
 		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
 		if (jumpTime_ <= 0.0f)
 		{
+			//体力が０なら死亡状態にする
+			if (ridesHp_ <= 0)
+			{
+				ChangeState(STATE::DEAD);
+				return;
+			}
 			ChangeState(STATE::PLAY);
 			return;
 		}

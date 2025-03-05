@@ -127,6 +127,7 @@ void GameScene::Update(void)
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		return;
 	}
 
 	/*stage_->Update();*/
@@ -151,15 +152,6 @@ void GameScene::Update(void)
 	// ƒJƒƒ‰ƒ‚[ƒhF
 	//camera->ChangeMode(Camera::MODE::FIXED_POINT);
 
-	//VECTOR pos2D = ConvWorldPosToScreenPos(shotEvent_->GetPos());
-	//if (pos2D.z <= 0.0f || pos2D.z >= 1.0f)
-	//{
-	//	isBreak_ = true;
-
-	//	// ”š”­ó‘Ô‚Ö
-	//	SceneManager::GetInstance().GetCamera()->ChangeMode(
-	//		Camera::MODE::SHAKE);
-	//}
 
 }
 
@@ -185,7 +177,7 @@ void GameScene::Draw(void)
 
 
 	//”wŒi•`‰æ
-	backGround_->Draw();
+	//backGround_->Draw();
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	for (auto& p : players_)
@@ -200,23 +192,6 @@ void GameScene::Draw(void)
 			SceneManager::GetInstance().GetCamera()->FadeOut();
 		}
 	}
-
-	/*int screenSize = 100;
-	int mx = Application::SCREEN_SIZE_X - screenSize;
-	int my = Application::SCREEN_SIZE_Y - screenSize;
-
-	int cx = Application::SCREEN_SIZE_X - screenSize;
-	int cy = Application::SCREEN_SIZE_Y - screenSize;
-
-	if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
-	{
-		SceneManager::GetInstance().GetCamera()->FadeOut();
-	}
-	else if ((cx + screenSize < pos2D.x) || (cy + screenSize < pos2D.y)
-		|| (cy - screenSize > pos2D.x) || (cy - screenSize > pos2D.y))
-	{
-		SceneManager::GetInstance().GetCamera()->FadeIn();
-	}*/
 
 	//ƒfƒoƒbƒO•`‰æ
 	DrawDebug();
@@ -355,26 +330,28 @@ void GameScene::Collision(void)
 				SceneManager::GetInstance().GetCamera()->FadeIn();
 			}
 
+
+
 			// player‚Æ‚ÌÕ“Ë”»’è
 			VECTOR diff = VSub(
 				plyer->GetPos(0),
 				vsPlyer->GetPos(1));
 			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < 20 * 10)
+			if (disPow < 30 * 20)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
 			{
 				//plyer‚É‘ŠŽè‚Ìƒ}ƒVƒ“‚ÌUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
 				plyer->RideDamage(1);
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
 				plyer->SetJump(dir);
-				dir = VScale(dir, -1);//ƒtƒbƒg‹´‚Ì•ûŒü‚ð”½“]
+				dir = VScale(dir, -1);//‚Á”ò‚Î‚µ‚Ì•ûŒü‚ð”½“]
 				vsPlyer->SetJump(dir);
 			}
 
-			//UŒ‚‰ÓŠ‚ªÕ“Ë
+			//UŒ‚‰ÓŠ“¯Žm‚ªÕ“Ë
 			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < 10 * 10)
+			if (disPow < 20 * 20)//UŒ‚”¼Œa~UŒ‚”¼Œa
 			{
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
@@ -382,6 +359,38 @@ void GameScene::Collision(void)
 				dir = VScale(dir, -1);
 				vsPlyer->SetJump(dir);
 			}
+
+			auto shots = plyer->GetShots();
+			for (auto& shot : shots)
+			{
+				if (shot->IsShot() && vsPlyer->GetState() == Player::STATE::PLAY)
+				{
+					
+					//’e‚Ì“–‚½‚è”»’è
+					auto info = MV1CollCheck_Sphere(vsPlyer->GetModelId(), -1,
+						shot->GetPos(), shot->GetCollisionRadius());
+					if (info.HitNum >= 1)
+					{
+						//plyer‚ÉUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
+						vsPlyer->RideDamage(1);
+
+						//‚Ó‚Á”ò‚Î‚µˆ—
+						VECTOR dir = VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)),-1);
+						vsPlyer->SetJump(dir);
+
+						shot->Blast();
+					}
+
+					// “–‚½‚è”»’èŒ‹‰Êƒ|ƒŠƒSƒ“”z—ñ‚ÌŒãŽn––‚ð‚·‚é
+					MV1CollResultPolyDimTerminate(info);
+				}
+			}
+		}
+
+		//Ÿ”s”»’è
+		if (plyer->GetState() == Player::STATE::DEAD)
+		{
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		}
 	}
 

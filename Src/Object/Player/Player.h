@@ -53,6 +53,10 @@ public:
 
 	//ƒvƒŒƒCƒ„[‚ÌTransformî•ñ
 	const Transform& GetTransform(void) const { return transform_; }
+	const int& GetModelId(void) const { return transform_.modelId; }
+
+	const STATE& GetState(void) const { return state_; }
+
 	const int& GetRideMaxHp(void) const { return ridesMaxHp_; }
 	const int& GetRideHp(void) const { return ridesHp_; }
 	const void RideDamage(int damage);

@@ -63,7 +63,6 @@ protected:
 	float speed_;
 	// ¶‘¶ŠÔ
 	float timeAlive_;
-	float stepAlive_;
 
 	// “–‚½‚è”»’è‚Ì”¼Œa
 	float collisionRadius_;

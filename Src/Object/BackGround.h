@@ -10,7 +10,7 @@ public:
 	static constexpr float BACKGROUND_SCALE = 2.0f;
 
 	//YÀ•W‰Šú’l
-	static constexpr float BACKGROUND_POS_Y = 11300.0f;
+	static constexpr float BACKGROUND_POS_Y = -11300.0f;
 
 	//‰ñ“]X
 	static constexpr float BACKGROUND_ANGLE_X = 180.0f;

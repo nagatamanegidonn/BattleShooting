@@ -64,7 +64,6 @@ void Transform::Update(void)
 	{
 		MV1SetMatrix(modelId, mat);
 	}
-
 }
 
 void Transform::Release(void)

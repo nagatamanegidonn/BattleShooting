@@ -49,7 +49,7 @@ void Fader::Update(void)
 		{
 			// フェード終了
 			alpha_ = 255;
-			if (isPreEnd_)
+			if (!isPreEnd_)
 			{
 				// 1フレーム後(Draw後)に終了とする
 				isEnd_ = true;

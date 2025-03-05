@@ -12,7 +12,7 @@
 ShotBase::ShotBase(void)
 {
 	// 初期化
-	stepAlive_ = 0.0f;
+	timeAlive_ = 0.0f;
 	dir_ = AsoUtility::VECTOR_ZERO;
 
 	// パラメータ設定
@@ -53,7 +53,7 @@ void ShotBase::Create(VECTOR birthPos, VECTOR dir)
 	transform_.quaRot = Quaternion::LookRotation(dir_);
 
 	// 生存フラグ、時間の初期化
-	stepAlive_ = timeAlive_;
+	timeAlive_ = 2.0f;
 	// モデル制御の基本情報更新
 	transform_.Update();
 	// 状態遷移
@@ -96,8 +96,8 @@ void ShotBase::Update(void)
 void ShotBase::CheckAlive(void)
 {
 	// 生存時間を減らす
-	stepAlive_ -= SceneManager::GetInstance().GetDeltaTime();
-	if (stepAlive_ < 0.0f)
+	timeAlive_ -= SceneManager::GetInstance().GetDeltaTime();
+	if (timeAlive_ < 0.0f)
 	{
 		ChangeState(STATE::END);
 	}
@@ -114,8 +114,10 @@ void ShotBase::Draw(void)
 			break;
 		case ShotBase::STATE::SHOT:
 			MV1DrawModel(transform_.modelId);
+			DrawSphere3D(transform_.pos, collisionRadius_, 10, 0x00ff00, 0x00ff00, true);
 			break;
 		case ShotBase::STATE::BLAST:
+			MV1DrawModel(transform_.modelId);
 			break;
 		case ShotBase::STATE::END:
 			break;

@@ -15,6 +15,8 @@ BackGround::~BackGround(void)
 
 void BackGround::Init(void)
 {
+	//※モデルのテクスチャの参照先がおかしいの白く描画されます
+
 	//モデルの情報をリソースマネージャーから引っ張てくる
 	transform_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(
 		ResourceManager::SRC::BACKGROUND);
@@ -26,7 +28,7 @@ void BackGround::Init(void)
 	transform_.pos.y = BACKGROUND_POS_Y;
 	//回転(X、Y、Z）
 	transform_.quaRot = Quaternion::Euler(
-		AsoUtility::Deg2RadF(BACKGROUND_ANGLE_X),
+		AsoUtility::Deg2RadF(0.0f),
 		AsoUtility::Deg2RadF(BACKGROUND_ANGLE_Y),
 		0.0f
 	);
