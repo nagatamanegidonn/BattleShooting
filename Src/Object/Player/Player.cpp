@@ -187,8 +187,8 @@ void Player::Draw()
 #pragma endregion
 
 
-	DrawSphere3D(rideAttrckPos_, 20, 10, 0xff0000, 0xff0000, false);
-	DrawSphere3D(rideDamagePos_, 30, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(rideAttrckPos_, ATTRCK_RADIUS, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(rideDamagePos_, DAMAGE_RADIUS, 10, 0x0000ff, 0x0000ff, false);
 
 	size_t size = shots_.size();
 	for (int i = 0; i < size; i++)

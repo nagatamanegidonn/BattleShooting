@@ -115,6 +115,7 @@ void ShotBase::Draw(void)
 		case ShotBase::STATE::SHOT:
 			MV1DrawModel(transform_.modelId);
 			DrawSphere3D(transform_.pos, collisionRadius_, 10, 0x00ff00, 0x00ff00, true);
+
 			break;
 		case ShotBase::STATE::BLAST:
 			MV1DrawModel(transform_.modelId);

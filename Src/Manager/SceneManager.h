@@ -18,6 +18,13 @@ public:
 		GAME,
 		RESULT
 	};
+
+	enum class WINNER
+	{
+		NONE,
+		PLAYER_ONE,
+		PLAYER_TWO,
+	};
 	
 	// インスタンスの生成
 	static void CreateInstance(void);
@@ -72,6 +79,12 @@ private:
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 	
+
+	//ゲームに使う変数
+	WINNER isWinner_;
+
+	void ResetGame(void);
+
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	SceneManager(void);

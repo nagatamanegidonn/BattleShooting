@@ -30,7 +30,9 @@ public:
 	// ’e‚Ì”­ËŠÔŠu
 	static constexpr float TIME_DELAY_SHOT = 0.2f;
 
-
+	//”¼Œa
+	static constexpr float ATTRCK_RADIUS = 20.0f;
+	static constexpr float DAMAGE_RADIUS = 30.0f;
 	
 	// ó‘Ô
 	enum class STATE

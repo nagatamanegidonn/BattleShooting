@@ -18,7 +18,7 @@ void ShotPlayer::SetParam(void)
 	// ¶‘¶ŠÔ
 	timeAlive_ = 10.0f;
 	// Õ“Ë—p‹…‘Ì”¼Œa
-	collisionRadius_ = 5.0f;
+	collisionRadius_ = 12.5f;
 
 
 }

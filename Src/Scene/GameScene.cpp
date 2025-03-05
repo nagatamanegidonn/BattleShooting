@@ -337,7 +337,7 @@ void GameScene::Collision(void)
 				plyer->GetPos(0),
 				vsPlyer->GetPos(1));
 			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < 30 * 20)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
+			if (disPow < Player::DAMAGE_RADIUS * Player::ATTRCK_RADIUS)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
 			{
 				//plyer‚É‘ŠŽè‚Ìƒ}ƒVƒ“‚ÌUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
 				plyer->RideDamage(1);
@@ -351,7 +351,7 @@ void GameScene::Collision(void)
 			//UŒ‚‰ÓŠ“¯Žm‚ªÕ“Ë
 			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < 20 * 20)//UŒ‚”¼Œa~UŒ‚”¼Œa
+			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
 			{
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
@@ -367,22 +367,38 @@ void GameScene::Collision(void)
 				{
 					
 					//’e‚Ì“–‚½‚è”»’è
-					auto info = MV1CollCheck_Sphere(vsPlyer->GetModelId(), -1,
-						shot->GetPos(), shot->GetCollisionRadius());
-					if (info.HitNum >= 1)
+#pragma region –vˆÄ
+
+					//auto info = MV1CollCheck_Sphere(vsPlyer->GetModelId(), -1,
+					//	shot->GetPos(), shot->GetCollisionRadius());
+					//if (info.HitNum >= 1)
+					//{
+					//	//plyer‚ÉUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
+					//	vsPlyer->RideDamage(1);
+
+					//	//‚Ó‚Á”ò‚Î‚µˆ—
+					//	VECTOR dir = VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)),-1);
+					//	vsPlyer->SetJump(dir);
+
+					//	shot->Blast();
+					//}
+					//// “–‚½‚è”»’èŒ‹‰Êƒ|ƒŠƒSƒ“”z—ñ‚ÌŒãŽn––‚ð‚·‚é
+					//MV1CollResultPolyDimTerminate(info);
+#pragma endregion
+					//Õ“Ë
+					diff = VSub(shot->GetPos(), vsPlyer->GetPos(2));
+					disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
 					{
 						//plyer‚ÉUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
 						vsPlyer->RideDamage(1);
 
 						//‚Ó‚Á”ò‚Î‚µˆ—
-						VECTOR dir = VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)),-1);
+						VECTOR dir = VScale(VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)), -1), 0.5f);
 						vsPlyer->SetJump(dir);
 
 						shot->Blast();
 					}
-
-					// “–‚½‚è”»’èŒ‹‰Êƒ|ƒŠƒSƒ“”z—ñ‚ÌŒãŽn––‚ð‚·‚é
-					MV1CollResultPolyDimTerminate(info);
 				}
 			}
 		}
@@ -391,6 +407,7 @@ void GameScene::Collision(void)
 		if (plyer->GetState() == Player::STATE::DEAD)
 		{
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+			return;
 		}
 	}
 

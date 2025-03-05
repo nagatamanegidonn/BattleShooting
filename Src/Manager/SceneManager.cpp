@@ -41,6 +41,9 @@ void SceneManager::Init(void)
 	camera_ = new Camera();
 	camera_->Init();
 
+	//ƒQ[ƒ€‚ÌŸ”s“™•Ï”‚Ì‰Šú‰»
+	ResetGame();
+
 	scene_ = new TitleScene();
 	scene_->Init();
 
@@ -199,6 +202,11 @@ bool SceneManager::IsLoading(void) const
 //{
 //	return (fader_->GetState() == Fader::STATE::LOADING);
 //}
+
+void SceneManager::ResetGame(void)
+{
+	isWinner_ = WINNER::NONE;
+}
 
 SceneManager::SceneManager(void)
 {
