@@ -15,6 +15,7 @@ public:
 		LEFT,	//¶Ø‚è‘Ö‚¦
 		RIGHT,	//‰EØ‚è‘Ö‚¦
 		ATTACK,	//UŒ‚
+		JATTACK,
 		MAX
 	};
 

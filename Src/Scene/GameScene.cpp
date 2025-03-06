@@ -353,6 +353,9 @@ void GameScene::Collision(void)
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
 			{
+				plyer->RideDamage(1);
+				vsPlyer->RideDamage(1);
+
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
 				plyer->SetJump(dir);

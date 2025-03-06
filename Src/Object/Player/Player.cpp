@@ -212,12 +212,10 @@ const void Player::RideDamage(int damage)
 const void Player::SetJump(VECTOR vec)
 {
 	//‘€ì‰Â”\ó‘Ô‚È‚ç‚Á”ò‚Î‚·
-	if (state_ == STATE::PLAY)
-	{
-		ChangeState(STATE::JUMP);
-		jumpDir_ = vec;
-		jumpTime_ = 1.0f;
-	}
+
+	ChangeState(STATE::JUMP);
+	jumpDir_ = vec;
+	jumpTime_ = 1.0f;
 }
 
 VECTOR& Player::GetPos(int id)
@@ -292,6 +290,8 @@ void Player::UpdatePlay()
 
 	ProcessTurn();
 	ProcessMove();
+
+
 
 	ProcessShot();
 
@@ -463,14 +463,21 @@ void Player::Turn(VECTOR axis)
 
 	}
 
-}
-
+} 
 
 void Player::ProcessShot(void)
 {
 	auto& ins = InputManager::GetInstance();
 
+	//ƒ^ƒbƒNƒ‹UŒ‚
+	if ((controller_->GetisControl(Controller::MODE::JATTACK)
+		&& jumpTime_ <= 0.0f))
+	{
+		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
+		SetJump(dir);
+	}
 
+	//ŽËŒ‚UŒ‚
 	if ((controller_->GetisControl(Controller::MODE::ATTACK)
 		&& deleyShot_ <= 0.0f))
 	{
