@@ -43,14 +43,19 @@ public:
 	// 状態遷移
 	void ChangeScene(SCENE_ID nextId);
 
-	// シーンIDの取得
-	SCENE_ID GetSceneID(void);
+	//ゲームのリセット
+	void ResetGame(void);
+	WINNER GetWinner(void) const;//勝者の取得
+	void SetWinner(WINNER win);//勝者の設定
+
+	SCENE_ID GetSceneID(void);// シーンIDの取得
 
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
 
 	// カメラの取得
 	Camera* GetCamera(void) const;
+
 
 	// ロード中か調べる
 	bool IsLoading(void) const;
@@ -82,8 +87,6 @@ private:
 
 	//ゲームに使う変数
 	WINNER isWinner_;
-
-	void ResetGame(void);
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

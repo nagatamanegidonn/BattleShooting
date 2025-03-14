@@ -65,8 +65,28 @@ void ResultScene::Draw(void)
 	int len = (int)strlen(msg.c_str());
 	int width = GetDrawStringWidth(msg.c_str(), len);
 	DrawFormatString(cx - (width / 2), 550, 0xffffff, msg.c_str());
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	msg = "Result WIN";
+
+	SceneManager& Sns = SceneManager::GetInstance();
+
+	switch (Sns.GetWinner())
+	{
+		//プレイヤー１の勝利
+	case SceneManager::WINNER::PLAYER_ONE:
+		msg = "PLAYER1 WIN";
+		break;
+		//プレイヤー２の勝利
+	case SceneManager::WINNER::PLAYER_TWO:
+		msg = "PLAYER2 WIN";
+		break;
+	}
+
+	len = (int)strlen(msg.c_str());
+	width = GetDrawStringWidth(msg.c_str(), len);
+	DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetFontSize(16);
 
 }

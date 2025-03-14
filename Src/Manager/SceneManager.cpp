@@ -56,7 +56,7 @@ void SceneManager::Init(void)
 	Init3D();
 
 	// 初期シーンの設定
-	ChangeScene(SCENE_ID::SELECT);
+	//ChangeScene(SCENE_ID::TITLE);
 
 }
 
@@ -160,7 +160,6 @@ void SceneManager::Destroy(void)
 
 void SceneManager::ChangeScene(SCENE_ID nextId)
 {
-
 	// フェード処理が終わってからシーンを変える場合もあるため、
 	// 遷移先シーンをメンバ変数に保持
 	waitSceneId_ = nextId;
@@ -203,10 +202,21 @@ bool SceneManager::IsLoading(void) const
 //	return (fader_->GetState() == Fader::STATE::LOADING);
 //}
 
+
 void SceneManager::ResetGame(void)
 {
 	isWinner_ = WINNER::NONE;
 }
+//勝者関係
+SceneManager::WINNER SceneManager::GetWinner(void) const
+{
+	return isWinner_;
+}
+void SceneManager::SetWinner(WINNER win)
+{
+	isWinner_ = win;
+}
+
 
 SceneManager::SceneManager(void)
 {

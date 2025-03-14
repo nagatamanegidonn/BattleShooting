@@ -123,12 +123,12 @@ void GameScene::Update(void)
 	}
 
 	// ƒV[ƒ“‘JˆÚ
-	InputManager& ins = InputManager::GetInstance();
+	/*InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		return;
-	}
+	}*/
 
 	/*stage_->Update();*/
 
@@ -405,13 +405,28 @@ void GameScene::Collision(void)
 				}
 			}
 		}
+	}
 
+	int winid = 0;
+	SceneManager& Sns = SceneManager::GetInstance();
+	for (auto& plyer : players_)
+	{
 		//Ÿ”s”»’è
 		if (plyer->GetState() == Player::STATE::DEAD)
 		{
+			switch (winid)
+			{
+			case 0:
+				Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
+				break;
+			case 1:
+				Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
+				break;
+			}
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 			return;
 		}
+		winid++;
 	}
 
 }
