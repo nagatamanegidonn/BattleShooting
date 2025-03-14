@@ -112,6 +112,7 @@ void GameScene::Init(void)
 		c++;
 	}
 
+	hitStop_ = 0.0f;
 }
 
 void GameScene::Update(void)
@@ -131,6 +132,12 @@ void GameScene::Update(void)
 	}*/
 
 	/*stage_->Update();*/
+
+	if (hitStop_ > 0)
+	{
+		hitStop_ -= SceneManager::GetInstance().GetDeltaTime();
+		return;
+	}
 
 	//ƒvƒŒƒCƒ„[‚ÌXV
 	for (auto p : players_)
@@ -162,7 +169,6 @@ void GameScene::Draw(void)
 	{	
 		return;
 	}
-
 
 #pragma region ƒQ[ƒ€ƒV[ƒ“‚Ì•`‰æ
 
@@ -333,14 +339,13 @@ void GameScene::Collision(void)
 
 
 			// player‚Æ‚ÌÕ“Ë”»’è
-			VECTOR diff = VSub(
-				plyer->GetPos(0),
-				vsPlyer->GetPos(1));
+			VECTOR diff = VSub(plyer->GetPos(0), vsPlyer->GetPos(1));
+
 			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 			if (disPow < Player::DAMAGE_RADIUS * Player::ATTRCK_RADIUS)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
 			{
 				//plyer‚É‘ŠŽè‚Ìƒ}ƒVƒ“‚ÌUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
-				plyer->RideDamage(1);
+				plyer->Damage(1);
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
 				plyer->SetJump(dir);
@@ -350,11 +355,12 @@ void GameScene::Collision(void)
 
 			//UŒ‚‰ÓŠ“¯Žm‚ªÕ“Ë
 			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
+
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
 			{
-				plyer->RideDamage(1);
-				vsPlyer->RideDamage(1);
+				plyer->Damage(1);
+				vsPlyer->Damage(1);
 
 				//‚Ó‚Á”ò‚Î‚µˆ—
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
@@ -394,7 +400,8 @@ void GameScene::Collision(void)
 					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
 					{
 						//plyer‚ÉUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
-						vsPlyer->RideDamage(1);
+						vsPlyer->Damage(1);
+						//hitStop_ = 0.5f;
 
 						//‚Ó‚Á”ò‚Î‚µˆ—
 						VECTOR dir = VScale(VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)), -1), 0.5f);
@@ -444,8 +451,8 @@ void GameScene::DrawDebug(void)
 	for (auto& plyer : players_)
 	{
 		int cx2 = cx + (20 * plyNum);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideMaxHp()), 50, 0x000000, true);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetRideHp()), 50, 0x00ff00, true);
+		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetMaxHp()), 50, 0x000000, true);
+		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetHp()), 50, 0x00ff00, true);
 
 		VECTOR pos = plyer->GetTransform().pos;
 		if (plyNum == 1)

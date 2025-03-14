@@ -42,6 +42,9 @@ private:
 	BackGround* backGround_;
 
 
+	float hitStop_;
+
+
 	void Collision(void);
 
 	//デバッグ用の描画

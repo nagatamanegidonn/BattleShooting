@@ -59,9 +59,9 @@ public:
 
 	const STATE& GetState(void) const { return state_; }
 
-	const int& GetRideMaxHp(void) const { return ridesMaxHp_; }
-	const int& GetRideHp(void) const { return ridesHp_; }
-	const void RideDamage(int damage);
+	const int& GetMaxHp(void) const { return playerMaxHp_; }
+	const int& GetHp(void) const { return playerHp_; }
+	const void Damage(int damage);
 	const void SetJump(VECTOR vec);
 	VECTOR& GetPos(int id);
 
@@ -139,8 +139,6 @@ private:
 	int playerId_;	//’e‚Ìí—Ş‚âƒ‚ƒfƒ‹‚ğŒˆ‚ß‚é•Ï”
 	int playerHp_;
 	int playerMaxHp_;
-	int ridesHp_;
-	int ridesMaxHp_;
 
 	float damageTime_;
 	float invincibleTime_;

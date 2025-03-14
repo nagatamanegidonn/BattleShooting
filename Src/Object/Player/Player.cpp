@@ -52,6 +52,17 @@ void Player::Init(VECTOR startPos, int playerNo)
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
+	if (playerNo == 0)
+	{
+		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else
+	{
+		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
+		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
+	}
+
 	//float scale = 10.0f;
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
@@ -90,7 +101,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 	//ステータス変数
 	//HPもとは１０
-	ridesMaxHp_ = ridesHp_ = 3;
+	playerMaxHp_ = playerHp_ = 3;
 
 	//矢印の作成
 	MakeSquereVertex();
@@ -198,14 +209,14 @@ void Player::Draw()
 }
 
 //乗り物へのダメージ
-const void Player::RideDamage(int damage)
+const void Player::Damage(int damage)
 {
 	if (invincibleTime_ > 0.0f)
 	{
 		return;
 	}
 	//体力を減らす
-	ridesHp_ -= damage;
+	playerHp_ -= damage;
 	//無敵時間を設定
 	invincibleTime_ = 1.0f;
 }
@@ -320,7 +331,7 @@ void Player::UpdateJump(void)
 		if (jumpTime_ <= 0.0f)
 		{
 			//体力が０なら死亡状態にする
-			if (ridesHp_ <= 0)
+			if (playerHp_ <= 0)
 			{
 				ChangeState(STATE::DEAD);
 				return;

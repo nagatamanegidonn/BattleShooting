@@ -38,13 +38,13 @@ void DirModel::Init(int i)
 
 	if (i==0)
 	{
-		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 0.5f));
+		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 0.5f));
 	}
 	else
 	{
-		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
+		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 0.5f));
+		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 0.5f));
 	}
 }
 
