@@ -52,17 +52,32 @@ void SelectScene::Init(void)
 
 void SelectScene::Update(void)
 {
-	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
-	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-	}
 
+	
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
+
+	// 左スティックの横軸
+	auto leftStickX = ins.GetJPadInputState(jno).AKeyLX;
+	// 左スティックの縦軸
+	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
+
+	(ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT));
+	
+	// シーン遷移
+	if (ins.IsTrgDown(KEY_INPUT_SPACE)||(ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)))
+	{
+	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+	}
+	
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		// プレイヤー１とプレイヤー２が準備完了ボタンを押してスペースを押すとゲームシーンに移行
-		if (start[ii] && ins.IsTrgDown(KEY_INPUT_SPACE)) {
+		if (start[ii] && ins.IsTrgDown(KEY_INPUT_SPACE)
+			|| (start[ii] && (ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::START)))
+			|| (start[ii] && (ins.IsPadBtnNew(jno2, InputManager::JOYPAD_BTN::START))))
+		{
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 		}
 	}
@@ -147,22 +162,32 @@ void SelectScene::Release(void)
 void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 {
 	//------------------------------------------
+	InputManager& ins = InputManager::GetInstance();
+
+
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+
+	// 左スティックの横軸
+	auto leftStickX = ins.GetJPadInputState(jno).AKeyLX;
+	// 左スティックの縦軸
+	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
+
 
 	if (start[0] == false)
 	{
-		if (CheckHitKey(KEY_INPUT_W))
+		if (CheckHitKey(KEY_INPUT_W) || (leftStickY < 0))
 		{
 			P1.y -= MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_S))
+		if (CheckHitKey(KEY_INPUT_S) || (leftStickY > 0))
 		{
 			P1.y += MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_D))
+		if (CheckHitKey(KEY_INPUT_D) || (leftStickX > 0))
 		{
 			P1.x += MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_A))
+		if (CheckHitKey(KEY_INPUT_A) || (leftStickX < 0))
 		{
 			P1.x -= MOVE;
 		}
@@ -199,6 +224,9 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 void SelectScene::Collision(void)
 {
 	InputManager& ins = InputManager::GetInstance();
+
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
 
 	for (int ii = 0; ii < CHARACTER_MAX; ii++)
 	{
