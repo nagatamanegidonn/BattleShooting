@@ -160,7 +160,7 @@ void Player::Draw()
 			MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		}
 	}
-	//MV1DrawModel(transform_.modelId);
+	MV1DrawModel(transform_.modelId);
 	
 
 #pragma region –îˆó‚Ì•`‰æi‰¼j
