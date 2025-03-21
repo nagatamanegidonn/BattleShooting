@@ -1,5 +1,5 @@
 #pragma once
-#include <memory>  // shared_ptrを使うために必要
+#include<memory>  // shared_ptrを使うために必要
 #include<vector>
 
 #include "SceneBase.h"
@@ -15,6 +15,7 @@ class GameScene : public SceneBase
 public:
 
 	static constexpr int PLAYER_SIZE = 2;
+	static constexpr float BLAST_SCALE = 30.0f;
 
 
 	// コンストラクタ

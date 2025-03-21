@@ -148,8 +148,12 @@ void GameScene::Update(void)
 	//回転
 	SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0, 0, 0);
 
-
-
+	int ret = IsEffekseer3DEffectPlaying(effectHitPlayId_);
+	if (ret == -1)
+	{
+		
+	}
+	
 	// シーン遷移
 	/*InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -192,7 +196,6 @@ void GameScene::Draw(void)
 	{	
 		return;
 	}
-
 #pragma region ゲームシーンの描画
 
 	// 描画
@@ -326,7 +329,6 @@ void GameScene::Release(void)
 
 	//エフェクトの開放
 	StopEffekseer3DEffect(effectHitPlayId_);
-
 }
 
 
@@ -379,10 +381,11 @@ void GameScene::Collision(void)
 				dir = VScale(dir, -1);//吹っ飛ばしの方向を反転
 				vsPlyer->SetJump(dir);
 
-				//エフェクト再生
+				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
-				//位置
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
+				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
 			}
 
 			//攻撃箇所同士が衝突
@@ -400,17 +403,12 @@ void GameScene::Collision(void)
 				dir = VScale(dir, -1);
 				vsPlyer->SetJump(dir);
 
-				//エフェクト再生
+				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
-				//位置
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
+				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
 			}
-
-			// 大きさ
-			float SCALE = 0.1f;
-			SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
-			//回転
-			SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
 
 
 			auto shots = plyer->GetShots();
@@ -508,7 +506,9 @@ void GameScene::DrawDebug(void)
 		}
 		plyNum *= -1;
 	}
+	printf("Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
 
+	DrawFormatString(0, 64, 0xff0000, "Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
 
 
 	return;

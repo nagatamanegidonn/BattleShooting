@@ -84,6 +84,11 @@ void SceneManager::Init3D(void)
 	// 正面から斜め下に向かったライト
 	ChangeLightTypeDir({ 0.00f, -1.00f, 1.00f });
 
+	// フォグ設定(ステージ導入時)
+	SetFogEnable(true);
+	SetFogColor(5, 5, 5);
+	SetFogStartEnd(3000.0f, 15000.0f);
+
 }
 
 void SceneManager::Update(void)
@@ -150,6 +155,7 @@ void SceneManager::Draw(void)
 	 // 非同期読み込みの数を描画
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "非同期読み込みの数 %d", GetASyncLoadNum());
 #endif
+
 }
 
 void SceneManager::Destroy(void)
