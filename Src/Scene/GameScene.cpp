@@ -130,6 +130,26 @@ void GameScene::Update(void)
 		return;
 	}
 
+	if (hitStop_ > 0)
+	{
+		hitStop_ -= SceneManager::GetInstance().GetDeltaTime();
+	}
+	else
+	{
+		//ƒGƒtƒFƒNƒgÄ¶
+		effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
+		hitStop_ = 2;
+	}
+	//ˆÊ’u
+	SetPosPlayingEffekseer3DEffect(effectHitPlayId_,0, 0, 0);
+	// ‘å‚«‚³
+	float SCALE = 0.1f;
+	SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
+	//‰ñ“]
+	SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0, 0, 0);
+
+
+
 	// ƒV[ƒ“‘JˆÚ
 	/*InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -140,11 +160,7 @@ void GameScene::Update(void)
 
 	/*stage_->Update();*/
 
-	if (hitStop_ > 0)
-	{
-		hitStop_ -= SceneManager::GetInstance().GetDeltaTime();
-		return;
-	}
+	
 
 	//ƒvƒŒƒCƒ„[‚ÌXV
 	for (auto p : players_)
@@ -367,12 +383,6 @@ void GameScene::Collision(void)
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				//ˆÊ’u
 				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
-				// ‘å‚«‚³
-				float SCALE = 10.0f;
-				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
-				//‰ñ“]
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
-
 			}
 
 			//UŒ‚‰ÓŠ“¯Žm‚ªÕ“Ë
@@ -394,13 +404,14 @@ void GameScene::Collision(void)
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				//ˆÊ’u
 				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
-				// ‘å‚«‚³
-				float SCALE = 10.0f;
-				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
-				//‰ñ“]
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
-
 			}
+
+			// ‘å‚«‚³
+			float SCALE = 0.1f;
+			SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
+			//‰ñ“]
+			SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
+
 
 			auto shots = plyer->GetShots();
 			for (auto& shot : shots)
