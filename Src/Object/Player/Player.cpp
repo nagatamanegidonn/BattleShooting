@@ -47,20 +47,27 @@ void Player::Init(VECTOR startPos, int playerNo)
 	dirModel_->Init(playerNo);
 
 	// モデル制御の基本情報
-	transform_.SetModel(MV1LoadModel("Data/Model/P1/キノコ.mv1"));
 	/*transform_.SetModel(
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
 	if (playerNo == 0)
 	{
+		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 	else
 	{
+		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
+
+
+		// マテリアルの自己発光色を設定
+		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
 	}
 
 	//float scale = 10.0f;
@@ -246,6 +253,13 @@ VECTOR& Player::GetPos(int id)
 
 	return transform_.pos;
 	// TODO: return ステートメントをここに挿入します
+}
+
+
+void Player::InitEffect(void)
+{
+
+
 }
 
 #pragma region 変数state_による関数stateUpdate_の変更
