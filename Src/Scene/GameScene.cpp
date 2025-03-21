@@ -209,7 +209,7 @@ void GameScene::Draw(void)
 
 
 	//”wŒi•`‰æ
-	//backGround_->Draw();
+	backGround_->Draw();
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	for (auto& p : players_)
