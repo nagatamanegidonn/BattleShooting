@@ -42,6 +42,11 @@ private:
 	BackGround* backGround_;
 
 
+	//爆発エフェクト
+	int effectHitResId_;
+	int effectHitPlayId_;
+
+
 	float hitStop_;
 
 

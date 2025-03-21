@@ -56,9 +56,9 @@ void Controller::IsCommnd(void)
 	{
 		InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
 
-		// 左スティックの横軸
+		// 左スティックの横軸取得
 		auto leftStickX = input.GetJPadInputState(jno).AKeyLX;
-		// 左スティックの縦軸
+		// 左スティックの縦軸取得
 		auto leftStickY = input.GetJPadInputState(jno).AKeyLY;
 
 		isControl_[static_cast<int>(MODE::FORWARD)] = ((input.IsNew(KEY_INPUT_W)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)));

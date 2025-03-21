@@ -1,5 +1,7 @@
 #include <DxLib.h>
 
+#include <EffekseerForDXLib.h>
+
 #include "../Application.h"
 
 #include "../Utility/AsoUtility.h"//Quaternion等を扱う関数が入っている
@@ -111,6 +113,11 @@ void GameScene::Init(void)
 		camera_[c]->SetFollow(&p->GetTransform());
 		c++;
 	}
+	
+	// 自機破壊エフェクト
+	effectHitResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::SHOT_EXPLOSION).handleId_;
+
 
 	hitStop_ = 0.0f;
 }
@@ -300,6 +307,10 @@ void GameScene::Release(void)
 	//背景解放処理
 	backGround_->Release();
 	delete backGround_;
+
+	//エフェクトの開放
+	StopEffekseer3DEffect(effectHitPlayId_);
+
 }
 
 
@@ -351,6 +362,17 @@ void GameScene::Collision(void)
 				plyer->SetJump(dir);
 				dir = VScale(dir, -1);//吹っ飛ばしの方向を反転
 				vsPlyer->SetJump(dir);
+
+				//エフェクト再生
+				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
+				//位置
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
+				// 大きさ
+				float SCALE = 10.0f;
+				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
+				//回転
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
+
 			}
 
 			//攻撃箇所同士が衝突
@@ -367,6 +389,17 @@ void GameScene::Collision(void)
 				plyer->SetJump(dir);
 				dir = VScale(dir, -1);
 				vsPlyer->SetJump(dir);
+
+				//エフェクト再生
+				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
+				//位置
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().pos.x, plyer->GetTransform().pos.y, plyer->GetTransform().pos.z);
+				// 大きさ
+				float SCALE = 10.0f;
+				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
+				//回転
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, plyer->GetTransform().rot.x, plyer->GetTransform().rot.y, plyer->GetTransform().rot.z);
+
 			}
 
 			auto shots = plyer->GetShots();
@@ -394,7 +427,6 @@ void GameScene::Collision(void)
 					//// 当たり判定結果ポリゴン配列の後始末をする
 					//MV1CollResultPolyDimTerminate(info);
 #pragma endregion
-					//衝突
 					diff = VSub(shot->GetPos(), vsPlyer->GetPos(2));
 					disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//攻撃半径×攻撃半径

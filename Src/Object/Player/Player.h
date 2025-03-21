@@ -85,6 +85,17 @@ private:
 	// 状態管理(更新ステップ)
 	std::function<void(void)> stateUpdate_;
 
+
+	//爆発エフェクト
+	int effectDestroyResId_;
+	int effectDestroyPlayId_;
+
+	// エフェクト初期化
+	void InitEffect(void);
+	// エフェクト制御
+	void SyncJetEffect(void);
+	void SyncBoostEffct(void);
+
 	// 状態遷移
 	void ChangeState(STATE state);
 	void ChangeStateNone(void);
