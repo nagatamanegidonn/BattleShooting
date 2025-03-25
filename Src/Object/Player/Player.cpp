@@ -4,7 +4,11 @@
 #include "../../Manager/ResourceManager.h"
 #include "../../Manager/Camera.h"
 
+#include "../../Application.h"
+
 #include "../../Utility/AsoUtility.h"
+
+#include "../Common/AnimationController.h"
 
 #include "../Shot/ShotPlayer.h"
 
@@ -57,6 +61,9 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+
 	}
 	else
 	{
@@ -64,7 +71,8 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
-
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
 
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
@@ -121,6 +129,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 	// 初期状態
 	ChangeState(STATE::PLAY);
 
+	InitEffect();
 
 }
 
@@ -142,6 +151,9 @@ void Player::Update()
 
 	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 0));
 	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 40));
+
+	// アニメーション再生
+	animationController_->Update();
 }
 
 void Player::Draw()
@@ -255,6 +267,17 @@ VECTOR& Player::GetPos(int id)
 	// TODO: return ステートメントをここに挿入します
 }
 
+//アニメーションの設定
+void Player::InitAnimation(std::string path)
+{
+
+	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
+	animationController_->Add((int)ANIM_TYPE::IDLE, path, 20.0f, 0);
+	animationController_->Add((int)ANIM_TYPE::RUN, path, 20.0f, 1);
+
+	animationController_->Play((int)ANIM_TYPE::IDLE);
+
+}
 
 void Player::InitEffect(void)
 {

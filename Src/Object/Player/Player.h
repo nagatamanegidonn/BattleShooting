@@ -9,6 +9,7 @@
 
 //#include "Controller.h"
 
+class AnimationController;
 class ShotPlayer;
 class Controller;
 class DirModel;
@@ -45,6 +46,12 @@ public:
 		END
 	};
 
+	// アニメーション種別
+	enum class ANIM_TYPE
+	{
+		IDLE,
+		RUN,
+	};
 
     Player(Camera& camera);  // コンストラクタ
     ~Player(); // デストラクタ
@@ -89,6 +96,11 @@ private:
 	//爆発エフェクト
 	int effectDestroyResId_;
 	int effectDestroyPlayId_;
+
+	// アニメーション
+	std::unique_ptr<AnimationController> animationController_;
+	//アニメーションの初期化
+	void InitAnimation(std::string path);
 
 	// エフェクト初期化
 	void InitEffect(void);
