@@ -89,8 +89,12 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::ROCK02, res);
 
 	//îwåií¨
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BackGround/City/City.mv1");
+	resourcesMap_.emplace(SRC::BACKGROUNDCITY, res);
+
+	//îwåiêX
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BackGround/Forest/Forest.mv1");
-	resourcesMap_.emplace(SRC::BACKGROUND, res);
+	resourcesMap_.emplace(SRC::BACKGROUNDFOREST, res);
 
 	// é©ã@ï¨éÀ
 	res = Resource(Resource::TYPE::EFFEKSEER, Application::PATH_EFFECT + "Jet.efkefc");
