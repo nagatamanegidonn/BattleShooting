@@ -6,6 +6,9 @@
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/Camera.h"
+
+#include "../Object/Stage.h"
+
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
@@ -33,6 +36,9 @@ void TitleScene::Init(void)
 	// ƒ^ƒCƒgƒ‹ƒƒS
 	imgTitleLogo_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::START_LOGO).handleId_;
 
+	//”wŒi‰Šú‰»
+	stage_ = new Stage;
+	stage_->Init();
 }
 
 void TitleScene::Update(void)
@@ -49,6 +55,8 @@ void TitleScene::Update(void)
 
 void TitleScene::Draw(void)
 {
+	stage_->Draw();
+
 
 	// ƒƒS•`‰æ
 	DrawLogo();
@@ -57,6 +65,8 @@ void TitleScene::Draw(void)
 
 void TitleScene::Release(void)
 {
+	stage_->Release();
+	delete stage_;
 }
 
 void TitleScene::DrawLogo(void)

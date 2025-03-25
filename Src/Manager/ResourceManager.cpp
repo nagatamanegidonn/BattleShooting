@@ -69,7 +69,8 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::SPEECH_BALLOON, res);
 
 	// ’e
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
+	//res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
 	resourcesMap_.emplace(SRC::SHOT_MODEL, res);
 
 	// –C‘ä

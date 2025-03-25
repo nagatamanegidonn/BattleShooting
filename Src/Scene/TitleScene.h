@@ -1,6 +1,8 @@
 #pragma once
 #include "SceneBase.h"
 
+class Stage;
+
 class TitleScene : public SceneBase
 {
 
@@ -22,6 +24,9 @@ private:
 
 	// タイトルロゴ
 	int imgTitleLogo_;
+
+	//背景インスタンス
+	Stage* stage_;
 
 	// ロゴ描画
 	void DrawLogo(void);

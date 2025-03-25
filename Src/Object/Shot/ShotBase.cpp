@@ -22,12 +22,13 @@ ShotBase::ShotBase(void)
 	ResourceManager& rem = ResourceManager::GetInstance();
 	transform_.modelId =
 		rem.LoadModelDuplicate(ResourceManager::SRC::SHOT_MODEL);
-	float scale = 0.2f;
+	//float scale = 0.2f;
+	float scale = 0.6f;
 	transform_.scl = { scale, scale, scale };
 	transform_.pos = AsoUtility::VECTOR_ZERO;
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
-		Quaternion::Euler(AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
+		Quaternion::Euler(AsoUtility::Deg2RadF(90.0f), AsoUtility::Deg2RadF(-90.0f), 0.0f);
 	transform_.Update();
 
 	// 爆発エフェクト
@@ -114,7 +115,7 @@ void ShotBase::Draw(void)
 			break;
 		case ShotBase::STATE::SHOT:
 			MV1DrawModel(transform_.modelId);
-			DrawSphere3D(transform_.pos, collisionRadius_, 10, 0x00ff00, 0x00ff00, true);
+			//DrawSphere3D(transform_.pos, collisionRadius_, 10, 0x00ff00, 0x00ff00, true);
 
 			break;
 		case ShotBase::STATE::BLAST:
