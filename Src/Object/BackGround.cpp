@@ -19,7 +19,7 @@ void BackGround::Init(void)
 
 	//モデルの情報をリソースマネージャーから引っ張てくる
 	transform_.modelId = ResourceManager::GetInstance().LoadModelDuplicate(
-		ResourceManager::SRC::BACKGROUND);
+		ResourceManager::SRC::BACKGROUNDCITY);
 	//大きさ
 	float scale = BACKGROUND_SCALE;
 	transform_.scl = { scale, scale, scale };
