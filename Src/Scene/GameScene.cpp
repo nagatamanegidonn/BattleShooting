@@ -127,28 +127,12 @@ void GameScene::Update(void)
 		return;
 	}
 
-	if (hitStop_ > 0)
-	{
-		hitStop_ -= SceneManager::GetInstance().GetDeltaTime();
-	}
-	else
-	{
-		//エフェクト再生
-		effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
-		hitStop_ = 2;
-	}
-	//位置
-	SetPosPlayingEffekseer3DEffect(effectHitPlayId_,0, 0, 0);
-	// 大きさ
-	float SCALE = 0.1f;
-	SetScalePlayingEffekseer3DEffect(effectHitPlayId_, SCALE, SCALE, SCALE);
-	//回転
-	SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0, 0, 0);
-
+	//エフェクトを再生してるか
 	int ret = IsEffekseer3DEffectPlaying(effectHitPlayId_);
 	if (ret == -1)
 	{
-		
+		//再生できてない
+		int t = 0;
 	}
 	
 	// シーン遷移
@@ -366,6 +350,9 @@ void GameScene::Collision(void)
 			// playerとの衝突判定
 			VECTOR diff = VSub(plyer->GetPos(0), vsPlyer->GetPos(1));
 
+			//プレイヤー同士の中心
+			VECTOR cPos = VScale(VAdd(plyer->GetTransform().pos, vsPlyer->GetTransform().pos), 0.5f);
+
 			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 			if (disPow < Player::DAMAGE_RADIUS * Player::ATTRCK_RADIUS)//ダメージ半径×攻撃半径
 			{
@@ -380,8 +367,8 @@ void GameScene::Collision(void)
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
 			}
 
 			//攻撃箇所同士が衝突
@@ -402,8 +389,8 @@ void GameScene::Collision(void)
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, 0.0f, 0.0f, 0.0f);
+				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
+				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
 			}
 
 

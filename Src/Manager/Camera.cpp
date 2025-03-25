@@ -1,3 +1,5 @@
+#include <EffekseerForDXLib.h>
+
 #include "../Utility/AsoUtility.h"
 #include "../Manager/InputManager.h"
 
@@ -75,6 +77,8 @@ void Camera::SetBeforeDraw(void)
 		cameraUp_
 	);
 
+	// DXライブラリのカメラとEffekseerのカメラを同期する。
+	Effekseer_Sync3DSetting();
 }
 
 #pragma region mode_による描画方法
