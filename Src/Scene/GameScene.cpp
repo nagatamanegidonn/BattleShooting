@@ -11,7 +11,7 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/Camera.h"
 
-#include "../Object/BackGround.h"
+#include "../Object/Stage.h"
 #include "../Object/Grid.h"
 #include "../Object/Shot/ShotPlayer.h"
 #include "../Object/Player/Player.h"
@@ -56,9 +56,7 @@ void GameScene::AsyncPreLoad(void)
 		32, 192 / 6,
 		&handleIds_2[0]);
 
-	stage_ = new Grid;
-
-	backGround_ = new BackGround;
+	stage_ = new Stage;
 }
 void GameScene::Init(void)
 {
@@ -84,10 +82,9 @@ void GameScene::Init(void)
 
 	}
 
-	stage_->Init();
-
 	//”wŒi‰Šú‰»
-	backGround_->Init();
+	stage_->Init();
+	//backGround_->Init();
 
 	Camera* camera = SceneManager::GetInstance().GetCamera();
 	// ƒJƒƒ‰ƒ‚[ƒhF’è“_ƒJƒƒ‰
@@ -199,6 +196,8 @@ void GameScene::Draw(void)
 #pragma region ƒQ[ƒ€ƒV[ƒ“‚Ì•`‰æ
 
 	// •`‰æ
+	//”wŒi•`‰æ
+	//backGround_->Draw();
 	stage_->Draw();
 	int screenSize = 100;
 	int mx = Application::SCREEN_SIZE_X - screenSize;
@@ -207,9 +206,6 @@ void GameScene::Draw(void)
 	int cx = Application::SCREEN_SIZE_X - screenSize;
 	int cy = Application::SCREEN_SIZE_Y - screenSize;
 
-
-	//”wŒi•`‰æ
-	backGround_->Draw();
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	for (auto& p : players_)
@@ -320,18 +316,18 @@ void GameScene::Release(void)
 		delete camera_[i];
 	}
 
-
-	stage_->Release();
-
 	//”wŒi‰ð•úˆ—
-	backGround_->Release();
-	delete backGround_;
+	stage_->Release();
+	delete stage_;
+
+	//backGround_->Release();
+	//delete backGround_;
 
 	//ƒGƒtƒFƒNƒg‚ÌŠJ•ú
 	StopEffekseer3DEffect(effectHitPlayId_);
 }
 
-
+//ƒQ[ƒ€‚ÌÕ“Ëˆ—
 void GameScene::Collision(void)
 {
 	//ƒvƒŒƒCƒ„[‚ÌXV
@@ -482,6 +478,8 @@ void GameScene::Collision(void)
 //ƒfƒoƒbƒO•`‰æ
 void GameScene::DrawDebug(void)
 {
+	//ƒOƒŠƒbƒhü‚Ì•`‰æ
+	stage_->DrawDebug();
 
 	int cx = Application::SCREEN_SIZE_X / 2;
 	int cy = Application::SCREEN_SIZE_Y / 2;

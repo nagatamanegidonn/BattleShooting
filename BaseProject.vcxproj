@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Object\Player\DirModel.cpp" />
-    <ClCompile Include="Src\Object\BackGround.cpp" />
+    <ClCompile Include="Src\Object\Stage.cpp" />
     <ClCompile Include="Src\Object\Player\Controller.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Object\Shot\ShotBase.cpp" />
@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Player\DirModel.h" />
-    <ClInclude Include="Src\Object\BackGround.h" />
+    <ClInclude Include="Src\Object\Stage.h" />
     <ClInclude Include="Src\Object\Player\Controller.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Object\Shot\ShotBase.h" />

@@ -108,7 +108,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 	//ステータス変数
 	//HPもとは１０
-	playerMaxHp_ = playerHp_ = 3;
+	playerMaxHp_ = playerHp_ = 5;
 
 	//矢印の作成
 	MakeSquereVertex();
@@ -215,7 +215,7 @@ void Player::Draw()
 	}
 }
 
-//乗り物へのダメージ
+//ダメージ
 const void Player::Damage(int damage)
 {
 	if (invincibleTime_ > 0.0f)

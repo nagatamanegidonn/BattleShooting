@@ -5,7 +5,7 @@
 #include "SceneBase.h"
 
 class Player;
-class BackGround;
+class Stage;
 class Grid;
 class Camera;
 
@@ -37,10 +37,9 @@ private:
 	Camera* camera_[PLAYER_SIZE];
 	int screenH[PLAYER_SIZE];
 
-	Grid* stage_;
-	
 	//背景インスタンス
-	BackGround* backGround_;
+	Stage* stage_;
+	//Stage* backGround_;
 
 
 	//爆発エフェクト
