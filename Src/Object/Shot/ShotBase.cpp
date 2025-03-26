@@ -43,7 +43,7 @@ ShotBase::~ShotBase(void)
 void ShotBase::Create(VECTOR birthPos, VECTOR dir,int modelId)
 {
 	//ÉÇÉfÉãÇÃê›íË
-	transform_.modelId = modelId;
+	transform_.modelId = MV1DuplicateModel(modelId);
 	float scale = 0.85f;
 	transform_.scl = { scale, scale, scale };
 	transform_.pos = AsoUtility::VECTOR_ZERO;
