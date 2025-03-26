@@ -51,19 +51,20 @@ void SelectScene::Init(void)
 	pos[1].x = (Application::SCREEN_SIZE_X / 3) * 2;
 	pos[1].y = Application::SCREEN_SIZE_Y / 2;
 
+	//ゲーム開始準備確認用フラグ
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
-		start[ii] = false;
+		isReady_[ii] = false;
 	}
+	isStart_ = false;
+	
 
-	for(int ii = 0; ii < PLAYER_MAX; ii++)chara[ii] = CHARA::E_CHARA_NON;
-
-	float size = 100.0f;
+	float size = 500.0f;
 
 	//プレイヤーの設定
 	VECTOR sPos[4] = {
-		{-size,0.0f,size}//左上
-		,{size,0.0f,size}//右上
+		{-size,0.0f,size / 2}//左上
+		,{size,0.0f,size / 2}//右上
 		,{-size,0.0f,-size}//左下
 		,{size,0.0f,-size}//右上 
 	};
@@ -97,17 +98,12 @@ void SelectScene::Update(void)
 	(ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT));
 	
 	// シーン遷移
-	if (ins.IsTrgDown(KEY_INPUT_SPACE)||(ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT)))
-	{
-	//	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-	}
-	
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		// プレイヤー１とプレイヤー２が準備完了ボタンを押してスペースを押すとゲームシーンに移行
-		if (start[ii] && ins.IsTrgDown(KEY_INPUT_SPACE)
-			|| (start[ii] && (ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::START)))
-			|| (start[ii] && (ins.IsPadBtnNew(jno2, InputManager::JOYPAD_BTN::START))))
+		if (isStart_ && (ins.IsTrgDown(KEY_INPUT_SPACE)
+			|| (ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::START))
+			|| (ins.IsPadBtnNew(jno2, InputManager::JOYPAD_BTN::START))))
 		{
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 			return;
@@ -154,13 +150,13 @@ void SelectScene::Draw(void)
 
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
-	if (start[0]) {
-		DrawString(0, 0, "p1", RGB(0, 0, 255), true);
+	if (isReady_[0]) {
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
 	}
 
 	//プレイヤー１が準備完了したかどうか
-	if (start[1]) {
-		DrawString(0, 0, "p2", RGB(0, 0, 255), true);
+	if (isReady_[1]) {
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_OK", RGB(0, 0, 255), true);
 	}
 
 	//プレイヤーの更新
@@ -176,29 +172,7 @@ void SelectScene::Draw(void)
 	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
 	//-----------------------------------------------------
 
-	switch (chara[0])
-	{
-	case E_CHARA_NON:
-		break;
-	case E_CHARA1:
-		DrawString(0, Application::SCREEN_SIZE_Y / 2, "プイレヤー１/キャラクター１", RGB(0, 0, 255), true);
-		break;
-	case E_CHARA2:
-		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "プイレヤー１/キャラクター2", RGB(0, 0, 255), true);
-		break;
-	}
-
-	switch (chara[1])
-	{
-	case E_CHARA_NON:
-		break;
-	case E_CHARA1:
-		DrawString(0, Application::SCREEN_SIZE_Y / 2 + 50 , "プイレヤー２/キャラクター１", RGB(0, 0, 255), true);
-		break;
-	case E_CHARA2:
-		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 + 50, "プイレヤー２/キャラクター2", RGB(0, 0, 255), true);
-		break;
-	}
+	
 }
 
 void SelectScene::Release(void)
@@ -214,6 +188,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 
 
 	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
 
 	// 左スティックの横軸
 	auto leftStickX = ins.GetJPadInputState(jno).AKeyLX;
@@ -221,7 +196,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
 
 
-	if (start[0] == false)
+	if (isReady_[0] == false)
 	{
 		if (CheckHitKey(KEY_INPUT_W) || (leftStickY < 0))
 		{
@@ -244,21 +219,26 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 
 	//------------------------------------------
 
-	if (start[1] == false)
+	// 左スティックの横軸
+	leftStickX = ins.GetJPadInputState(jno2).AKeyLX;
+	// 左スティックの縦軸
+	leftStickY = ins.GetJPadInputState(jno2).AKeyLY;
+
+	if (isReady_[1] == false)
 	{
-		if (CheckHitKey(KEY_INPUT_UP))
+		if (CheckHitKey(KEY_INPUT_UP) || (leftStickY < 0))
 		{
 			P2.y -= MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_DOWN))
+		if (CheckHitKey(KEY_INPUT_DOWN) || (leftStickY > 0))
 		{
 			P2.y += MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_RIGHT))
+		if (CheckHitKey(KEY_INPUT_RIGHT) || (leftStickX > 0))
 		{
 			P2.x += MOVE;
 		}
-		if (CheckHitKey(KEY_INPUT_LEFT))
+		if (CheckHitKey(KEY_INPUT_LEFT) || (leftStickX < 0))
 		{
 			P2.x -= MOVE;
 		}
@@ -288,24 +268,16 @@ void SelectScene::Collision(void)
 			// true == 準備完了 / false == 準備中
 			if (ins.IsTrgDown(KEY_INPUT_1))
 			{
-				if (start[0] == false)
+				if (isReady_[0] == false)
 				{
-					start[0] = true;
+					isReady_[0] = true;
 
+					//
 
-					if (ii == 0)
-					{
-						chara[0] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[0] = E_CHARA2;
-					}
 				}
 				else
 				{
-					start[0] = false;
-					chara[0] = E_CHARA_NON;
+					isReady_[0] = false;
 				}
 			}
 		}
@@ -323,26 +295,28 @@ void SelectScene::Collision(void)
 			// true == 準備完了 / false == 準備中
 			if (ins.IsTrgDown(KEY_INPUT_2))
 			{
-				if (start[1] == false)
+				if (isReady_[1] == false)
 				{
-					start[1] = true;
+					isReady_[1] = true;
 
-					if (ii == 0)
-					{
-						chara[1] = E_CHARA1;
-					}
-					else if (ii == 1)
-					{
-						chara[1] = E_CHARA2;
-					}
+					//
+
 				}
 				else
 				{
-					start[1] = false;
-					chara[1] = E_CHARA_NON;
+					isReady_[1] = false;
 				}
 			}
 		}
+	}
+
+	//全プレイヤーが準備完了なら
+	if (isReady_[0] && isReady_[1])
+	{
+		isStart_ = true;
+	}
+	else {
+		isStart_ = false;
 	}
 
 	//-------------------------------------------------------------------

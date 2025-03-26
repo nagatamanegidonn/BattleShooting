@@ -40,7 +40,6 @@ public:
 
 private:
 
-	int chara[PLAYER_MAX];
 
 	std::vector<std::shared_ptr<Player>> players_;
 
@@ -48,6 +47,7 @@ private:
 	VECTOR pos[PLAYER_MAX];
 
 	// キャラクター選択が完了しているかどうかの確認用
-	bool start[PLAYER_MAX];
+	bool isReady_[PLAYER_MAX];
+	bool isStart_;
 
 };

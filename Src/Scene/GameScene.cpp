@@ -136,12 +136,12 @@ void GameScene::Update(void)
 	}
 	
 	// ƒV[ƒ“‘JˆÚ
-	/*InputManager& ins = InputManager::GetInstance();
+	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		return;
-	}*/
+	}
 
 	/*stage_->Update();*/
 
@@ -336,24 +336,6 @@ void GameScene::Collision(void)
 				{
 					
 					//’e‚Ì“–‚½‚è”»’è
-#pragma region –vˆÄ
-
-					//auto info = MV1CollCheck_Sphere(vsPlyer->GetModelId(), -1,
-					//	shot->GetPos(), shot->GetCollisionRadius());
-					//if (info.HitNum >= 1)
-					//{
-					//	//plyer‚ÉUŒ‚‚ª“–‚½‚Á‚Ä‚¢‚é
-					//	vsPlyer->RideDamage(1);
-
-					//	//‚Ó‚Á”ò‚Î‚µˆ—
-					//	VECTOR dir = VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)),-1);
-					//	vsPlyer->SetJump(dir);
-
-					//	shot->Blast();
-					//}
-					//// “–‚½‚è”»’èŒ‹‰Êƒ|ƒŠƒSƒ“”z—ñ‚ÌŒãn––‚ğ‚·‚é
-					//MV1CollResultPolyDimTerminate(info);
-#pragma endregion
 					diff = VSub(shot->GetPos(), vsPlyer->GetPos(2));
 					disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//UŒ‚”¼Œa~UŒ‚”¼Œa
