@@ -23,7 +23,7 @@ ShotBase::ShotBase(void)
 	transform_.modelId =
 		rem.LoadModelDuplicate(ResourceManager::SRC::SHOT_MODEL);
 	//float scale = 0.2f;
-	float scale = 0.6f;
+	float scale = 0.85f;
 	transform_.scl = { scale, scale, scale };
 	transform_.pos = AsoUtility::VECTOR_ZERO;
 	transform_.quaRot = Quaternion();
