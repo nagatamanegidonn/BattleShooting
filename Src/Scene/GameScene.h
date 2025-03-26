@@ -1,5 +1,5 @@
 #pragma once
-#include<memory>  // shared_ptrを使うために必要
+#include<memory>  // shared_ptrを使うために必要c
 #include<vector>
 
 #include "SceneBase.h"

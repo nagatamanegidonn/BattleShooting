@@ -1,12 +1,15 @@
 #pragma once
+
 #include "SceneBase.h"
 
+class Player;
 class Stage;
 
 class TitleScene : public SceneBase
 {
 
 public:
+
 
 	// コンストラクタ
 	TitleScene(void);
@@ -25,6 +28,7 @@ private:
 	// タイトルロゴ
 	int imgTitleLogo_;
 
+	
 	//背景インスタンス
 	Stage* stage_;
 

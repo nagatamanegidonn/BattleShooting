@@ -8,6 +8,7 @@
 #include "../Manager/Camera.h"
 
 #include "../Object/Stage.h"
+#include "../Object/Player/Player.h"
 
 #include "TitleScene.h"
 
@@ -24,6 +25,7 @@ void TitleScene::AsyncPreLoad(void)
 {
 	//”ñ“¯Šú“Ç‚Ýž‚Ý‚ð—LŒø‚É‚·‚é
 	SetUseASyncLoadFlag(true);
+
 }
 void TitleScene::Init(void)
 {
@@ -39,6 +41,8 @@ void TitleScene::Init(void)
 	//”wŒi‰Šú‰»
 	stage_ = new Stage;
 	stage_->Init();
+
+
 }
 
 void TitleScene::Update(void)
@@ -49,7 +53,10 @@ void TitleScene::Update(void)
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+		return;
 	}
+
+	
 
 }
 

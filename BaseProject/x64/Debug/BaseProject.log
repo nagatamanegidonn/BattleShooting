@@ -1,3 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: BackGround.cpp という名前の複数のファイルでは、同じ場所に出力が生成されます。これにより、不適切なビルド結果が生じる可能性があります。関連するファイルは Src\BackGround.cpp, Src\Object\BackGround.cpp です。
-  ShotBase.cpp
-  BaseProject.vcxproj -> C:\Users\nsaga\OneDrive\デスクトップ\春コン2025\x64\Debug\BaseProject.exe
+  SelectScene.cpp
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  BaseProject.vcxproj -> C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\x64\Debug\BaseProject.exe

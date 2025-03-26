@@ -9,6 +9,8 @@
 
 #include "../Utility/AsoUtility.h"
 
+#include "../Object/Player/Player.h"
+
 #include "SelectScene.h"
 
 SelectScene::SelectScene(void)
@@ -23,6 +25,13 @@ void SelectScene::AsyncPreLoad(void)
 {
 	//非同期読み込みを有効にする
 	SetUseASyncLoadFlag(true);
+
+	// 初期化: i = 1、条件式: i <= 5、更新: i++
+	for (int i = 0; i < PLAYER_MAX; i++) {
+
+		auto  player = std::make_shared<Player>();
+		players_.push_back(player);
+	}
 }
 void SelectScene::Init(void)
 {
@@ -48,10 +57,32 @@ void SelectScene::Init(void)
 	}
 
 	for(int ii = 0; ii < PLAYER_MAX; ii++)chara[ii] = CHARA::E_CHARA_NON;
+
+	float size = 100.0f;
+
+	//プレイヤーの設定
+	VECTOR sPos[4] = {
+		{-size,0.0f,size}//左上
+		,{size,0.0f,size}//右上
+		,{-size,0.0f,-size}//左下
+		,{size,0.0f,-size}//右上 
+	};
+
+	// 初期化: i = 1、条件式: i <= 5、更新: i++
+	for (int i = 0; i < PLAYER_MAX; i++) {
+		players_[i]->Init(sPos[i], i);
+		players_[i]->ChangeState(Player::STATE::NONE);
+	}
 }
 
 void SelectScene::Update(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
+
 	InputManager& ins = InputManager::GetInstance();
 
 	
@@ -79,6 +110,7 @@ void SelectScene::Update(void)
 			|| (start[ii] && (ins.IsPadBtnNew(jno2, InputManager::JOYPAD_BTN::START))))
 		{
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+			return;
 		}
 	}
 
@@ -94,10 +126,20 @@ void SelectScene::Update(void)
 	// キャラ選択時の当たり判定
 	Collision();
 
+	//プレイヤーの更新
+	for (auto p : players_)
+	{
+		p->Update();
+	}
 }
 
 void SelectScene::Draw(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
 	//-----------------------------------------------------
 	//デバック用
 
@@ -121,6 +163,12 @@ void SelectScene::Draw(void)
 		DrawString(0, 0, "p2", RGB(0, 0, 255), true);
 	}
 
+	//プレイヤーの更新
+	for (auto p : players_)
+	{
+		p->Draw();
+	}
+	
 	//プレイヤー１のカーソル（仮）
 	DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
 

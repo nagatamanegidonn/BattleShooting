@@ -17,7 +17,8 @@
 #include "Player.h"
 
 
-Player::Player(Camera& camera) :camera_(camera)
+//Player::Player(Camera& camera) :camera_(camera)
+Player::Player()
 {
 	// ó‘ÔŠÇ—
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));

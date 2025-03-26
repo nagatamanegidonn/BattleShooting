@@ -53,12 +53,16 @@ public:
 		RUN,
 	};
 
-    Player(Camera& camera);  // コンストラクタ
+    //Player(Camera& camera);  // コンストラクタ
+    Player();  // コンストラクタ
     ~Player(); // デストラクタ
 
     void Init(VECTOR startPos,int playerNo);  // 初期化
     void Update();  // 更新
     void Draw();  // 描画
+
+	// 状態遷移
+	void ChangeState(STATE state);
 
 	//プレイヤーのTransform情報
 	const Transform& GetTransform(void) const { return transform_; }
@@ -78,7 +82,7 @@ public:
 
 private:
 	//自身のカメラ
-	Camera& camera_;
+	//Camera& camera_;
 
 
 	std::shared_ptr<Controller> controller_;
@@ -109,7 +113,6 @@ private:
 	void SyncBoostEffct(void);
 
 	// 状態遷移
-	void ChangeState(STATE state);
 	void ChangeStateNone(void);
 	void ChangeStatePlay(void);
 	void ChangeStateJump(void);

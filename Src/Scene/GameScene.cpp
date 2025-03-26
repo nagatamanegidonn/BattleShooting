@@ -35,7 +35,7 @@ void GameScene::AsyncPreLoad(void)
 	for (int i = 0; i < PLAYER_SIZE; i++) {
 		camera_[i] = new Camera();
 
-		auto  player = std::make_shared<Player>(*camera_[i]);
+		auto  player = std::make_shared<Player>();
 		players_.push_back(player);
 	}
 
@@ -209,72 +209,7 @@ void GameScene::Draw(void)
 	DrawDebug();
 
 #pragma endregion
-	return;
-
-
-//	for (int i = 0; i < PLAYER_SIZE; i++) 
-//	{
-//		// 設定したいスクリーンを作成する
-//		SetDrawScreen(screenH[i]);
-//
-//		// 画面を初期化
-//		ClearDrawScreen();
-//
-//		// カメラ設定
-//		camera_[i]->SetBeforeDraw();
-////
-//#pragma region ゲームシーンの描画
-//
-//		// 描画
-//		stage_->Draw();
-//
-//		//プレイヤーの描画
-//		for (auto& p : players_)
-//		{
-//			p->Draw();
-//		}
-//
-//		//デバッグ描画
-//		//DrawDebug();
-//
-//#pragma endregion
-//
-//		//つなぎ
-//		SetDrawScreen(DX_SCREEN_BACK);
-//
-//	}
 	
-	SetDrawScreen(DX_SCREEN_BACK);
-	// 画面を初期化
-	ClearDrawScreen();
-
-	int x = 0;
-	int y = 0;
-
-	//描画場所
-	/*for (auto screen : screenH)
-	{
-		DrawGraph(x, y, screen, true);
-
-		if (x >= cx && y >= cy)
-		{
-			x += cx;
-		}
-		else if (x >= cx && y >= 0)
-		{
-			x -= cx;
-			y += cy;
-		}
-		else if (x >= 0 && y >= 0)
-		{
-			x += cx;
-		}
-	}*/
-
-
-	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
-	SetDrawScreen(DX_SCREEN_BACK);
-
 }
 
 void GameScene::Release(void)

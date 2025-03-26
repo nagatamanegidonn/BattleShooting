@@ -1,4 +1,6 @@
 #pragma once
+#include<memory>  // shared_ptrを使うために必要c
+
 #include "SceneBase.h"
 
 class SelectScene : public SceneBase
@@ -39,6 +41,8 @@ public:
 private:
 
 	int chara[PLAYER_MAX];
+
+	std::vector<std::shared_ptr<Player>> players_;
 
 	// カーソル座標
 	VECTOR pos[PLAYER_MAX];
