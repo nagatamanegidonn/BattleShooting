@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.42.34433:TargetPlatformVersion=10.0.22621.0:
 Debug|x64|C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\|
+=======
+PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.39.33519:TargetPlatformVersion=10.0.22621.0:
+Debug|x64|D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\|
+>>>>>>> 04023bd1f948c395e1a01cf030e155a97cc611af

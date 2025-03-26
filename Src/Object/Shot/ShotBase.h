@@ -9,7 +9,7 @@ class ShotBase
 public:
 
 	// 爆発エフェクトの大きさ
-	static constexpr float BLAST_SCALE = 10.0f;
+	static constexpr float BLAST_SCALE = 20.0f;
 
 	// 状態
 	enum class STATE
