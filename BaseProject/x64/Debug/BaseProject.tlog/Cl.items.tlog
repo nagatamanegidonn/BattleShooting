@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\BackGround.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\BackGround.obj
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Object\BackGround.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\BackGround.obj
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Object\Common\AnimationController.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\AnimationController.obj
@@ -27,33 +26,3 @@ C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SceneBase.cp
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\SelectScene.obj
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\TitleScene.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\TitleScene.obj
 C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Utility\AsoUtility.cpp;C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\BaseProject\x64\Debug\AsoUtility.obj
-=======
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\BackGround.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\BackGround.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\BackGround.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\BackGround.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Common\AnimationController.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\AnimationController.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Player\DirModel.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\DirModel.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Stage.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Stage.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Player\Controller.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Controller.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Player\Player.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Player.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Shot\ShotBase.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\ShotBase.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Shot\ShotPlayer.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\ShotPlayer.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\GameScene.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\GameScene.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Common\IntVector3.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\IntVector3.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Common\Transform.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Transform.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Application.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Application.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Common\Fader.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Fader.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Common\Quaternion.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Quaternion.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Common\Vector2.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Vector2.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\main.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\main.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Manager\Camera.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Camera.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Manager\InputManager.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\InputManager.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Manager\Resource.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Resource.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Manager\ResourceManager.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\ResourceManager.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Manager\SceneManager.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\SceneManager.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Object\Grid.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\Grid.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\ResultScene.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\ResultScene.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\SceneBase.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\SceneBase.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\SelectScene.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\SelectScene.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\TitleScene.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\TitleScene.obj
-D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Utility\AsoUtility.cpp;D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\BaseProject\x64\Debug\AsoUtility.obj
->>>>>>> 04023bd1f948c395e1a01cf030e155a97cc611af

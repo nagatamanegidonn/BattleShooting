@@ -47,6 +47,11 @@ void TitleScene::Init(void)
 
 void TitleScene::Update(void)
 {
+	//ƒ[ƒh‚ªŠ®—¹‚µ‚½‚©”»’f
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
 
 	// ƒV[ƒ“‘JˆÚ
 	InputManager& ins = InputManager::GetInstance();
@@ -62,6 +67,12 @@ void TitleScene::Update(void)
 
 void TitleScene::Draw(void)
 {
+	//ƒ[ƒh‚ªŠ®—¹‚µ‚½‚©”»’f
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
+
 	stage_->Draw();
 
 

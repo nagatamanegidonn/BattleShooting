@@ -11,13 +11,6 @@ public:
 	static constexpr int MOVE = 4;				// カーソルの移動速度
 	static constexpr int CHARACTER_MAX = 2;
 
-	enum CHARA
-	{
-		E_CHARA_NON,
-		E_CHARA1,
-		E_CHARA2,
-	};
-
 
 	// コンストラクタ
 	SelectScene(void);
@@ -40,14 +33,13 @@ public:
 
 private:
 
-	int chara[PLAYER_MAX];
-
 	std::vector<std::shared_ptr<Player>> players_;
 
 	// カーソル座標
 	VECTOR pos[PLAYER_MAX];
 
 	// キャラクター選択が完了しているかどうかの確認用
-	bool start[PLAYER_MAX];
+	bool isReady_[PLAYER_MAX];
+	bool isStart_;
 
 };

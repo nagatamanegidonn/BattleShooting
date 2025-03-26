@@ -159,6 +159,12 @@ void Player::Update()
 
 void Player::Draw()
 {
+	//しーんIDがGameシーン以外なら下記の処理
+	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME)
+	{
+		MV1DrawModel(transform_.modelId);
+		return;
+	}
 
 	// モデルの描画
 	// 視野範囲内：ディフューズカラーを赤色にする
@@ -301,6 +307,22 @@ void Player::ChangeState(STATE state)
 void Player::ChangeStateNone()
 {
 	stateUpdate_ = std::bind(&Player::UpdateNone, this);
+
+	float scale = 1.0f;
+	transform_.scl = { scale, scale, scale };
+	transform_.quaRot = Quaternion::Euler(
+		0.0f,
+		AsoUtility::Deg2RadF(0.0f),
+		0.0f
+	);
+	transform_.quaRotLocal = Quaternion::Euler(
+		AsoUtility::Deg2RadF(90.0f),
+		AsoUtility::Deg2RadF(0.0f),
+		AsoUtility::Deg2RadF(-10.0f)
+	);
+	transform_.Update();
+
+
 }
 void Player::ChangeStatePlay()
 {
@@ -331,6 +353,20 @@ void Player::ChangeStateVictory()
 
 void Player::UpdateNone()
 {
+
+	//今回回転させたい回転量をクォータニオンで作る
+	Quaternion rotPow = Quaternion();
+
+	rotPow = rotPow.Mult(
+		Quaternion::AngleAxis(
+			AsoUtility::Deg2RadF(1.0f), AsoUtility::AXIS_Z
+		));
+	
+
+	// 回転諒を加える(合成)
+	transform_.quaRot = transform_.quaRot.Mult(rotPow);
+
+	transform_.Update();
 
 }
 void Player::UpdatePlay()
