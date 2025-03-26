@@ -150,6 +150,8 @@ private:
 
 	// ’e
 	std::vector<ShotPlayer*> shots_;
+	//’e‚Ìƒ‚ƒfƒ‹
+	int shotModel_;
 	// ’e‚Ì”­ËŠÔŠu
 	float deleyShot_;
 	// ‘€ìF’e”­Ë

@@ -59,6 +59,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 	if (playerNo == 0)
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -69,6 +70,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 	else
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
@@ -159,6 +161,12 @@ void Player::Update()
 
 void Player::Draw()
 {
+	//ゲーム中でなければモデルのみを描画
+	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME)
+	{
+		MV1DrawModel(transform_.modelId);
+		return;
+	}
 
 	// モデルの描画
 	// 視野範囲内：ディフューズカラーを赤色にする
@@ -583,7 +591,7 @@ void Player::CreateShot(void)
 		if (v->GetState() == ShotPlayer::STATE::END)
 		{
 			// 以前に生成したインスタンスを使い回し
-			v->Create(transform_.pos, transform_.GetForward());
+			v->Create(transform_.pos, transform_.GetForward(),shotModel_);
 			isCreate = true;
 			break;
 		}
@@ -594,7 +602,7 @@ void Player::CreateShot(void)
 		auto dir = transform_.GetForward();
 		// 新しいインスタンスを生成
 		ShotPlayer* newShot = new ShotPlayer();
-		newShot->Create(transform_.pos, transform_.GetForward());
+		newShot->Create(transform_.pos, transform_.GetForward(), shotModel_);
 
 		// 弾の管理配列に追加
 		shots_.push_back(newShot);

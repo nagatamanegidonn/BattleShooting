@@ -30,7 +30,7 @@ public:
 
 	/// <param name="birthPos">‰ŠúÀ•W</param>
 	/// <param name="dir">is•ûŒü</param>
-	virtual void Create(VECTOR birthPos, VECTOR dir);
+	virtual void Create(VECTOR birthPos, VECTOR dir, int modelId);
 	virtual void Update(void);
 	virtual void Draw(void);
 	virtual void Release(void);
