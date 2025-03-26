@@ -2,11 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-<<<<<<< HEAD
-      <FullPath>C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\x64\Debug\BaseProject.exe</FullPath>
-=======
       <FullPath>D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\x64\Debug\BaseProject.exe</FullPath>
->>>>>>> 04023bd1f948c395e1a01cf030e155a97cc611af
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

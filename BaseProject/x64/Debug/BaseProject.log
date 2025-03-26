@@ -1,21 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: BackGround.cpp という名前の複数のファイルでは、同じ場所に出力が生成されます。これにより、不適切なビルド結果が生じる可能性があります。関連するファイルは Src\BackGround.cpp, Src\Object\BackGround.cpp です。
-<<<<<<< HEAD
-  SelectScene.cpp
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(173,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,70): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,36): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\Src\Scene\SelectScene.cpp(176,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  BaseProject.vcxproj -> C:\Users\fatto\OneDrive\デスクトップ\BattleShooting\x64\Debug\BaseProject.exe
-=======
-  Player.cpp
   GameScene.cpp
 D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\GameScene.cpp(200,28): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
 D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\Src\Scene\GameScene.cpp(200,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  コードを生成中...
 BaseProject\x64\Debug\BackGround.obj : warning LNK4042: オブジェクトの指定が重複しています。余分なものは無視されます。
 EffekseerForDXLib_vs2019_x64_d.lib(EffekseerForDXLib.obj) : warning LNK4099: PDB '' が 'EffekseerForDXLib_vs2019_x64_d.lib(EffekseerForDXLib.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.Vector3D.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.Vector3D.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
@@ -98,4 +84,3 @@ Effekseer_vs2019_x64_d.lib(ModelLoader.obj) : warning LNK4099: PDB '' が 'Effek
 Effekseer_vs2019_x64_d.lib(Effekseer.MaterialFile.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.MaterialFile.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.CompiledMaterial.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.CompiledMaterial.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
   BaseProject.vcxproj -> D:\Class\VocationalSchoolData\Programing\SpringContest\BattleShooting\x64\Debug\BaseProject.exe
->>>>>>> 04023bd1f948c395e1a01cf030e155a97cc611af

@@ -167,6 +167,8 @@ void Player::Draw()
 		MV1DrawModel(transform_.modelId);
 		return;
 	}
+	int temp = static_cast<int>(state_);
+	DrawFormatString(0, 64, 0x00FF, "PlayerParam: %d",temp);
 
 	// モデルの描画
 	// 視野範囲内：ディフューズカラーを赤色にする
@@ -245,6 +247,10 @@ const void Player::Damage(int damage)
 	}
 	//体力を減らす
 	playerHp_ -= damage;
+	if (playerHp_ <= 0)
+	{
+		playerHp_ = 0;
+	}
 	//無敵時間を設定
 	invincibleTime_ = 1.0f;
 }
@@ -298,6 +304,10 @@ void Player::InitEffect(void)
 
 void Player::ChangeState(STATE state)
 {
+	if (state_ == STATE::DEAD)
+	{
+		return;
+	}
 
 	// 状態変更
 	state_ = state;

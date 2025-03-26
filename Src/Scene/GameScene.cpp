@@ -295,8 +295,8 @@ void GameScene::Collision(void)
 				plyer->Damage(1);
 				//Ç”Ç¡îÚÇŒÇµèàóù
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
-				plyer->SetJump(dir);
-				dir = VScale(dir, -1);//êÅÇ¡îÚÇŒÇµÇÃï˚å¸ÇîΩì]
+				plyer->SetJump(VScale(dir, 1.5f));
+				dir = VScale(dir, -1);//êÅÇ¡îÚÇŒÇµÇÃï˚å¸ÇîΩì]&Å~ÇT
 				vsPlyer->SetJump(dir);
 
 				// îöî≠ÉGÉtÉFÉNÉgÇçƒê∂Ç∑ÇÈ
@@ -310,7 +310,7 @@ void GameScene::Collision(void)
 			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
 
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
+			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS + Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
 			{
 				plyer->Damage(1);
 				vsPlyer->Damage(1);
@@ -334,11 +334,11 @@ void GameScene::Collision(void)
 			{
 				if (shot->IsShot() && vsPlyer->GetState() == Player::STATE::PLAY)
 				{
-					
+
 					//íeÇÃìñÇΩÇËîªíË
 					diff = VSub(shot->GetPos(), vsPlyer->GetPos(2));
 					disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
+					if (disPow < shot->GetCollisionRadius() * shot->GetCollisionRadius() + Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
 					{
 						//plyerÇ…çUåÇÇ™ìñÇΩÇ¡ÇƒÇ¢ÇÈ
 						vsPlyer->Damage(1);
@@ -352,6 +352,18 @@ void GameScene::Collision(void)
 					}
 				}
 			}
+		}
+
+		VECTOR diff = VSub(AsoUtility::VECTOR_ZERO, plyer->GetTransform().pos);
+
+		float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+		if (disPow < Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Stage::STAGE_RADIUS * Stage::STAGE_RADIUS)//É_ÉÅÅ[ÉWîºåaÅ~çUåÇîºåa
+		{
+		}
+		else
+		{
+			plyer->Damage(100);
+			plyer->SetJump({0.0f,0.0f,0.0f});
 		}
 	}
 
