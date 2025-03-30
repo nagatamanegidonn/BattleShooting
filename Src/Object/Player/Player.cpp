@@ -121,9 +121,6 @@ void Player::Init(VECTOR startPos, int playerNo)
 	//HPもとは１０
 	playerMaxHp_ = playerHp_ = 5;
 
-	//矢印の作成
-	MakeSquereVertex();
-
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
 	deleyShot_ = TIME_DELAY_SHOT;
@@ -227,9 +224,10 @@ void Player::Draw()
 
 #pragma endregion
 
-
+#ifdef _DEBUG
 	DrawSphere3D(rideAttrckPos_, ATTRCK_RADIUS, 10, 0xff0000, 0xff0000, false);
 	DrawSphere3D(rideDamagePos_, DAMAGE_RADIUS, 10, 0x0000ff, 0x0000ff, false);
+#endif
 
 	size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
@@ -357,7 +355,6 @@ void Player::ChangeStateVictory()
 
 #pragma endregion
 
-
 // 更新ステップ
 #pragma region state_ごとによる更新処理
 
@@ -383,9 +380,9 @@ void Player::UpdatePlay()
 	ProcessTurn();
 	ProcessMove();
 
-
-
 	ProcessShot();
+
+	ProcessBoost();
 
 	// 現在座標を起点に移動後座標を決める
 	movedPos_ = VAdd(transform_.pos, movePow_);
@@ -555,9 +552,9 @@ void Player::Turn(VECTOR axis)
 
 	}
 
-} 
+}
 
-void Player::ProcessShot(void)
+void Player::ProcessBoost(void)
 {
 	auto& ins = InputManager::GetInstance();
 
@@ -568,6 +565,11 @@ void Player::ProcessShot(void)
 		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
 		SetJump(dir);
 	}
+}
+
+void Player::ProcessShot(void)
+{
+	auto& ins = InputManager::GetInstance();
 
 	//射撃攻撃
 	if ((controller_->GetisControl(Controller::MODE::ATTACK)
@@ -617,9 +619,4 @@ void Player::CreateShot(void)
 		// 弾の管理配列に追加
 		shots_.push_back(newShot);
 	}
-}
-
-void Player::MakeSquereVertex(void)
-{
-	
 }

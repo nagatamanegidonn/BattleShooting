@@ -69,6 +69,7 @@ public:
 	const int& GetModelId(void) const { return transform_.modelId; }
 
 	const STATE& GetState(void) const { return state_; }
+	const bool IsDead(void) const { return state_ == STATE::DEAD; }
 
 	const int& GetMaxHp(void) const { return playerMaxHp_; }
 	const int& GetHp(void) const { return playerHp_; }
@@ -177,10 +178,6 @@ private:
     // モデル制御の基本情報
     Transform transform_;
 
-	// 頂点情報
-	VERTEX3D vertexs_[6];
-	// 描画用の四角頂点を作成
-	void MakeSquereVertex(void);
 
 };
 

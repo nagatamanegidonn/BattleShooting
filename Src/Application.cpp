@@ -4,6 +4,8 @@
 #include "Manager/ResourceManager.h"
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Manager/SoundManager.h"
+
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -11,6 +13,7 @@ Application* Application::instance_ = nullptr;
 const std::string Application::PATH_IMAGE = "Data/Image/";
 const std::string Application::PATH_MODEL = "Data/Model/";
 const std::string Application::PATH_EFFECT = "Data/Effect/";
+const std::string Application::PATH_SOUND = "Data/Sound/";
 
 void Application::CreateInstance(void)
 {
@@ -54,7 +57,8 @@ void Application::Init(void)
 
 	// リソース管理初期化
 	ResourceManager::CreateInstance();
-
+	//音の初期化
+	SoundManager::CreateInstance();
 	// シーン管理初期化
 	SceneManager::CreateInstance();
 
@@ -91,7 +95,8 @@ void Application::Destroy(void)
 	InputManager::GetInstance().Destroy();
 	ResourceManager::GetInstance().Destroy();
 	SceneManager::GetInstance().Destroy();
-	
+	SoundManager::GetInstance().Destroy();
+
 	// Effekseerを終了する。
 	Effkseer_End();
 

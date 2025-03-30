@@ -5,6 +5,7 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
+#include "../Manager/SoundManager.h"
 #include "../Manager/Camera.h"
 
 #include "../Object/Stage.h"
@@ -53,6 +54,9 @@ void TitleScene::Update(void)
 		return;
 	}
 
+	SoundManager::GetInstance().Play(SoundManager::SRC::TITLE_BGM, Sound::TIMES::LOOP);
+
+
 	// ƒV[ƒ“‘JˆÚ
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -83,6 +87,9 @@ void TitleScene::Draw(void)
 
 void TitleScene::Release(void)
 {
+	//SoundManager::GetInstance().Stop(SoundManager::SRC::TITLE_BGM);
+	SoundManager::GetInstance().AllStop();
+
 	stage_->Release();
 	delete stage_;
 }

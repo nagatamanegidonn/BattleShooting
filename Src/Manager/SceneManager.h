@@ -24,6 +24,7 @@ public:
 		NONE,
 		PLAYER_ONE,
 		PLAYER_TWO,
+		DRAW,
 	};
 	
 	// インスタンスの生成

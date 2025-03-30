@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BackGround.cpp" />
+    <ClCompile Include="Src\Manager\Sound.cpp" />
+    <ClCompile Include="Src\Manager\SoundManager.cpp" />
     <ClCompile Include="Src\Object\BackGround.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Player\DirModel.cpp" />
@@ -50,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\BackGround.h" />
+    <ClInclude Include="Src\Manager\Sound.h" />
+    <ClInclude Include="Src\Manager\SoundManager.h" />
     <ClInclude Include="Src\Object\BackGround.h" />
     <ClInclude Include="Src\Object\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Player\DirModel.h" />

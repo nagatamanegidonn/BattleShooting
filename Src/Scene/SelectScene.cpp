@@ -46,10 +46,10 @@ void SelectScene::Init(void)
 	pos[1] = AsoUtility::VECTOR_ZERO;
 
 	pos[0].x = Application::SCREEN_SIZE_X / 3;
-	pos[0].y = Application::SCREEN_SIZE_Y / 2;
+	pos[0].y = Application::SCREEN_SIZE_Y / 3;
 
 	pos[1].x = (Application::SCREEN_SIZE_X / 3) * 2;
-	pos[1].y = Application::SCREEN_SIZE_Y / 2;
+	pos[1].y = Application::SCREEN_SIZE_Y / 3;
 
 	//ゲーム開始準備確認用フラグ
 	for (int ii = 0; ii < PLAYER_MAX; ii++)

@@ -134,7 +134,7 @@ void GameScene::Update(void)
 		//Ä¶‚Å‚«‚Ä‚È‚¢
 		int t = 0;
 	}
-	
+
 	// ƒV[ƒ“‘JˆÚ
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -143,9 +143,32 @@ void GameScene::Update(void)
 		return;
 	}
 
+	SceneManager& Sns = SceneManager::GetInstance();
+
+	//Ÿ”s”»’è
+	if (players_[0]->IsDead() || players_[1]->IsDead())
+	{
+		if (players_[0]->IsDead() && players_[1]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::DRAW);
+		}
+		else if (players_[0]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
+		}
+		else if (players_[1]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
+		}
+
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		return;
+	}
+
+
 	/*stage_->Update();*/
 
-	
+
 
 	//ƒvƒŒƒCƒ„[‚ÌXV
 	for (auto p : players_)
@@ -206,7 +229,9 @@ void GameScene::Draw(void)
 	}
 
 	//ƒfƒoƒbƒO•`‰æ
+#ifdef _DEBUG
 	DrawDebug();
+#endif
 
 #pragma endregion
 	
@@ -328,11 +353,12 @@ void GameScene::Collision(void)
 				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
 			}
 
-
+			//’e‚Ì“–‚½‚è”»’è
 			auto shots = plyer->GetShots();
 			for (auto& shot : shots)
 			{
-				if (shot->IsShot() && vsPlyer->GetState() == Player::STATE::PLAY)
+				if (shot->IsShot() &&
+					(vsPlyer->GetState() == Player::STATE::PLAY || vsPlyer->GetState() == Player::STATE::JUMP))
 				{
 
 					//’e‚Ì“–‚½‚è”»’è
@@ -357,37 +383,14 @@ void GameScene::Collision(void)
 		VECTOR diff = VSub(AsoUtility::VECTOR_ZERO, plyer->GetTransform().pos);
 
 		float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-		if (disPow < Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Stage::STAGE_RADIUS * Stage::STAGE_RADIUS)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
-		{
-		}
-		else
+		float distance = Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Stage::STAGE_RADIUS * Stage::STAGE_RADIUS;
+		if (disPow > distance)//ƒ_ƒ[ƒW”¼Œa~UŒ‚”¼Œa
 		{
 			plyer->Damage(100);
-			plyer->SetJump({0.0f,0.0f,0.0f});
+			plyer->ChangeState(Player::STATE::DEAD);
 		}
 	}
-
-	int winid = 0;
-	SceneManager& Sns = SceneManager::GetInstance();
-	for (auto& plyer : players_)
-	{
-		//Ÿ”s”»’è
-		if (plyer->GetState() == Player::STATE::DEAD)
-		{
-			switch (winid)
-			{
-			case 0:
-				Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
-				break;
-			case 1:
-				Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
-				break;
-			}
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-			return;
-		}
-		winid++;
-	}
+	
 
 }
 
@@ -405,6 +408,7 @@ void GameScene::DrawDebug(void)
 	//ƒvƒŒƒCƒ„[‚ÌXV
 	for (auto& plyer : players_)
 	{
+		//HPƒo[‚Ì•\Ž¦
 		int cx2 = cx + (20 * plyNum);
 		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetMaxHp()), 50, 0x000000, true);
 		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetHp()), 50, 0x00ff00, true);
