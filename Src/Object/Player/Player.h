@@ -60,6 +60,7 @@ public:
     void Init(VECTOR startPos,int playerNo);  // 初期化
     void Update();  // 更新
     void Draw();  // 描画
+    void DrawPram(int plyarNo);  // 描画
 
 	// 状態遷移
 	void ChangeState(STATE state);
@@ -168,6 +169,10 @@ private:
 	int playerId_;	//弾の種類やモデルを決める変数
 	int playerHp_;
 	int playerMaxHp_;
+	//ステータス画像
+	int hpGaugeH_;
+	int hpFreamH_;
+	int playerIconH_;
 
 	float damageTime_;
 	float invincibleTime_;

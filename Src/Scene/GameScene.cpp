@@ -404,25 +404,13 @@ void GameScene::DrawDebug(void)
 	int cy = Application::SCREEN_SIZE_Y / 2;
 
 
-	int plyNum= -1;
+	int plyNum = 0;
 	//プレイヤーの更新
 	for (auto& plyer : players_)
 	{
 		//HPバーの表示
-		int cx2 = cx + (20 * plyNum);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetMaxHp()), 50, 0x000000, true);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetHp()), 50, 0x00ff00, true);
-
-		VECTOR pos = plyer->GetTransform().pos;
-		if (plyNum == 1)
-		{
-			DrawFormatString(0, 16, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
-		}
-		else
-		{
-			DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
-		}
-		plyNum *= -1;
+		plyer->DrawPram(plyNum);
+		plyNum += 1;
 	}
 	printf("Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
 

@@ -65,7 +65,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
-
+		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
 	}
 	else
 	{
@@ -79,6 +79,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
 	}
 
 	//float scale = 10.0f;
@@ -120,6 +121,8 @@ void Player::Init(VECTOR startPos, int playerNo)
 	//ステータス変数
 	//HPもとは１０
 	playerMaxHp_ = playerHp_ = 5;
+	hpGaugeH_ = LoadGraph("Data/Image/HPGauge.png");
+	hpFreamH_ = LoadGraph("Data/Image/HPFream.png");
 
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
@@ -234,6 +237,56 @@ void Player::Draw()
 	{
 		shots_[i]->Draw();
 	}
+}
+void Player::DrawPram(int plyarNo)
+{
+
+	int plyNum = -1;
+	bool plyFlag = true;
+	if (plyarNo == 0)
+	{
+		plyNum = 1;
+		plyFlag = true;
+	}
+	else
+	{
+		plyNum = -1;
+		plyFlag = false;
+	}
+
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+
+	//HPバーの表示
+	/*int cx2 = cx + (20 * plyNum);
+	DrawBox(cx2, 20, cx2 + (20 * plyNum * playerMaxHp_), 50, 0x000000, true);
+	DrawBox(cx2, 20, cx2 + (20 * plyNum * playerHp_), 50, 0x00ff00, true);*/
+
+	int imageSize = 68;
+	int cx2 = (400 * (plyNum * -1)) + cx;
+
+	for (int i = 0; i < playerMaxHp_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpFreamH_, true, plyFlag);
+	}
+	for (int i = 0; i < playerHp_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpGaugeH_, true, plyFlag);
+	}
+
+	const VECTOR pos = transform_.pos;
+	if (plyNum == 1)
+	{
+		DrawFormatString(0, 16, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+	}
+	else
+	{
+		DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+	}
+	plyNum *= -1;
+
+
 }
 
 //ダメージ

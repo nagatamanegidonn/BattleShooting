@@ -91,6 +91,9 @@ void ResultScene::Draw(void)
 	case SceneManager::WINNER::PLAYER_TWO:
 		msg = "PLAYER2 WIN";
 		break;
+	case SceneManager::WINNER::DRAW:
+		msg = "DRAW";
+		break;
 	}
 
 	len = (int)strlen(msg.c_str());
