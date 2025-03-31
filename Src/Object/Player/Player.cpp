@@ -186,8 +186,6 @@ void Player::Draw()
 		MV1DrawModel(transform_.modelId);
 		return;
 	}
-	int temp = static_cast<int>(state_);
-	DrawFormatString(0, 64, 0x00FF, "PlayerParam: %d",temp);
 
 	// モデルの描画
 	// 視野範囲内：ディフューズカラーを赤色にする
@@ -308,7 +306,7 @@ void Player::DrawPram(int plyarNo)
 
 	if (magazineShot_ <= 0)
 	{
-		DrawFormatString(cx - 120, 80, 0xffffff, "Yボタン又はQ、/キーでリロード");
+		DrawFormatString(cx - 120, 80, 0xffffff, "Yボタン又はQ、＼キーでリロード");
 	}
 
 #ifdef _DEBUG

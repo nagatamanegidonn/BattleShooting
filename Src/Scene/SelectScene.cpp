@@ -139,6 +139,10 @@ void SelectScene::Draw(void)
 	//-----------------------------------------------------
 	//デバック用
 
+	DrawFormatString(0, 16, 0xffffff, "1,2で決定");
+	DrawFormatString(0, 16, 0xffffff, "Spaceキーでスタート");
+
+
 	//背景
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
