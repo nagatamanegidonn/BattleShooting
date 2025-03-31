@@ -123,12 +123,15 @@ void Player::Init(VECTOR startPos, int playerNo)
 	playerMaxHp_ = playerHp_ = 5;
 	hpGaugeH_ = LoadGraph("Data/Image/HPGauge.png");
 	hpFreamH_ = LoadGraph("Data/Image/HPFream.png");
+	shotGaugeH_ = LoadGraph("Data/Image/shotGauge.png");
+	shotFreamH_ = LoadGraph("Data/Image/shotFream.png");
 
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
 	deleyShot_ = TIME_DELAY_SHOT;
-
-
+	magazineMaxShot_ = magazineShot_ = 20;
+	reloadTime_ = 0.0f;
+	reloadSet_ = TIME_RELOAD;
 	// 初期状態
 	ChangeState(STATE::PLAY);
 
@@ -140,9 +143,25 @@ void Player::Update()
 {
 	controller_->Update();
 
-	// 更新ステップ
-	stateUpdate_();
-
+	
+	//リロード硬直
+	if (reloadTime_ > 0.0f)
+	{
+		reloadTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		for (int i = 0; i < static_cast<int>(magazineMaxShot_); i++)
+		{
+			if (reloadTime_ <= reloadSet_)
+			{
+				reloadSet_ -= 0.1f;
+				magazineShot_ += 1;
+			}
+		}
+	}
+	else
+	{
+		// 更新ステップ
+		stateUpdate_();
+	}
 
 	transform_.Update();
 
@@ -240,32 +259,34 @@ void Player::Draw()
 }
 void Player::DrawPram(int plyarNo)
 {
-
 	int plyNum = -1;
 	bool plyFlag = true;
+
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+	int imageSize = 68;
+	int cx2 = (400 * (plyNum * -1)) + cx;
+
 	if (plyarNo == 0)
 	{
 		plyNum = 1;
 		plyFlag = true;
+		cx2 = (400 * (plyNum * -1)) + cx;
+		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), 50, 0.1f, 0.0f, playerIconH_, true, false);
+
 	}
 	else
 	{
 		plyNum = -1;
 		plyFlag = false;
+		cx2 = (400 * (plyNum * -1)) + cx;
+		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), 50, 0.1f, 0.0f, playerIconH_, true, true);
 	}
 
-	int cx = Application::SCREEN_SIZE_X / 2;
-	int cy = Application::SCREEN_SIZE_Y / 2;
-
-
-	//HPバーの表示
-	/*int cx2 = cx + (20 * plyNum);
-	DrawBox(cx2, 20, cx2 + (20 * plyNum * playerMaxHp_), 50, 0x000000, true);
-	DrawBox(cx2, 20, cx2 + (20 * plyNum * playerHp_), 50, 0x00ff00, true);*/
-
-	int imageSize = 68;
-	int cx2 = (400 * (plyNum * -1)) + cx;
-
+	//HPの描画
 	for (int i = 0; i < playerMaxHp_; i++)
 	{
 		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpFreamH_, true, plyFlag);
@@ -275,6 +296,22 @@ void Player::DrawPram(int plyarNo)
 		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpGaugeH_, true, plyFlag);
 	}
 
+	//弾の描画
+	for (int i = 0; i < magazineMaxShot_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.75f, 0.0f, shotFreamH_, true, plyFlag);
+	}
+	for (int i = 0; i < magazineShot_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.65f, 0.0f, shotGaugeH_, true, plyFlag);
+	}
+
+	if (magazineShot_ <= 0)
+	{
+		DrawFormatString(cx - 120, 80, 0xffffff, "Yボタン又はQ、/キーでリロード");
+	}
+
+#ifdef _DEBUG
 	const VECTOR pos = transform_.pos;
 	if (plyNum == 1)
 	{
@@ -285,17 +322,19 @@ void Player::DrawPram(int plyarNo)
 		DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
 	}
 	plyNum *= -1;
-
+#endif
 
 }
 
 //ダメージ
 const void Player::Damage(int damage)
 {
+	reloadTime_ = 0.0f;
 	if (invincibleTime_ > 0.0f)
 	{
 		return;
 	}
+
 	//体力を減らす
 	playerHp_ -= damage;
 	if (playerHp_ <= 0)
@@ -625,20 +664,26 @@ void Player::ProcessShot(void)
 	auto& ins = InputManager::GetInstance();
 
 	//射撃攻撃
-	if ((controller_->GetisControl(Controller::MODE::ATTACK)
-		&& deleyShot_ <= 0.0f))
+	if (controller_->GetisControl(Controller::MODE::ATTACK)
+		&& deleyShot_ <= 0.0f && magazineShot_ > 0)
 	{
-
 		// 弾を生成(方向は仮で正面方向)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
 		// 弾を指定位置から、指定方向に発射させる
 		CreateShot();
 
-
-		// 弾発射後の硬直時間セット
+		//弾数ー１
+		magazineShot_ -= 1;
+		//弾発射後の硬直時間セット
 		deleyShot_ = TIME_DELAY_SHOT;
 	}
-
+	//弾のリロード
+	if (controller_->GetisControl(Controller::MODE::XBUTTUN) && (magazineShot_ < magazineMaxShot_))
+	{
+		reloadTime_ = 0.1f * (magazineMaxShot_ - magazineShot_);
+		reloadSet_ = 0.1f * (magazineMaxShot_ - magazineShot_) - 0.1f;
+		//reloadTime_ = TIME_RELOAD;
+	}
 
 	// 弾発射後の硬直時間を減らしていく
 	if (deleyShot_ > 0.0f)
