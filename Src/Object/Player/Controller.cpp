@@ -66,7 +66,6 @@ void Controller::IsCommnd(void)
 		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_D)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_BUTTON)));
 		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_A)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_BUTTON)));
 		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_SPACE)) || (input.IsNew(KEY_INPUT_V)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_TRIGGER)));
-		isControl_[static_cast<int>(MODE::XBUTTUN)] = ((input.IsNew(KEY_INPUT_Q)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::TOP)));
 		isControl_[static_cast<int>(MODE::JATTACK)] = ((input.IsNew(KEY_INPUT_F)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_TRIGGER)));
 	}
 		break;
@@ -84,7 +83,6 @@ void Controller::IsCommnd(void)
 		isControl_[static_cast<int>(MODE::RIGHT)] = ((leftStickX > 0.0f) || (input.IsNew(KEY_INPUT_RIGHT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_BUTTON)));
 		isControl_[static_cast<int>(MODE::LEFT)] = ((leftStickX < 0.0f) || (input.IsNew(KEY_INPUT_LEFT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_BUTTON)));
 		isControl_[static_cast<int>(MODE::ATTACK)] = ((input.IsNew(KEY_INPUT_RETURN)) || (input.IsNew(KEY_INPUT_V)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::R_TRIGGER)));
-		isControl_[static_cast<int>(MODE::XBUTTUN)] = ((input.IsNew(KEY_INPUT_BACKSLASH)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::TOP)));
 		isControl_[static_cast<int>(MODE::JATTACK)] = ((input.IsNew(KEY_INPUT_RSHIFT)) || (input.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::L_TRIGGER)));
 	}
 		break;

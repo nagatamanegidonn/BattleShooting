@@ -135,7 +135,6 @@ void GameScene::Update(void)
 		int t = 0;
 	}
 
-#ifdef _DEBUG
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -143,7 +142,6 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		return;
 	}
-#endif
 
 	SceneManager& Sns = SceneManager::GetInstance();
 
@@ -228,15 +226,6 @@ void GameScene::Draw(void)
 		{
 			SceneManager::GetInstance().GetCamera()->FadeOut();
 		}
-	}
-
-	int plyNum = 0;
-	//プレイヤーの更新
-	for (auto& plyer : players_)
-	{
-		//HPバーの表示
-		plyer->DrawPram(plyNum);
-		plyNum += 1;
 	}
 
 	//デバッグ描画
@@ -415,7 +404,14 @@ void GameScene::DrawDebug(void)
 	int cy = Application::SCREEN_SIZE_Y / 2;
 
 
-	
+	int plyNum = 0;
+	//プレイヤーの更新
+	for (auto& plyer : players_)
+	{
+		//HPバーの表示
+		plyer->DrawPram(plyNum);
+		plyNum += 1;
+	}
 	printf("Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
 
 	DrawFormatString(0, 64, 0xff0000, "Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
