@@ -30,6 +30,7 @@ public:
 
 	// ’e‚Ì”­ËŠÔŠu
 	static constexpr float TIME_DELAY_SHOT = 0.2f;
+	static constexpr float TIME_RELOAD = 2.0f;
 
 	//”¼Œa
 	static constexpr float ATTRCK_RADIUS = 25.0f;
@@ -156,6 +157,11 @@ private:
 	int shotModel_;
 	// ’e‚Ì”­ËŠÔŠu
 	float deleyShot_;
+	//’e”
+	int magazineShot_;
+	int magazineMaxShot_;
+	float reloadSet_;//’e‚ß‚ÌŠÔŠu
+	float reloadTime_;
 	// ‘€ìF’e”­Ë
 	void ProcessShot(void);
 	// ©‹@‚Ì’e‚ğ”­Ë
@@ -172,6 +178,8 @@ private:
 	//ƒXƒe[ƒ^ƒX‰æ‘œ
 	int hpGaugeH_;
 	int hpFreamH_;
+	int shotGaugeH_;
+	int shotFreamH_;
 	int playerIconH_;
 
 	float damageTime_;
