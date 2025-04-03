@@ -220,7 +220,20 @@ bool SceneManager::IsLoading(void) const
 
 void SceneManager::ResetGame(void)
 {
+	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
+		playerId_[i] = -1;
+	}
+
 	isWinner_ = WINNER::NONE;
+}
+int SceneManager::GetPlayerId(int i) const
+{
+	return playerId_[i];
+	// TODO: return ステートメントをここに挿入します
+}
+void SceneManager::SetPlayerId(int i, int setNum)
+{
+	playerId_[i] = setNum;
 }
 //勝者関係
 SceneManager::WINNER SceneManager::GetWinner(void) const

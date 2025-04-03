@@ -3,6 +3,7 @@
 #include<vector>
 
 #include "SceneBase.h"
+#include "../Manager/SceneManager.h"
 
 class Player;
 class Stage;
@@ -14,7 +15,6 @@ class GameScene : public SceneBase
 {
 public:
 
-	static constexpr int PLAYER_SIZE = 2;
 	static constexpr float BLAST_SCALE = 30.0f;
 
 
@@ -34,8 +34,8 @@ private:
 
 
 	std::vector<std::shared_ptr<Player>> players_;
-	Camera* camera_[PLAYER_SIZE];
-	int screenH[PLAYER_SIZE];
+	Camera* camera_[SceneManager::PLAYER_SIZE];
+	int screenH[SceneManager::PLAYER_SIZE];
 
 	//背景インスタンス
 	Stage* stage_;

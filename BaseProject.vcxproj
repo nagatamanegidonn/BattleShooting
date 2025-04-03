@@ -25,6 +25,7 @@
     <ClCompile Include="Src\Object\BackGround.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Player\DirModel.cpp" />
+    <ClCompile Include="Src\Object\Player\ViewPlayer.cpp" />
     <ClCompile Include="Src\Object\Stage.cpp" />
     <ClCompile Include="Src\Object\Player\Controller.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Src\Object\BackGround.h" />
     <ClInclude Include="Src\Object\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Player\DirModel.h" />
+    <ClInclude Include="Src\Object\Player\ViewPlayer.h" />
     <ClInclude Include="Src\Object\Stage.h" />
     <ClInclude Include="Src\Object\Player\Controller.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
