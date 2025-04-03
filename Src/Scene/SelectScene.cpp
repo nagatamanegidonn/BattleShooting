@@ -75,7 +75,7 @@ void SelectScene::Init(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i);
+		players_[i]->Init(sPos[i], i, i);
 		players_[i]->ChangeState(Player::STATE::NONE);
 	}
 
@@ -187,6 +187,9 @@ void SelectScene::Draw(void)
 		{
 			DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p2Img_, true ,true);
 		}
+
+		//
+	
 	}
 
 	//プレイヤーの更新
@@ -312,9 +315,12 @@ void SelectScene::Collision(void)
 					{
 						select[0] = SELECT_TYPE_2;
 					}
+					//
+					SceneManager::GetInstance().SetPlayerId(0, ii);
 				}
 				else
 				{
+					SceneManager::GetInstance().SetPlayerId(0, -1);
 					isReady_[0] = false;
 					select[0] = SELECT_TYPE_NON;
 				}
@@ -347,9 +353,13 @@ void SelectScene::Collision(void)
 						select[1] = SELECT_TYPE_2;
 					}
 
+					//
+					SceneManager::GetInstance().SetPlayerId(1, ii);
+
 				}
 				else
 				{
+					SceneManager::GetInstance().SetPlayerId(1, -1);
 					isReady_[1] = false;
 					select[0] = SELECT_TYPE_NON;
 				}

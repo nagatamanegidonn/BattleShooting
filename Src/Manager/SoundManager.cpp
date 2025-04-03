@@ -105,6 +105,7 @@ bool SoundManager::Play(SRC src, Sound::TIMES times)
 		}
 		return lPair->second.Play(times);
 	}
+	return false;
 }
 bool SoundManager::Play(SRC src, Sound::TIMES times, VECTOR pos, float radius)
 {
@@ -117,6 +118,7 @@ bool SoundManager::Play(SRC src, Sound::TIMES times, VECTOR pos, float radius)
 		}
 		return lPair->second.Play(pos, radius, times);
 	}
+	return false;
 }
 
 void SoundManager::Stop(SRC src)
@@ -143,6 +145,7 @@ bool SoundManager::CheckMove(SRC src)
 	{
 		return lPair->second.CheckMove();
 	}
+	return false;
 }
 
 void SoundManager::ChengeVolume(SRC src, float per)

@@ -9,6 +9,8 @@ class SceneManager
 
 public:
 
+	static constexpr int PLAYER_SIZE = 2;
+
 	// シーン管理用
 	enum class SCENE_ID
 	{
@@ -46,14 +48,17 @@ public:
 
 	//ゲームのリセット
 	void ResetGame(void);
-	WINNER GetWinner(void) const;//勝者の取得
+//プレイキャラを扱う変数
+	int GetPlayerId(int i) const;
+	void SetPlayerId(int i,int setNum);
+//勝者の変数を扱う関数
+	WINNER GetWinner(void) const;
 	void SetWinner(WINNER win);//勝者の設定
 
 	SCENE_ID GetSceneID(void);// シーンIDの取得
 
 	// デルタタイムの取得
 	float GetDeltaTime(void) const;
-
 	// カメラの取得
 	Camera* GetCamera(void) const;
 
@@ -87,6 +92,8 @@ private:
 	
 
 	//ゲームに使う変数
+	int playerId_[PLAYER_SIZE];
+
 	WINNER isWinner_;
 
 	// デフォルトコンストラクタをprivateにして、
