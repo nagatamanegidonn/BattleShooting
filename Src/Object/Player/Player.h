@@ -58,7 +58,7 @@ public:
     Player();  // コンストラクタ
     ~Player(); // デストラクタ
 
-    void Init(VECTOR startPos,int playerNo);  // 初期化
+    void Init(VECTOR startPos,int playerNo,int pryId);  // 初期化
     void Update();  // 更新
     void Draw();  // 描画
     void DrawPram(int plyarNo);  // 描画

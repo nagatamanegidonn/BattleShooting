@@ -71,7 +71,7 @@ void SelectScene::Init(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i);
+		players_[i]->Init(sPos[i], i, i);
 		players_[i]->ChangeState(Player::STATE::NONE);
 	}
 }

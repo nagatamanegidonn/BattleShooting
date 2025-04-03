@@ -42,7 +42,7 @@ Player::~Player()
 {
 }
 
-void Player::Init(VECTOR startPos, int playerNo)
+void Player::Init(VECTOR startPos, int playerNo, int pryId)
 {
 
 	controller_ = std::make_shared<Controller>();
@@ -56,7 +56,8 @@ void Player::Init(VECTOR startPos, int playerNo)
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
-	if (playerNo == 0)
+	//ƒvƒŒƒCƒLƒƒƒ‰‚²‚Æ‚É‘ã‚í‚é
+	if (pryId == 0)
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
 		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);

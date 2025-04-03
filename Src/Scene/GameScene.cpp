@@ -75,7 +75,7 @@ void GameScene::Init(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
-		players_[i]->Init(sPos[i], SceneManager::GetInstance().GetPlayerId(i));
+		players_[i]->Init(sPos[i], i, SceneManager::GetInstance().GetPlayerId(i));
 
 		//各プレイヤーのスクリーンの作成
 		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y, true);
