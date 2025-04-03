@@ -28,32 +28,23 @@ void SoundManager::Init(void)
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SelectBGM.mp3");
 	res.ChengeMaxVolume(1.1);
-	soundMap_.emplace(SRC::RULE_BGM, res);
+	soundMap_.emplace(SRC::SELECT_BGM, res);
+
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM1.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_1, res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM2.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_2, res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM3.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_3, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM.mp3");
 	//res.ChengeMaxVolume(0.7);
-	soundMap_.emplace(SRC::GAME_BGM, res);
-	
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "BttleBGM.mp3");
-	res.ChengeMaxVolume(0.9);
-	soundMap_.emplace(SRC::BTTLE_BGM, res);
-
-	
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "VictoryBGM.mp3");
-	res.ChengeMaxVolume(0.9);
-	soundMap_.emplace(SRC::VICTORY_BGM , res);
-	
+	soundMap_.emplace(SRC::RESULT_BGM, res);
 
 
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "WinBGM.mp3");
-	soundMap_.emplace(SRC::WIN_BGM, res);
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "DrawBGM.mp3");
-	soundMap_.emplace(SRC::DRAW_BGM, res);
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "LoseBGM.mp3");
-	soundMap_.emplace(SRC::LOSE_BGM, res);
 
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/shot.mp3");

@@ -60,11 +60,11 @@ void TitleScene::Update(void)
 	}
 
 
-	cntSound_++;
+	/*cntSound_++;
 	if (cntSound_ % 30 == 0 || cntSound_ % 45 == 0)
 	{
 		SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
-	}
+	}*/
 	
 
 	// ƒV[ƒ“‘JˆÚ

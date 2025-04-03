@@ -2,6 +2,7 @@
 
 #include "../Application.h"
 
+#include "../Manager/SoundManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -9,7 +10,7 @@
 
 #include "../Utility/AsoUtility.h"
 
-#include "../Object/Player/Player.h"
+#include "../Object/Player/ViewPlayer.h"
 
 #include "SelectScene.h"
 
@@ -29,7 +30,7 @@ void SelectScene::AsyncPreLoad(void)
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
 
-		auto  player = std::make_shared<Player>();
+		auto  player = std::make_shared<ViewPlayer>();
 		players_.push_back(player);
 	}
 }
@@ -76,13 +77,15 @@ void SelectScene::Init(void)
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
 		players_[i]->Init(sPos[i], i, i);
-		players_[i]->ChangeState(Player::STATE::NONE);
+		players_[i]->ChangeState(ViewPlayer::STATE::PLAY);
 	}
 
-	for (int ii = 0; ii > PLAYER_MAX; ii++)
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		select[ii] = SELECT_TYPE_NON;
 	}
+	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
+
 }
 
 void SelectScene::Update(void)
@@ -209,6 +212,7 @@ void SelectScene::Draw(void)
 
 void SelectScene::Release(void)
 {
+	SoundManager::GetInstance().AllStop();
 
 }
 

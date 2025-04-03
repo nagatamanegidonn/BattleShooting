@@ -6,6 +6,7 @@
 
 #include "../Utility/AsoUtility.h"//Quaternion等を扱う関数が入っている
 
+#include "../Manager/SoundManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -117,6 +118,9 @@ void GameScene::Init(void)
 
 
 	hitStop_ = 0.0f;
+
+	SoundManager::GetInstance().Play(SoundManager::SRC::BTTLE_BGM_3, Sound::TIMES::LOOP);
+
 }
 
 void GameScene::Update(void)
@@ -280,6 +284,8 @@ void GameScene::Release(void)
 
 	//エフェクトの開放
 	StopEffekseer3DEffect(effectHitPlayId_);
+
+	SoundManager::GetInstance().AllStop();
 }
 
 //ゲームの衝突処理

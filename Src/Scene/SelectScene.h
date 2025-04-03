@@ -3,6 +3,8 @@
 
 #include "SceneBase.h"
 
+class ViewPlayer;
+
 class SelectScene : public SceneBase
 {
 public:
@@ -49,7 +51,7 @@ private:
 
 	SELECT select[PLAYER_MAX];
 	 
-	std::vector<std::shared_ptr<Player>> players_;
+	std::vector<std::shared_ptr<ViewPlayer>> players_;
 
 	// カーソル座標
 	VECTOR pos[PLAYER_MAX];
