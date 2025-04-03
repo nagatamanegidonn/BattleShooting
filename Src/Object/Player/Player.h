@@ -36,6 +36,7 @@ public:
 	static constexpr float ATTRCK_RADIUS = 25.0f;
 	static constexpr float DAMAGE_RADIUS = 35.0f;
 	
+
 	// ó‘Ô
 	enum class STATE
 	{
@@ -86,7 +87,6 @@ public:
 private:
 	//©g‚ÌƒJƒƒ‰
 	//Camera& camera_;
-
 
 	std::shared_ptr<Controller> controller_;
 	std::shared_ptr<DirModel> dirModel_;

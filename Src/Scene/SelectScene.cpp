@@ -305,7 +305,7 @@ void SelectScene::Collision(void)
 					isReady_[0] = true;
 
 					//
-
+					SceneManager::GetInstance().SetPlayerId(0, ii);
 				}
 				else
 				{
@@ -334,7 +334,7 @@ void SelectScene::Collision(void)
 					isReady_[1] = true;
 
 					//
-
+					SceneManager::GetInstance().SetPlayerId(1, ii);
 				}
 				else
 				{

@@ -32,6 +32,8 @@ private:
 	//”wŒiƒCƒ“ƒXƒ^ƒ“ƒX
 	Stage* stage_;
 
+	int cntSound_;
+
 	// ƒƒS•`‰æ
 	void DrawLogo(void);
 

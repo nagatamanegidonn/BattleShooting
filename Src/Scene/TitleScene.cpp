@@ -43,19 +43,29 @@ void TitleScene::Init(void)
 	stage_ = new Stage;
 	stage_->Init();
 
+	cntSound_ = 0;
+
+	SoundManager::GetInstance().Play(SoundManager::SRC::TITLE_BGM, Sound::TIMES::LOOP);
 
 }
 
 void TitleScene::Update(void)
 {
+
+
 	//ロードが完了したか判断
 	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
 	{
 		return;
 	}
 
-	SoundManager::GetInstance().Play(SoundManager::SRC::TITLE_BGM, Sound::TIMES::LOOP);
 
+	cntSound_++;
+	if (cntSound_ % 30 == 0 || cntSound_ % 45 == 0)
+	{
+		SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
+	}
+	
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();

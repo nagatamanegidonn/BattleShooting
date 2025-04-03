@@ -15,6 +15,7 @@
 #include "Controller.h"
 #include "DirModel.h"
 #include "Player.h"
+#include "../../Manager/SoundManager.h"
 
 
 //Player::Player(Camera& camera) :camera_(camera)
@@ -67,6 +68,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
 		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
+
 	}
 	else
 	{
@@ -81,6 +83,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
 		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+
 	}
 
 	//float scale = 10.0f;
@@ -155,6 +158,10 @@ void Player::Update()
 			{
 				reloadSet_ -= 0.1f;
 				magazineShot_ += 1;
+				if (magazineShot_ % 2 == 0)
+				{
+					SoundManager::GetInstance().Play(SoundManager::SRC::RELOAD, Sound::TIMES::ONCE, true);
+				}
 			}
 		}
 	}
@@ -336,6 +343,8 @@ const void Player::Damage(int damage)
 
 	//体力を減らす
 	playerHp_ -= damage;
+	SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
+
 	if (playerHp_ <= 0)
 	{
 		playerHp_ = 0;
@@ -670,6 +679,7 @@ void Player::ProcessShot(void)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
 		// 弾を指定位置から、指定方向に発射させる
 		CreateShot();
+		SoundManager::GetInstance().Play(SoundManager::SRC::ATTRCK, Sound::TIMES::ONCE, true);
 
 		//弾数ー１
 		magazineShot_ -= 1;
