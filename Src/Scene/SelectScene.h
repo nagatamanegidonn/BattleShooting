@@ -40,7 +40,15 @@ public:
 
 private:
 
+	enum SELECT
+	{
+		SELECT_TYPE_NON,
+		SELECT_TYPE_1,
+		SELECT_TYPE_2,
+	};
 
+	SELECT select[PLAYER_MAX];
+	 
 	std::vector<std::shared_ptr<Player>> players_;
 
 	// カーソル座標
@@ -50,4 +58,8 @@ private:
 	bool isReady_[PLAYER_MAX];
 	bool isStart_;
 
+	int p1Img_;
+	int p2Img_;
+
+	int Cursor_;
 };

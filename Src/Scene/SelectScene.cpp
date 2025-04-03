@@ -41,6 +41,10 @@ void SelectScene::Init(void)
 	// カメラモード：定点カメラ
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
+	p1Img_ = LoadGraph("Data/Image/P1MushImage.png");
+	p2Img_ = LoadGraph("Data/Image/P2MushImage.png");
+
+	Cursor_ = LoadGraph("Data/Image/Cursor.png");
 
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
@@ -73,6 +77,11 @@ void SelectScene::Init(void)
 	for (int i = 0; i < PLAYER_MAX; i++) {
 		players_[i]->Init(sPos[i], i);
 		players_[i]->ChangeState(Player::STATE::NONE);
+	}
+
+	for (int ii = 0; ii > PLAYER_MAX; ii++)
+	{
+		select[ii] = SELECT_TYPE_NON;
 	}
 }
 
@@ -156,11 +165,28 @@ void SelectScene::Draw(void)
 	SetFontSize(25);
 	if (isReady_[0]) {
 		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
+
+		if (select[0] == SELECT_TYPE_1)
+		{
+			DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p1Img_, true);
+		}
+		else if (select[0] == SELECT_TYPE_2)
+		{
+			DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p2Img_, true);
+		}
 	}
 
 	//プレイヤー１が準備完了したかどうか
 	if (isReady_[1]) {
 		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_OK", RGB(0, 0, 255), true);
+		if (select[1] == SELECT_TYPE_1)
+		{
+			DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p1Img_, true, true);
+		}
+		else if (select[1] == SELECT_TYPE_2)
+		{
+			DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p2Img_, true ,true);
+		}
 	}
 
 	//プレイヤーの更新
@@ -170,10 +196,12 @@ void SelectScene::Draw(void)
 	}
 	
 	//プレイヤー１のカーソル（仮）
-	DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
+	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
+	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, Cursor_, true);
 
 	//プレイヤー２のカーソル（仮）
-	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
+	//DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
+	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, Cursor_, true);
 	//-----------------------------------------------------
 
 	
@@ -276,10 +304,19 @@ void SelectScene::Collision(void)
 				{
 					isReady_[0] = true;
 
+					if (ii == 0)
+					{
+						select[0] = SELECT_TYPE_1;
+					}
+					else if (ii == 1)
+					{
+						select[0] = SELECT_TYPE_2;
+					}
 				}
 				else
 				{
 					isReady_[0] = false;
+					select[0] = SELECT_TYPE_NON;
 				}
 			}
 		}
@@ -301,10 +338,20 @@ void SelectScene::Collision(void)
 				{
 					isReady_[1] = true;
 
+					if (ii == 0)
+					{
+						select[1] = SELECT_TYPE_1;
+					}
+					else if (ii == 1)
+					{
+						select[1] = SELECT_TYPE_2;
+					}
+
 				}
 				else
 				{
 					isReady_[1] = false;
+					select[0] = SELECT_TYPE_NON;
 				}
 			}
 		}
