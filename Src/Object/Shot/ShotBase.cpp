@@ -40,8 +40,18 @@ ShotBase::~ShotBase(void)
 {
 }
 
-void ShotBase::Create(VECTOR birthPos, VECTOR dir)
+void ShotBase::Create(VECTOR birthPos, VECTOR dir,int modelId)
 {
+	//モデルの設定
+	transform_.modelId = MV1DuplicateModel(modelId);
+	float scale = 0.85f;
+	transform_.scl = { scale, scale, scale };
+	transform_.pos = AsoUtility::VECTOR_ZERO;
+	transform_.quaRot = Quaternion();
+	transform_.quaRotLocal =
+		Quaternion::Euler(AsoUtility::Deg2RadF(90.0f), AsoUtility::Deg2RadF(-90.0f), 0.0f);
+	transform_.Update();
+
 	// パラメータ設定
 	SetParam();
 	// 再利用可能なようにする

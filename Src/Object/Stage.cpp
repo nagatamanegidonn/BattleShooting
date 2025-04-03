@@ -86,7 +86,7 @@ void Stage::DrawDebug(void)
 		float newZ = -dir.x * sinA + dir.z * cosA;
 
 		ePos = { newX, 0.0f, newZ };
-		ePos = VScale(ePos, HLEN / 2);
+		ePos = VScale(ePos, STAGE_RADIUS);
 
 		DrawLine3D(sPos, ePos, 0xff0000);
 		DrawSphere3D(ePos, 20.0f, 10, 0x0000ff, 0x0000ff, true);

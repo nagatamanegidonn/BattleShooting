@@ -73,6 +73,12 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
 	resourcesMap_.emplace(SRC::SHOT_MODEL, res);
 
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
+	resourcesMap_.emplace(SRC::P1_SHOT_MODEL, res);
+
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
+	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
+
 	// –C‘ä
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BossShip/Turret.mv1");
 	resourcesMap_.emplace(SRC::TURRET_STAND, res);

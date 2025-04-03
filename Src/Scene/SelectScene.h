@@ -11,6 +11,13 @@ public:
 	static constexpr int MOVE = 4;				// カーソルの移動速度
 	static constexpr int CHARACTER_MAX = 2;
 
+	enum CHARA
+	{
+		E_CHARA_NON,
+		E_CHARA1,
+		E_CHARA2,
+	};
+
 
 	// コンストラクタ
 	SelectScene(void);
@@ -32,6 +39,7 @@ public:
 
 
 private:
+
 
 	std::vector<std::shared_ptr<Player>> players_;
 

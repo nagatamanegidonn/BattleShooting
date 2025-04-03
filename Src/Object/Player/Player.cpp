@@ -59,16 +59,18 @@ void Player::Init(VECTOR startPos, int playerNo)
 	if (playerNo == 0)
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
-
+		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
 	}
 	else
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
@@ -77,6 +79,7 @@ void Player::Init(VECTOR startPos, int playerNo)
 
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
+		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
 	}
 
 	//float scale = 10.0f;
@@ -118,15 +121,17 @@ void Player::Init(VECTOR startPos, int playerNo)
 	//ステータス変数
 	//HPもとは１０
 	playerMaxHp_ = playerHp_ = 5;
-
-	//矢印の作成
-	MakeSquereVertex();
+	hpGaugeH_ = LoadGraph("Data/Image/HPGauge.png");
+	hpFreamH_ = LoadGraph("Data/Image/HPFream.png");
+	shotGaugeH_ = LoadGraph("Data/Image/shotGauge.png");
+	shotFreamH_ = LoadGraph("Data/Image/shotFream.png");
 
 	//変数：攻撃関係
 	//弾発射後の硬直時間セット
 	deleyShot_ = TIME_DELAY_SHOT;
-
-
+	magazineMaxShot_ = magazineShot_ = 20;
+	reloadTime_ = 0.0f;
+	reloadSet_ = TIME_RELOAD;
 	// 初期状態
 	ChangeState(STATE::PLAY);
 
@@ -138,9 +143,25 @@ void Player::Update()
 {
 	controller_->Update();
 
-	// 更新ステップ
-	stateUpdate_();
-
+	
+	//リロード硬直
+	if (reloadTime_ > 0.0f)
+	{
+		reloadTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		for (int i = 0; i < static_cast<int>(magazineMaxShot_); i++)
+		{
+			if (reloadTime_ <= reloadSet_)
+			{
+				reloadSet_ -= 0.1f;
+				magazineShot_ += 1;
+			}
+		}
+	}
+	else
+	{
+		// 更新ステップ
+		stateUpdate_();
+	}
 
 	transform_.Update();
 
@@ -159,7 +180,7 @@ void Player::Update()
 
 void Player::Draw()
 {
-	//しーんIDがGameシーン以外なら下記の処理
+	//ゲーム中でなければモデルのみを描画
 	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME)
 	{
 		MV1DrawModel(transform_.modelId);
@@ -223,9 +244,10 @@ void Player::Draw()
 
 #pragma endregion
 
-
+#ifdef _DEBUG
 	DrawSphere3D(rideAttrckPos_, ATTRCK_RADIUS, 10, 0xff0000, 0xff0000, false);
 	DrawSphere3D(rideDamagePos_, DAMAGE_RADIUS, 10, 0x0000ff, 0x0000ff, false);
+#endif
 
 	size_t size = shots_.size();
 	for (int i = 0; i < size; i++)
@@ -233,16 +255,90 @@ void Player::Draw()
 		shots_[i]->Draw();
 	}
 }
+void Player::DrawPram(int plyarNo)
+{
+	int plyNum = -1;
+	bool plyFlag = true;
+
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+	int imageSize = 68;
+	int cx2 = (400 * (plyNum * -1)) + cx;
+
+	if (plyarNo == 0)
+	{
+		plyNum = 1;
+		plyFlag = true;
+		cx2 = (400 * (plyNum * -1)) + cx;
+		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), 50, 0.1f, 0.0f, playerIconH_, true, false);
+
+	}
+	else
+	{
+		plyNum = -1;
+		plyFlag = false;
+		cx2 = (400 * (plyNum * -1)) + cx;
+		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), 50, 0.1f, 0.0f, playerIconH_, true, true);
+	}
+
+	//HPの描画
+	for (int i = 0; i < playerMaxHp_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpFreamH_, true, plyFlag);
+	}
+	for (int i = 0; i < playerHp_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * imageSize * i), 30, 1.0f, 0.0f, hpGaugeH_, true, plyFlag);
+	}
+
+	//弾の描画
+	for (int i = 0; i < magazineMaxShot_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.75f, 0.0f, shotFreamH_, true, plyFlag);
+	}
+	for (int i = 0; i < magazineShot_; i++)
+	{
+		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.65f, 0.0f, shotGaugeH_, true, plyFlag);
+	}
+
+	if (magazineShot_ <= 0)
+	{
+		DrawFormatString(cx - 120, 80, 0xffffff, "Yボタン又はQ、＼キーでリロード");
+	}
+
+#ifdef _DEBUG
+	const VECTOR pos = transform_.pos;
+	if (plyNum == 1)
+	{
+		DrawFormatString(0, 16, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+	}
+	else
+	{
+		DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
+	}
+	plyNum *= -1;
+#endif
+
+}
 
 //ダメージ
 const void Player::Damage(int damage)
 {
+	reloadTime_ = 0.0f;
 	if (invincibleTime_ > 0.0f)
 	{
 		return;
 	}
+
 	//体力を減らす
 	playerHp_ -= damage;
+	if (playerHp_ <= 0)
+	{
+		playerHp_ = 0;
+	}
 	//無敵時間を設定
 	invincibleTime_ = 1.0f;
 }
@@ -296,6 +392,10 @@ void Player::InitEffect(void)
 
 void Player::ChangeState(STATE state)
 {
+	if (state_ == STATE::DEAD)
+	{
+		return;
+	}
 
 	// 状態変更
 	state_ = state;
@@ -321,8 +421,6 @@ void Player::ChangeStateNone()
 		AsoUtility::Deg2RadF(-10.0f)
 	);
 	transform_.Update();
-
-
 }
 void Player::ChangeStatePlay()
 {
@@ -347,13 +445,11 @@ void Player::ChangeStateVictory()
 
 #pragma endregion
 
-
 // 更新ステップ
 #pragma region state_ごとによる更新処理
 
 void Player::UpdateNone()
 {
-
 	//今回回転させたい回転量をクォータニオンで作る
 	Quaternion rotPow = Quaternion();
 
@@ -361,11 +457,9 @@ void Player::UpdateNone()
 		Quaternion::AngleAxis(
 			AsoUtility::Deg2RadF(1.0f), AsoUtility::AXIS_Z
 		));
-	
 
 	// 回転諒を加える(合成)
 	transform_.quaRot = transform_.quaRot.Mult(rotPow);
-
 	transform_.Update();
 
 }
@@ -376,9 +470,9 @@ void Player::UpdatePlay()
 	ProcessTurn();
 	ProcessMove();
 
-
-
 	ProcessShot();
+
+	ProcessBoost();
 
 	// 現在座標を起点に移動後座標を決める
 	movedPos_ = VAdd(transform_.pos, movePow_);
@@ -548,9 +642,9 @@ void Player::Turn(VECTOR axis)
 
 	}
 
-} 
+}
 
-void Player::ProcessShot(void)
+void Player::ProcessBoost(void)
 {
 	auto& ins = InputManager::GetInstance();
 
@@ -561,22 +655,33 @@ void Player::ProcessShot(void)
 		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
 		SetJump(dir);
 	}
+}
+
+void Player::ProcessShot(void)
+{
+	auto& ins = InputManager::GetInstance();
 
 	//射撃攻撃
-	if ((controller_->GetisControl(Controller::MODE::ATTACK)
-		&& deleyShot_ <= 0.0f))
+	if (controller_->GetisControl(Controller::MODE::ATTACK)
+		&& deleyShot_ <= 0.0f && magazineShot_ > 0)
 	{
-
 		// 弾を生成(方向は仮で正面方向)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
 		// 弾を指定位置から、指定方向に発射させる
 		CreateShot();
 
-
-		// 弾発射後の硬直時間セット
+		//弾数ー１
+		magazineShot_ -= 1;
+		//弾発射後の硬直時間セット
 		deleyShot_ = TIME_DELAY_SHOT;
 	}
-
+	//弾のリロード
+	if (controller_->GetisControl(Controller::MODE::XBUTTUN) && (magazineShot_ < magazineMaxShot_))
+	{
+		reloadTime_ = 0.1f * (magazineMaxShot_ - magazineShot_);
+		reloadSet_ = 0.1f * (magazineMaxShot_ - magazineShot_) - 0.1f;
+		//reloadTime_ = TIME_RELOAD;
+	}
 
 	// 弾発射後の硬直時間を減らしていく
 	if (deleyShot_ > 0.0f)
@@ -594,7 +699,7 @@ void Player::CreateShot(void)
 		if (v->GetState() == ShotPlayer::STATE::END)
 		{
 			// 以前に生成したインスタンスを使い回し
-			v->Create(transform_.pos, transform_.GetForward());
+			v->Create(transform_.pos, transform_.GetForward(),shotModel_);
 			isCreate = true;
 			break;
 		}
@@ -605,14 +710,9 @@ void Player::CreateShot(void)
 		auto dir = transform_.GetForward();
 		// 新しいインスタンスを生成
 		ShotPlayer* newShot = new ShotPlayer();
-		newShot->Create(transform_.pos, transform_.GetForward());
+		newShot->Create(transform_.pos, transform_.GetForward(), shotModel_);
 
 		// 弾の管理配列に追加
 		shots_.push_back(newShot);
 	}
-}
-
-void Player::MakeSquereVertex(void)
-{
-	
 }

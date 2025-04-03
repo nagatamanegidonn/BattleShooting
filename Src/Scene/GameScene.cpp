@@ -134,7 +134,8 @@ void GameScene::Update(void)
 		//çƒê∂Ç≈Ç´ÇƒÇ»Ç¢
 		int t = 0;
 	}
-	
+
+#ifdef _DEBUG
 	// ÉVÅ[ÉìëJà⁄
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
@@ -142,10 +143,34 @@ void GameScene::Update(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		return;
 	}
+#endif
+
+	SceneManager& Sns = SceneManager::GetInstance();
+
+	//èüîsîªíË
+	if (players_[0]->IsDead() || players_[1]->IsDead())
+	{
+		if (players_[0]->IsDead() && players_[1]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::DRAW);
+		}
+		else if (players_[0]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
+		}
+		else if (players_[1]->IsDead())
+		{
+			Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
+		}
+
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		return;
+	}
+
 
 	/*stage_->Update();*/
 
-	
+
 
 	//ÉvÉåÉCÉÑÅ[ÇÃçXêV
 	for (auto p : players_)
@@ -205,8 +230,19 @@ void GameScene::Draw(void)
 		}
 	}
 
+	int plyNum = 0;
+	//ÉvÉåÉCÉÑÅ[ÇÃçXêV
+	for (auto& plyer : players_)
+	{
+		//HPÉoÅ[ÇÃï\é¶
+		plyer->DrawPram(plyNum);
+		plyNum += 1;
+	}
+
 	//ÉfÉoÉbÉOï`âÊ
+#ifdef _DEBUG
 	DrawDebug();
+#endif
 
 #pragma endregion
 	
@@ -295,8 +331,8 @@ void GameScene::Collision(void)
 				plyer->Damage(1);
 				//Ç”Ç¡îÚÇŒÇµèàóù
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
-				plyer->SetJump(dir);
-				dir = VScale(dir, -1);//êÅÇ¡îÚÇŒÇµÇÃï˚å¸ÇîΩì]
+				plyer->SetJump(VScale(dir, 1.5f));
+				dir = VScale(dir, -1);//êÅÇ¡îÚÇŒÇµÇÃï˚å¸ÇîΩì]&Å~ÇT
 				vsPlyer->SetJump(dir);
 
 				// îöî≠ÉGÉtÉFÉNÉgÇçƒê∂Ç∑ÇÈ
@@ -310,7 +346,7 @@ void GameScene::Collision(void)
 			diff = VSub(plyer->GetPos(1), vsPlyer->GetPos(1));
 
 			disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
+			if (disPow < Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS + Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
 			{
 				plyer->Damage(1);
 				vsPlyer->Damage(1);
@@ -328,35 +364,18 @@ void GameScene::Collision(void)
 				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
 			}
 
-
+			//íeÇÃìñÇΩÇËîªíË
 			auto shots = plyer->GetShots();
 			for (auto& shot : shots)
 			{
-				if (shot->IsShot() && vsPlyer->GetState() == Player::STATE::PLAY)
+				if (shot->IsShot() &&
+					(vsPlyer->GetState() == Player::STATE::PLAY || vsPlyer->GetState() == Player::STATE::JUMP))
 				{
-					
+
 					//íeÇÃìñÇΩÇËîªíË
-#pragma region ñvàƒ
-
-					//auto info = MV1CollCheck_Sphere(vsPlyer->GetModelId(), -1,
-					//	shot->GetPos(), shot->GetCollisionRadius());
-					//if (info.HitNum >= 1)
-					//{
-					//	//plyerÇ…çUåÇÇ™ìñÇΩÇ¡ÇƒÇ¢ÇÈ
-					//	vsPlyer->RideDamage(1);
-
-					//	//Ç”Ç¡îÚÇŒÇµèàóù
-					//	VECTOR dir = VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)),-1);
-					//	vsPlyer->SetJump(dir);
-
-					//	shot->Blast();
-					//}
-					//// ìñÇΩÇËîªíËåãâ É|ÉäÉSÉìîzóÒÇÃå„énññÇÇ∑ÇÈ
-					//MV1CollResultPolyDimTerminate(info);
-#pragma endregion
 					diff = VSub(shot->GetPos(), vsPlyer->GetPos(2));
 					disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-					if (disPow < shot->GetCollisionRadius() * Player::DAMAGE_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
+					if (disPow < shot->GetCollisionRadius() * shot->GetCollisionRadius() + Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS)//çUåÇîºåaÅ~çUåÇîºåa
 					{
 						//plyerÇ…çUåÇÇ™ìñÇΩÇ¡ÇƒÇ¢ÇÈ
 						vsPlyer->Damage(1);
@@ -371,29 +390,18 @@ void GameScene::Collision(void)
 				}
 			}
 		}
-	}
 
-	int winid = 0;
-	SceneManager& Sns = SceneManager::GetInstance();
-	for (auto& plyer : players_)
-	{
-		//èüîsîªíË
-		if (plyer->GetState() == Player::STATE::DEAD)
+		VECTOR diff = VSub(AsoUtility::VECTOR_ZERO, plyer->GetTransform().pos);
+
+		float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+		float distance = Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Stage::STAGE_RADIUS * Stage::STAGE_RADIUS;
+		if (disPow > distance)//É_ÉÅÅ[ÉWîºåaÅ~çUåÇîºåa
 		{
-			switch (winid)
-			{
-			case 0:
-				Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
-				break;
-			case 1:
-				Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
-				break;
-			}
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-			return;
+			plyer->Damage(100);
+			plyer->ChangeState(Player::STATE::DEAD);
 		}
-		winid++;
 	}
+	
 
 }
 
@@ -407,25 +415,7 @@ void GameScene::DrawDebug(void)
 	int cy = Application::SCREEN_SIZE_Y / 2;
 
 
-	int plyNum= -1;
-	//ÉvÉåÉCÉÑÅ[ÇÃçXêV
-	for (auto& plyer : players_)
-	{
-		int cx2 = cx + (20 * plyNum);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetMaxHp()), 50, 0x000000, true);
-		DrawBox(cx2, 20, cx2 + (20 * plyNum * plyer->GetHp()), 50, 0x00ff00, true);
-
-		VECTOR pos = plyer->GetTransform().pos;
-		if (plyNum == 1)
-		{
-			DrawFormatString(0, 16, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
-		}
-		else
-		{
-			DrawFormatString(0, 32, 0xff0000, "%2.f,%2.f,%2.f", pos.x, pos.y, pos.z);
-		}
-		plyNum *= -1;
-	}
+	
 	printf("Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);
 
 	DrawFormatString(0, 64, 0xff0000, "Effect ID: %d, Position: (0, 0, 0), Scale: %f\n", effectHitPlayId_, BLAST_SCALE);

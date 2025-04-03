@@ -30,6 +30,7 @@ public:
 
 	// ’e‚Ì”­ËŠÔŠu
 	static constexpr float TIME_DELAY_SHOT = 0.2f;
+	static constexpr float TIME_RELOAD = 2.0f;
 
 	//”¼Œa
 	static constexpr float ATTRCK_RADIUS = 25.0f;
@@ -60,6 +61,7 @@ public:
     void Init(VECTOR startPos,int playerNo);  // ‰Šú‰»
     void Update();  // XV
     void Draw();  // •`‰æ
+    void DrawPram(int plyarNo);  // •`‰æ
 
 	// ó‘Ô‘JˆÚ
 	void ChangeState(STATE state);
@@ -69,6 +71,7 @@ public:
 	const int& GetModelId(void) const { return transform_.modelId; }
 
 	const STATE& GetState(void) const { return state_; }
+	const bool IsDead(void) const { return state_ == STATE::DEAD; }
 
 	const int& GetMaxHp(void) const { return playerMaxHp_; }
 	const int& GetHp(void) const { return playerHp_; }
@@ -150,8 +153,15 @@ private:
 
 	// ’e
 	std::vector<ShotPlayer*> shots_;
+	//’e‚Ìƒ‚ƒfƒ‹
+	int shotModel_;
 	// ’e‚Ì”­ËŠÔŠu
 	float deleyShot_;
+	//’e”
+	int magazineShot_;
+	int magazineMaxShot_;
+	float reloadSet_;//’e‚ß‚ÌŠÔŠu
+	float reloadTime_;
 	// ‘€ìF’e”­Ë
 	void ProcessShot(void);
 	// ©‹@‚Ì’e‚ğ”­Ë
@@ -165,6 +175,12 @@ private:
 	int playerId_;	//’e‚Ìí—Ş‚âƒ‚ƒfƒ‹‚ğŒˆ‚ß‚é•Ï”
 	int playerHp_;
 	int playerMaxHp_;
+	//ƒXƒe[ƒ^ƒX‰æ‘œ
+	int hpGaugeH_;
+	int hpFreamH_;
+	int shotGaugeH_;
+	int shotFreamH_;
+	int playerIconH_;
 
 	float damageTime_;
 	float invincibleTime_;
@@ -175,10 +191,6 @@ private:
     // ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
     Transform transform_;
 
-	// ’¸“_î•ñ
-	VERTEX3D vertexs_[6];
-	// •`‰æ—p‚ÌlŠp’¸“_‚ğì¬
-	void MakeSquereVertex(void);
 
 };
 

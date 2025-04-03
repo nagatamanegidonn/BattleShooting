@@ -34,6 +34,11 @@ void ResultScene::Init(void)
 
 void ResultScene::Update(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
@@ -53,6 +58,12 @@ void ResultScene::Update(void)
 
 void ResultScene::Draw(void)
 {
+	//ロードが完了したか判断
+	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
+	{
+		return;
+	}
+
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x0000ff, true);
 
 	int cx = Application::SCREEN_SIZE_X / 2;
@@ -79,6 +90,9 @@ void ResultScene::Draw(void)
 		//プレイヤー２の勝利
 	case SceneManager::WINNER::PLAYER_TWO:
 		msg = "PLAYER2 WIN";
+		break;
+	case SceneManager::WINNER::DRAW:
+		msg = "DRAW";
 		break;
 	}
 
