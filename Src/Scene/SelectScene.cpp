@@ -75,7 +75,7 @@ void SelectScene::Init(void)
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i);
+		players_[i]->Init(sPos[i], i, i);
 		players_[i]->ChangeState(Player::STATE::NONE);
 	}
 
@@ -304,17 +304,12 @@ void SelectScene::Collision(void)
 				{
 					isReady_[0] = true;
 
-					if (ii == 0)
-					{
-						select[0] = SELECT_TYPE_1;
-					}
-					else if (ii == 1)
-					{
-						select[0] = SELECT_TYPE_2;
-					}
+					//
+
 				}
 				else
 				{
+					SceneManager::GetInstance().SetPlayerId(0, -1);
 					isReady_[0] = false;
 					select[0] = SELECT_TYPE_NON;
 				}
@@ -338,18 +333,12 @@ void SelectScene::Collision(void)
 				{
 					isReady_[1] = true;
 
-					if (ii == 0)
-					{
-						select[1] = SELECT_TYPE_1;
-					}
-					else if (ii == 1)
-					{
-						select[1] = SELECT_TYPE_2;
-					}
+					//
 
 				}
 				else
 				{
+					SceneManager::GetInstance().SetPlayerId(1, -1);
 					isReady_[1] = false;
 					select[0] = SELECT_TYPE_NON;
 				}
