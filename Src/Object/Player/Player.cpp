@@ -204,6 +204,40 @@ void Player::Draw()
 	{
 		return;
 	}
+	if (state_ == STATE::VICTORY)
+	{
+		SetFontSize(28);//文字のサイズを設定
+
+		std::string msg = "Result WIN";
+
+		SceneManager& Sns = SceneManager::GetInstance();
+
+		switch (Sns.GetWinner())
+		{
+			//プレイヤー１の勝利
+		case SceneManager::WINNER::PLAYER_ONE:
+			msg = "PLAYER1 WIN";
+			break;
+			//プレイヤー２の勝利
+		case SceneManager::WINNER::PLAYER_TWO:
+			msg = "PLAYER2 WIN";
+			break;
+		case SceneManager::WINNER::DRAW:
+			msg = "DRAW";
+			break;
+		}
+
+		int cx = Application::SCREEN_SIZE_X / 2;
+		int cy = Application::SCREEN_SIZE_Y / 2;
+
+		int len = (int)strlen(msg.c_str());
+		int width = GetDrawStringWidth(msg.c_str(), len);
+		DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetFontSize(16);
+		return;
+	}
 
 #pragma region 矢印の描画（仮）
 
@@ -563,6 +597,26 @@ void Player::UpdateFallDead(void)
 }
 void Player::UpdateDead()
 {
+	if (jumpTime_ > 0.0f)
+	{
+		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		// 移動
+		movePow_ =
+			VScale(jumpDir_, SPEED_MOVE * jumpTime_);
+		// 現在座標を起点に移動後座標を決める
+		movedPos_ = VAdd(transform_.pos, movePow_);
+		// 移動後の位置に問題がなければ移動
+		transform_.pos = movedPos_;
+		if (jumpTime_ <= 0.0f)
+		{
+			ChangeState(STATE::END);//本来ならここで爆発エフェクト発生
+			return;
+		}
+		return;
+	}
+	ChangeState(STATE::END);//本来ならここでエフェクトがひとつもなかったら爆発エフェクト発生
+
+	//この先の処理、エフェクトが終了したらChangeStateする処理
 
 }
 void Player::UpdateEnd()
@@ -574,9 +628,13 @@ void Player::UpdateVictory()
 	InputManager& ins = InputManager::GetInstance();
 	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
 
-	if (controller_->GetisControl(Controller::MODE::ATTACK))
+	if (controller_->GetisControl(Controller::MODE::FORWARD))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+	}
+	if (controller_->GetisControl(Controller::MODE::BACK))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
 	}
 }
 
