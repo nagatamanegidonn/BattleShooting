@@ -1,6 +1,8 @@
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
 
+#include "Utility/FrameRate.h"
+
 #include "Manager/ResourceManager.h"
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
@@ -48,6 +50,9 @@ void Application::Init(void)
 		return;
 	}
 
+	SetWaitVSyncFlag(0); // 垂直同期無効化
+	frameRate_ = new FrameRate; // フレームレート
+
 	//Effekseerの初期化を行う
 	InitEffekseer();
 
@@ -73,17 +78,23 @@ void Application::Run(void)
 	// ゲームループ
 	while (ProcessMessage() == 0 && isGameEnd_ == false)
 	{
+		frameRate_->Update(); // フレームレート更新
 
+		if (frameRate_->GetLimitFrameRate() == true)
+		{
+			frameRate_->SetFrameRate();
 #ifdef _DEBUG
-		// デバッグ時のみ、Escapeキー入力時にゲーム終了処理
-		SetGameEnd((CheckHitKey(KEY_INPUT_ESCAPE) == 1) ? true : false);
+			// デバッグ時のみ、Escapeキー入力時にゲーム終了処理
+			SetGameEnd((CheckHitKey(KEY_INPUT_ESCAPE) == 1) ? true : false);
 #endif
-		inputManager.Update();
-		sceneManager.Update();
+			inputManager.Update();
+			sceneManager.Update();
 
-		sceneManager.Draw();
+			sceneManager.Draw();
 
-		ScreenFlip();
+			frameRate_->Draw();
+			ScreenFlip();
+		}
 
 	}
 
@@ -91,6 +102,9 @@ void Application::Run(void)
 
 void Application::Destroy(void)
 {
+	// フレームレート制御 解放処理
+	delete frameRate_;
+
 
 	InputManager::GetInstance().Destroy();
 	ResourceManager::GetInstance().Destroy();

@@ -211,6 +211,10 @@ bool SceneManager::IsLoading(void) const
 
 	return false;
 }
+int SceneManager::LoadCunt(void) const
+{
+	return fader_->GetLoadCut();
+}
 //
 //bool SceneManager::IsLoading(void) const
 //{

@@ -65,6 +65,7 @@ public:
 
 	// ƒ[ƒh’†‚©’²‚×‚é
 	bool IsLoading(void) const;
+	int LoadCunt(void) const;
 
 private:
 

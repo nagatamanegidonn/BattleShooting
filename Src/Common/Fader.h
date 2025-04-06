@@ -30,6 +30,8 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	const int& GetLoadCut(void) const { return loadCut_; }
+
 private:
 
 	// 状態
@@ -37,6 +39,10 @@ private:
 
 	// 透明度
 	float alpha_;
+
+	//ローディング変数
+	int loadCut_;
+	float loadTime_;
 
 	// 状態(STATE)を保ったまま終了判定を行うため、
 	// Update->Draw->Updateの1フレーム判定用

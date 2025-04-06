@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+class FrameRate;
+
 class Application
 {
 
@@ -55,6 +57,10 @@ private:
 
 	// 解放失敗
 	bool isReleaseFail_;
+
+	// フレームレート制御
+	FrameRate* frameRate_;
+
 
 	// ゲーム終了フラグ
 	bool isGameEnd_;

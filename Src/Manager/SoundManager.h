@@ -9,27 +9,20 @@ public:
 	enum class SRC
 	{
 		TITLE_BGM,		//タイトルシーンのBGM
-		RULE_BGM,		//ルールシーンのBGM
-		GAME_BGM,		//ゲームシーンのBGM
-		BTTLE_BGM,		//ゲームシーンのBGM
+		SELECT_BGM,		//セレクトシーンのBGM
+		BTTLE_BGM_1,		//ゲームシーンのBGM
+		BTTLE_BGM_2,		//ゲームシーンのBGM
+		BTTLE_BGM_3,		//ゲームシーンのBGM
+		RESULT_BGM,		//リザルトシーンのBGM
 
-		VICTORY_BGM,
-
-		ATTRCK,
-		DAMAGE,
-
-		KEEN,//金属音
-
-		WIN_BGM,		//勝った時のBGM
-		DRAW_BGM,		//引き分けの時のBGM
-		LOSE_BGM,		//負けた時のBGM
-
+		
 		ENTER_SOUND,	//決定音
 		SELECT_SOUND,	//選択しているときの効果音
 		DAMAGE_SOUND,	//ダメージを受けた時の効果音
-		HEAL_SOUND,		//回復した時の効果音
-		POISON_SOUND,	//毒になった時の効果音
-
+		
+		ATTRCK,
+		DAMAGE,
+		RELOAD,
 	};
 
 	// 明示的にインステンスを生成する
@@ -47,7 +40,7 @@ public:
 	// リソースの完全破棄
 	void Destroy(void);
 
-	bool Play(SRC src, Sound::TIMES times);	//二次元音源用
+	bool Play(SRC src, Sound::TIMES times, bool isForce = false);	//二次元音源用
 	bool Play(SRC src, Sound::TIMES times, VECTOR pos, float radius);	//三次元音源用
 
 	void Stop(SRC src);	//音源を停止する

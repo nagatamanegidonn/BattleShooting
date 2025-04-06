@@ -57,7 +57,7 @@ public:
 	VECTOR pos_;	//座標
 	float radius_;	//有効範囲
 
-	bool Play(TIMES times);						//2D用音源再生
+	bool Play(TIMES times, bool isForce = false);						//2D用音源再生
 	bool Play(VECTOR pos, float radius, TIMES times);	//3D用音源再生
 
 	void Stop(void);	//再生中の音源を停止する

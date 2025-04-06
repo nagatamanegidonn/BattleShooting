@@ -22,10 +22,15 @@ public:
 	static constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 100.0f, -500.0f };
 
 	// カメラ位置から注視点までの相対座標
-	static constexpr VECTOR RELATIVE_C2T_POS = { 0.0f, -100.0f, 500.0f };
-	//static constexpr VECTOR RELATIVE_C2T_POS = { 0.0f, -1000.0f, 0.0f };
+	static constexpr VECTOR RELATIVE_C2T_POS = { 0.0f, -100.0f, -500.0f };
+	static constexpr VECTOR RELATIVE_F2C_POS_FOLLOW = { 0.0f, 40.0f, 120.0f };
 
-	static constexpr VECTOR RELATIVE_F2C_POS_FOLLOW = { 0.0f, 40.0f, -120.0f };
+	// シェイク：時間
+	static constexpr float TIME_SHAKE = 1.0f;
+	// シェイク：幅
+	static constexpr float WIDTH_SHAKE = 3.0f;
+	// シェイク：スピード
+	static constexpr float SPEED_SHAKE = 30.0f;
 
 
 	// カメラモード
@@ -35,7 +40,8 @@ public:
 		FIXED_POINT,	// 定点カメラ
 		FREE,			// フリーモード
 		FOLLOW,			// 追従モード
-		FOLLOW_POINT,
+		FOLLOW_POINT,   // 上空
+		SHAKE,
 	};
 
 	Camera(void);
@@ -49,6 +55,8 @@ public:
 	void SetBeforeDrawFree(void);
 	void SetBeforeDrawFollow(void);
 	void SetBeforeDrawFollowPoint(void);
+	void SetBeforeDrawShake(void);
+	void SetBeforeDrawNone(void);
 	void Draw(void);
 
 	void Release(void);
@@ -57,6 +65,7 @@ public:
 	void SetFollow(const Transform* follow);
 	void SetSubFollow(const Transform* follow);
 
+	
 	VECTOR GetPos(void) const;
 
 	// カメラモードの変更
@@ -66,6 +75,12 @@ public:
 	void FadeOut(void);
 
 private:
+
+	// 画面揺らし用
+	float stepShake_;
+	VECTOR defaultPos_;
+	VECTOR shakeDir_;
+
 
 	// カメラモード
 	MODE mode_;
@@ -79,8 +94,6 @@ private:
 
 	// カメラの回転
 	Quaternion rot_;
-
-
 
 	// 追従対象
 	const Transform* followTransform_;

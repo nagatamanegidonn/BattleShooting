@@ -28,45 +28,36 @@ void SoundManager::Init(void)
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SelectBGM.mp3");
 	res.ChengeMaxVolume(1.1);
-	soundMap_.emplace(SRC::RULE_BGM, res);
+	soundMap_.emplace(SRC::SELECT_BGM, res);
+
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM1.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_1, res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM2.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_2, res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM3.mp3");
+	res.ChengeMaxVolume(0.6);
+	soundMap_.emplace(SRC::BTTLE_BGM_3, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM.mp3");
 	//res.ChengeMaxVolume(0.7);
-	soundMap_.emplace(SRC::GAME_BGM, res);
-	
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "BttleBGM.mp3");
+	soundMap_.emplace(SRC::RESULT_BGM, res);
+
+
+
+
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/shot.mp3");
 	res.ChengeMaxVolume(0.9);
-	soundMap_.emplace(SRC::BTTLE_BGM, res);
-
-	
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "VictoryBGM.mp3");
-	res.ChengeMaxVolume(0.9);
-	soundMap_.emplace(SRC::VICTORY_BGM , res);
-	
-
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "Attrck.mp3");
 	soundMap_.emplace(SRC::ATTRCK, res);
 
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "Damege.mp3");
-	res.ChengeMaxVolume(1.3);
-	soundMap_.emplace(SRC::DAMAGE , res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Lobot_Hit.mp3");
+	res.ChengeMaxVolume(1.1);
+	soundMap_.emplace(SRC::DAMAGE, res);
 
-
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "Keen.mp3");
-	res.ChengeMaxVolume(2.0);
-	soundMap_.emplace(SRC::KEEN, res);
-
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "WinBGM.mp3");
-	soundMap_.emplace(SRC::WIN_BGM, res);
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "DrawBGM.mp3");
-	soundMap_.emplace(SRC::DRAW_BGM, res);
-
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "LoseBGM.mp3");
-	soundMap_.emplace(SRC::LOSE_BGM, res);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Reload.mp3");
+	res.ChengeMaxVolume(1.1);
+	soundMap_.emplace(SRC::RELOAD, res);
 
 	//res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "TitleBGM.mp3");
 	//soundMap_.emplace(SRC::TITLE_BGM, res);
@@ -94,7 +85,7 @@ void SoundManager::Destroy(void)
 }
 
 //âπÇÃçƒê∂
-bool SoundManager::Play(SRC src, Sound::TIMES times)
+bool SoundManager::Play(SRC src, Sound::TIMES times, bool isForce)
 {
 	const auto& lPair = soundMap_.find(src);
 	if (lPair != soundMap_.end())
@@ -103,7 +94,7 @@ bool SoundManager::Play(SRC src, Sound::TIMES times)
 		{
 			lPair->second.Load();
 		}
-		return lPair->second.Play(times);
+		return lPair->second.Play(times, isForce);
 	}
 	return false;
 }
@@ -137,7 +128,7 @@ void SoundManager::AllStop(void)
 		lPair.second.Stop();
 	}
 }
-
+//çƒê∂íÜÇ©?
 bool SoundManager::CheckMove(SRC src)
 {
 	const auto& lPair = soundMap_.find(src);
@@ -147,7 +138,7 @@ bool SoundManager::CheckMove(SRC src)
 	}
 	return false;
 }
-
+//âπó 
 void SoundManager::ChengeVolume(SRC src, float per)
 {
 	const auto& lPair = soundMap_.find(src);

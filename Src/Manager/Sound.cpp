@@ -74,14 +74,15 @@ void Sound::Release(void)
 	DeleteSoundMem(handleId_);
 }
 
-bool Sound::Play(TIMES times)
+bool Sound::Play(TIMES times, bool isForce)
 {
 	if (soundType_ != TYPE::SOUND_2D || handleId_ == -1)
 	{
 		return false;	//Ž¸”s
 	}
-	if (CheckMove())
+	if (!isForce && CheckMove())
 	{
+		//int i = PlaySoundMem(handleId_, times == TIMES::ONCE ? DX_PLAYTYPE_BACK : DX_PLAYTYPE_LOOP, true);
 		return false;
 	}
 	int i = PlaySoundMem(handleId_, times == TIMES::ONCE ? DX_PLAYTYPE_BACK : DX_PLAYTYPE_LOOP, true);

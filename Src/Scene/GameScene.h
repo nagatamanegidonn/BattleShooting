@@ -32,6 +32,8 @@ public:
 
 private:
 
+	bool eventFlag_;
+	int eventId_;
 
 	std::vector<std::shared_ptr<Player>> players_;
 	Camera* camera_[SceneManager::PLAYER_SIZE];
@@ -52,9 +54,10 @@ private:
 
 	void Collision(void);
 
+	void GameDraw(void);
+	void EventDraw(void);
+
 	//デバッグ用の描画
 	void DrawDebug(void);
 
-	int* handleIds_;
-	int* handleIds_2;
 };

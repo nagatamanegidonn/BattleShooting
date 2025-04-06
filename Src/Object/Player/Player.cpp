@@ -15,6 +15,7 @@
 #include "Controller.h"
 #include "DirModel.h"
 #include "Player.h"
+#include "../../Manager/SoundManager.h"
 
 
 //Player::Player(Camera& camera) :camera_(camera)
@@ -24,6 +25,7 @@ Player::Player()
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
 	stateChanges_.emplace(STATE::PLAY, std::bind(&Player::ChangeStatePlay, this));
 	stateChanges_.emplace(STATE::JUMP, std::bind(&Player::ChangeStateJump, this));
+	stateChanges_.emplace(STATE::FALL_DEAD, std::bind(&Player::ChangeStateFallDead, this));
 	stateChanges_.emplace(STATE::DEAD, std::bind(&Player::ChangeStateDead, this));
 	stateChanges_.emplace(STATE::END, std::bind(&Player::ChangeStateEnd, this));
 	stateChanges_.emplace(STATE::VICTORY, std::bind(&Player::ChangeStateVictory, this));
@@ -34,6 +36,7 @@ Player::Player()
 	movePow_ = AsoUtility::VECTOR_ZERO;
 
 	//変数：回転関係
+	turnTime_ = 2.0f;
 	direction_ = AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
 
@@ -67,6 +70,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
 		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
+
 	}
 	else
 	{
@@ -81,6 +85,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
 		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+
 	}
 
 	//float scale = 10.0f;
@@ -105,6 +110,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	movePow_ = AsoUtility::VECTOR_ZERO;
 
 	//変数：回転関係
+	turnTime_ = 2.0f;
 	direction_= AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
 
@@ -155,6 +161,10 @@ void Player::Update()
 			{
 				reloadSet_ -= 0.1f;
 				magazineShot_ += 1;
+				if (magazineShot_ % 2 == 0)
+				{
+					SoundManager::GetInstance().Play(SoundManager::SRC::RELOAD, Sound::TIMES::ONCE, true);
+				}
 			}
 		}
 	}
@@ -182,27 +192,52 @@ void Player::Update()
 void Player::Draw()
 {
 	//ゲーム中でなければモデルのみを描画
-	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME)
+	if (state_ == STATE::END)
 	{
-		MV1DrawModel(transform_.modelId);
 		return;
 	}
 
 	// モデルの描画
-	// 視野範囲内：ディフューズカラーを赤色にする
-
-	MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-	MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-	if (invincibleTime_ > 0.0f)
-	{
-		if (invincibleTime_ >= 0.1f)
-		{
-			MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-			MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-		}
-	}
 	MV1DrawModel(transform_.modelId);
 	
+	if (state_ == STATE::DEAD|| state_ == STATE::FALL_DEAD)
+	{
+		return;
+	}
+	if (state_ == STATE::VICTORY)
+	{
+		SetFontSize(28);//文字のサイズを設定
+
+		std::string msg = "Result WIN";
+
+		SceneManager& Sns = SceneManager::GetInstance();
+
+		switch (Sns.GetWinner())
+		{
+			//プレイヤー１の勝利
+		case SceneManager::WINNER::PLAYER_ONE:
+			msg = "PLAYER1 WIN";
+			break;
+			//プレイヤー２の勝利
+		case SceneManager::WINNER::PLAYER_TWO:
+			msg = "PLAYER2 WIN";
+			break;
+		case SceneManager::WINNER::DRAW:
+			msg = "DRAW";
+			break;
+		}
+
+		int cx = Application::SCREEN_SIZE_X / 2;
+		int cy = Application::SCREEN_SIZE_Y / 2;
+
+		int len = (int)strlen(msg.c_str());
+		int width = GetDrawStringWidth(msg.c_str(), len);
+		DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetFontSize(16);
+		return;
+	}
 
 #pragma region 矢印の描画（仮）
 
@@ -336,6 +371,8 @@ const void Player::Damage(int damage)
 
 	//体力を減らす
 	playerHp_ -= damage;
+	SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
+
 	if (playerHp_ <= 0)
 	{
 		playerHp_ = 0;
@@ -393,11 +430,10 @@ void Player::InitEffect(void)
 
 void Player::ChangeState(STATE state)
 {
-	if (state_ == STATE::DEAD)
+	if (state_ == STATE::END)
 	{
 		return;
 	}
-
 	// 状態変更
 	state_ = state;
 
@@ -408,20 +444,6 @@ void Player::ChangeState(STATE state)
 void Player::ChangeStateNone()
 {
 	stateUpdate_ = std::bind(&Player::UpdateNone, this);
-
-	float scale = 1.0f;
-	transform_.scl = { scale, scale, scale };
-	transform_.quaRot = Quaternion::Euler(
-		0.0f,
-		AsoUtility::Deg2RadF(0.0f),
-		0.0f
-	);
-	transform_.quaRotLocal = Quaternion::Euler(
-		AsoUtility::Deg2RadF(90.0f),
-		AsoUtility::Deg2RadF(0.0f),
-		AsoUtility::Deg2RadF(-10.0f)
-	);
-	transform_.Update();
 }
 void Player::ChangeStatePlay()
 {
@@ -433,7 +455,13 @@ void Player::ChangeStateJump(void)
 }
 void Player::ChangeStateDead()
 {
+	playerHp_ = 0;
 	stateUpdate_ = std::bind(&Player::UpdateDead, this);
+}
+void Player::ChangeStateFallDead(void)
+{
+	playerHp_ = 0;
+	stateUpdate_ = std::bind(&Player::UpdateFallDead, this);
 }
 void Player::ChangeStateEnd()
 {
@@ -451,18 +479,7 @@ void Player::ChangeStateVictory()
 
 void Player::UpdateNone()
 {
-	//今回回転させたい回転量をクォータニオンで作る
-	Quaternion rotPow = Quaternion();
-
-	rotPow = rotPow.Mult(
-		Quaternion::AngleAxis(
-			AsoUtility::Deg2RadF(1.0f), AsoUtility::AXIS_Z
-		));
-
-	// 回転諒を加える(合成)
-	transform_.quaRot = transform_.quaRot.Mult(rotPow);
-	transform_.Update();
-
+	
 }
 void Player::UpdatePlay()
 {
@@ -499,6 +516,7 @@ void Player::UpdateJump(void)
 		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
 		if (jumpTime_ <= 0.0f)
 		{
+			jumpTime_ = 0.0f;
 			//体力が０なら死亡状態にする
 			if (playerHp_ <= 0)
 			{
@@ -519,8 +537,86 @@ void Player::UpdateJump(void)
 	// 移動後の位置に問題がなければ移動
 	transform_.pos = movedPos_;
 }
+void Player::UpdateFallDead(void)
+{
+	if (jumpTime_ > 0.0f)
+	{
+		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		// 移動
+		movePow_ =
+			VScale(jumpDir_, SPEED_MOVE * jumpTime_);
+		// 現在座標を起点に移動後座標を決める
+		movedPos_ = VAdd(transform_.pos, movePow_);
+		// 移動後の位置に問題がなければ移動
+		transform_.pos = movedPos_;
+		if (jumpTime_ <= 0.0f)
+		{
+			if (turnTime_ > 5.0f)
+			{
+				ChangeState(STATE::END);
+				return;
+			}
+			turnTime_ = 2.0f;
+			jumpTime_ = 0.0f;
+		}
+	}
+	else
+	{
+		//今回回転させたい回転量をクォータニオンで作る
+		Quaternion rotPow = Quaternion();
+		float dir = 1.0f;
+
+		if (turnTime_ < 0.5f)
+		{
+			dir = 1.0f;
+		}
+		else if (turnTime_ < 1.5f)
+		{
+			dir = -1;
+		}
+
+		rotPow = rotPow.Mult(
+			Quaternion::AngleAxis(
+				AsoUtility::Deg2RadF(dir), AsoUtility::AXIS_Y
+			));
+
+		// 回転諒を加える(合成)
+		//transform_.quaRot = transform_.quaRot.Mult(rotPow);
+		transform_.quaRotLocal = transform_.quaRotLocal.Mult(rotPow);
+		transform_.Update();
+
+		turnTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
+		if (turnTime_ <= 0.0f)
+		{
+			turnTime_ = 10.0f;
+			jumpTime_ = 3.0f;
+			jumpDir_ = DOWN_DIR;
+		}
+	}
+}
 void Player::UpdateDead()
 {
+	if (jumpTime_ > 0.0f)
+	{
+		jumpTime_ -= SceneManager::GetInstance().GetDeltaTime();
+		// 移動
+		movePow_ =
+			VScale(jumpDir_, SPEED_MOVE * jumpTime_);
+		// 現在座標を起点に移動後座標を決める
+		movedPos_ = VAdd(transform_.pos, movePow_);
+		// 移動後の位置に問題がなければ移動
+		transform_.pos = movedPos_;
+		if (jumpTime_ <= 0.0f)
+		{
+			ChangeState(STATE::END);//本来ならここで爆発エフェクト発生
+			return;
+		}
+		return;
+	}
+	ChangeState(STATE::END);//本来ならここでエフェクトがひとつもなかったら爆発エフェクト発生
+
+	//この先の処理、エフェクトが終了したらChangeStateする処理
 
 }
 void Player::UpdateEnd()
@@ -529,7 +625,17 @@ void Player::UpdateEnd()
 }
 void Player::UpdateVictory()
 {
+	InputManager& ins = InputManager::GetInstance();
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
 
+	if (controller_->GetisControl(Controller::MODE::FORWARD))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+	}
+	if (controller_->GetisControl(Controller::MODE::BACK))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+	}
 }
 
 #pragma endregion
@@ -670,6 +776,7 @@ void Player::ProcessShot(void)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
 		// 弾を指定位置から、指定方向に発射させる
 		CreateShot();
+		SoundManager::GetInstance().Play(SoundManager::SRC::ATTRCK, Sound::TIMES::ONCE, true);
 
 		//弾数ー１
 		magazineShot_ -= 1;

@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "../Manager/SceneManager.h"
 #include "../Application.h"
 #include "Fader.h"
 
@@ -20,6 +21,11 @@ void Fader::SetFade(STATE state)
 		isPreEnd_ = false;
 		isEnd_ = false;
 	}
+	else if (state_ == STATE::FADE_OUT)
+	{
+		loadTime_ = 0.0f;
+		loadCut_ = 0;
+	}
 }
 
 void Fader::Init(void)
@@ -28,6 +34,9 @@ void Fader::Init(void)
 	alpha_ = 0;
 	isPreEnd_ = true;
 	isEnd_ = true;
+
+	loadTime_ = 0.0f;
+	loadCut_ = 0;
 }
 
 void Fader::Update(void)
@@ -58,7 +67,6 @@ void Fader::Update(void)
 		}
 
 		break;
-
 	case STATE::FADE_IN:
 		alpha_ -= SPEED_ALPHA;
 		if (alpha_ < 0)
@@ -71,6 +79,15 @@ void Fader::Update(void)
 				isEnd_ = true;
 			}
 			isPreEnd_ = true;
+		}
+		break;
+
+	case STATE::LOADING:
+		loadTime_ += SceneManager::GetInstance().GetDeltaTime();
+		if (loadTime_ >= 0.5f)
+		{
+			loadTime_ = 0.0f;
+			loadCut_ += 1;
 		}
 		break;
 
