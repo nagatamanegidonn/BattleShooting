@@ -1,3 +1,9 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1119,5): warning MSB8027: BackGround.cpp という名前の複数のファイルでは、同じ場所に出力が生成されます。これにより、不適切なビルド結果が生じる可能性があります。関連するファイルは Src\BackGround.cpp, Src\Object\BackGround.cpp です。
-  Player.cpp
+  SceneManager.cpp
+  SelectScene.cpp
+D:\プログラム\春コン2025\Src\Scene\SelectScene.cpp(191,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+D:\プログラム\春コン2025\Src\Scene\SelectScene.cpp(191,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+D:\プログラム\春コン2025\Src\Scene\SelectScene.cpp(195,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+D:\プログラム\春コン2025\Src\Scene\SelectScene.cpp(195,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コードを生成中...
   BaseProject.vcxproj -> D:\プログラム\春コン2025\x64\Debug\BaseProject.exe

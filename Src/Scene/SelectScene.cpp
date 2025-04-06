@@ -2,6 +2,7 @@
 
 #include "../Application.h"
 
+#include "../Manager/SoundManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -9,7 +10,7 @@
 
 #include "../Utility/AsoUtility.h"
 
-#include "../Object/Player/Player.h"
+#include "../Object/Player/ViewPlayer.h"
 
 #include "SelectScene.h"
 
@@ -29,7 +30,7 @@ void SelectScene::AsyncPreLoad(void)
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
 
-		auto  player = std::make_shared<Player>();
+		auto  player = std::make_shared<ViewPlayer>();
 		players_.push_back(player);
 	}
 }
@@ -41,8 +42,9 @@ void SelectScene::Init(void)
 	// カメラモード：定点カメラ
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
-	p1Img_ = LoadGraph("Data/Image/P1MushImage.png");
-	p2Img_ = LoadGraph("Data/Image/P2MushImage.png");
+
+	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_IMAGE).handleId_;
+	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_IMAGE).handleId_;
 
 	Cursor_ = LoadGraph("Data/Image/Cursor.png");
 
@@ -76,13 +78,11 @@ void SelectScene::Init(void)
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
 		players_[i]->Init(sPos[i], i, i);
-		players_[i]->ChangeState(Player::STATE::NONE);
+		players_[i]->ChangeState(ViewPlayer::STATE::PLAY);
 	}
 
-	for (int ii = 0; ii > PLAYER_MAX; ii++)
-	{
-		select[ii] = SELECT_TYPE_NON;
-	}
+	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
+
 }
 
 void SelectScene::Update(void)
@@ -160,36 +160,24 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
 
+	SceneManager& sns = SceneManager::GetInstance();
 
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
-	if (isReady_[0]) {
+	if (isReady_[0] && sns.GetPlayerId(0) > -1) {
 		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
 
-		if (select[0] == SELECT_TYPE_1)
-		{
-			DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p1Img_, true);
-		}
-		else if (select[0] == SELECT_TYPE_2)
-		{
-			DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p2Img_, true);
-		}
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3
+			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(0)], true);
 	}
 
-	//プレイヤー１が準備完了したかどうか
-	if (isReady_[1]) {
+	//プレイヤー2が準備完了したかどうか
+	if (isReady_[1] && sns.GetPlayerId(1) > -1) {
 		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_OK", RGB(0, 0, 255), true);
-		if (select[1] == SELECT_TYPE_1)
-		{
-			DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p1Img_, true, true);
-		}
-		else if (select[1] == SELECT_TYPE_2)
-		{
-			DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3, 0.3f, 0.0f, p2Img_, true ,true);
-		}
 
-		//
-	
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3
+			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(1)], true, true);
+
 	}
 
 	//プレイヤーの更新
@@ -212,6 +200,7 @@ void SelectScene::Draw(void)
 
 void SelectScene::Release(void)
 {
+	SoundManager::GetInstance().AllStop();
 
 }
 
@@ -288,84 +277,9 @@ void SelectScene::Collision(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
-	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
-
-	for (int ii = 0; ii < CHARACTER_MAX; ii++)
-	{
-		if (pos[0].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
-			pos[0].x > ii * (Application::SCREEN_SIZE_X / 2) &&
-			pos[0].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[0].y > 0)
-		{
-			// シーン遷移
-			// プレイヤー１が準備完了しているかどうか
-			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_1) || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
-			{
-				if (isReady_[0] == false)
-				{
-					isReady_[0] = true;
-
-					if (ii == 0)
-					{
-						select[0] = SELECT_TYPE_1;
-					}
-					else if (ii == 1)
-					{
-						select[0] = SELECT_TYPE_2;
-					}
-					//
-					SceneManager::GetInstance().SetPlayerId(0, ii);
-				}
-				else
-				{
-					SceneManager::GetInstance().SetPlayerId(0, -1);
-					isReady_[0] = false;
-					select[0] = SELECT_TYPE_NON;
-				}
-			}
-		}
-	}
-
-
-	for (int ii = 0; ii < CHARACTER_MAX; ii++)
-	{
-		if (pos[1].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
-			pos[1].x > ii * (Application::SCREEN_SIZE_X / 2) &&
-			pos[1].y < Application::SCREEN_SIZE_Y / 2 &&
-			pos[1].y > 0)
-		{
-			// プレイヤー２が準備完了しているかどうか
-			// true == 準備完了 / false == 準備中
-			if (ins.IsTrgDown(KEY_INPUT_2) || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
-			{
-				if (isReady_[1] == false)
-				{
-					isReady_[1] = true;
-
-					if (ii == 0)
-					{
-						select[1] = SELECT_TYPE_1;
-					}
-					else if (ii == 1)
-					{
-						select[1] = SELECT_TYPE_2;
-					}
-
-					//
-					SceneManager::GetInstance().SetPlayerId(1, ii);
-
-				}
-				else
-				{
-					SceneManager::GetInstance().SetPlayerId(1, -1);
-					isReady_[1] = false;
-					select[0] = SELECT_TYPE_NON;
-				}
-			}
-		}
-	}
+	//キャラクターを決定
+	CharacthrSelect(0);
+	CharacthrSelect(1);
 
 	//全プレイヤーが準備完了なら
 	if (isReady_[0] && isReady_[1])
@@ -402,6 +316,46 @@ void SelectScene::Collision(void)
 		if (pos[ii].y + SIZE > Application::SCREEN_SIZE_Y)
 		{
 			pos[ii].y -= MOVE;
+		}
+	}
+}
+
+void SelectScene::CharacthrSelect(int playerId)
+{
+	InputManager& ins = InputManager::GetInstance();
+
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+	bool isTrg = ins.IsTrgDown(KEY_INPUT_1);
+	if (playerId == 1)//プレイヤー2なら
+	{
+		jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
+		isTrg = ins.IsTrgDown(KEY_INPUT_2);
+	}
+
+	for (int ii = 0; ii < CHARACTER_MAX; ii++)
+	{
+		if (pos[playerId].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
+			pos[playerId].x > ii * (Application::SCREEN_SIZE_X / 2) &&
+			pos[playerId].y < Application::SCREEN_SIZE_Y / 2 &&
+			pos[playerId].y > 0)
+		{
+			// プレイヤー２が準備完了しているかどうか
+			// true == 準備完了 / false == 準備中
+			if (isTrg || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
+			{
+				if (isReady_[playerId] == false)
+				{
+					isReady_[playerId] = true;
+
+					//プレイヤー選択をSceneManagerの設定
+					SceneManager::GetInstance().SetPlayerId(playerId, ii);
+				}
+				else
+				{
+					SceneManager::GetInstance().SetPlayerId(playerId, -1);
+					isReady_[playerId] = false;
+				}
+			}
 		}
 	}
 }

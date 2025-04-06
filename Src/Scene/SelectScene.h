@@ -13,14 +13,7 @@ public:
 	static constexpr int MOVE = 4;				// カーソルの移動速度
 	static constexpr int CHARACTER_MAX = 2;
 
-	enum CHARA
-	{
-		E_CHARA_NON,
-		E_CHARA1,
-		E_CHARA2,
-	};
-
-
+	
 	// コンストラクタ
 	SelectScene(void);
 
@@ -36,21 +29,9 @@ public:
 	// カーソルの移動処理
 	void GetMove(VECTOR& P1, VECTOR& P2);
 
-	// 当たり判定
-	void Collision(void);
-
 
 private:
 
-	enum SELECT
-	{
-		SELECT_TYPE_NON,
-		SELECT_TYPE_1,
-		SELECT_TYPE_2,
-	};
-
-	SELECT select[PLAYER_MAX];
-	 
 	std::vector<std::shared_ptr<ViewPlayer>> players_;
 
 	// カーソル座標
@@ -60,8 +41,13 @@ private:
 	bool isReady_[PLAYER_MAX];
 	bool isStart_;
 
-	int p1Img_;
-	int p2Img_;
+	int playerImg_[CHARACTER_MAX];
 
 	int Cursor_;
+
+	// 当たり判定
+	void Collision(void);
+
+
+	void CharacthrSelect(int playerId);
 };

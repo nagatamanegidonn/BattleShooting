@@ -44,18 +44,7 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "SkyDome/SkyDome.mv1");
 	resourcesMap_.emplace(SRC::SKYDOME, res);
 
-	// プレイヤー機
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "PlayerShip/PlayerShip.mv1");
-	resourcesMap_.emplace(SRC::PLAYER_SHIP, res);
-
-	// リーダー機
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "LeaderShip/LeaderShip.mv1");
-	resourcesMap_.emplace(SRC::LEADER_SHIP, res);
-
-	// ボス戦艦
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BossShip/BossShip.mv1");
-	resourcesMap_.emplace(SRC::BOSS_SHIP, res);
-
+	
 	// ダンジョン
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Rock/Dungeon.mv1");
 	resourcesMap_.emplace(SRC::DUNGEON, res);
@@ -67,6 +56,15 @@ void ResourceManager::Init(void)
 	// 吹き出し
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "SpeechBalloon.png");
 	resourcesMap_.emplace(SRC::SPEECH_BALLOON, res);
+	
+	
+	//P1のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1MushImage.png");
+	resourcesMap_.emplace(SRC::P1_IMAGE, res);
+	//P2のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2MushImage.png");
+	resourcesMap_.emplace(SRC::P2_IMAGE, res);
+
 
 	// 弾
 	//res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
@@ -79,14 +77,7 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
 	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
 
-	// 砲台
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BossShip/Turret.mv1");
-	resourcesMap_.emplace(SRC::TURRET_STAND, res);
-
-	// 砲身
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "BossShip/Turret_Gun.mv1");
-	resourcesMap_.emplace(SRC::TURRET_GUN, res);
-
+	
 	// 背景岩１
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Rock/Rock21.mv1");
 	resourcesMap_.emplace(SRC::ROCK01, res);

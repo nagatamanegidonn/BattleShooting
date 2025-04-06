@@ -128,12 +128,12 @@ void GameScene::Update(void)
 
 #ifdef _DEBUG
 	// ƒV[ƒ“‘JˆÚ
-	InputManager& ins = InputManager::GetInstance();
+	/*InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
 		return;
-	}
+	}*/
 #endif
 
 	SceneManager& Sns = SceneManager::GetInstance();
