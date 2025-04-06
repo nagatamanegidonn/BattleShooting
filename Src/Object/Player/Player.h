@@ -35,6 +35,8 @@ public:
 	//半径
 	static constexpr float ATTRCK_RADIUS = 25.0f;
 	static constexpr float DAMAGE_RADIUS = 35.0f;
+
+	static constexpr VECTOR DOWN_DIR = { 0.0f,-0.3f,0.0f };
 	
 
 	// 状態
@@ -43,6 +45,7 @@ public:
 		NONE,
 		PLAY,
 		JUMP,
+		FALL_DEAD,
 		DEAD,
 		VICTORY,
 		END
@@ -73,6 +76,10 @@ public:
 
 	const STATE& GetState(void) const { return state_; }
 	const bool IsDead(void) const { return state_ == STATE::DEAD; }
+
+	const VECTOR& GetJumpDir(void) const { return jumpDir_; }
+	const float& GetJumpTime(void) const { return jumpTime_; }
+	const float& GetTrunTime(void) const { return turnTime_; }
 
 	const int& GetMaxHp(void) const { return playerMaxHp_; }
 	const int& GetHp(void) const { return playerHp_; }
@@ -111,15 +118,13 @@ private:
 
 	// エフェクト初期化
 	void InitEffect(void);
-	// エフェクト制御
-	void SyncJetEffect(void);
-	void SyncBoostEffct(void);
-
+	
 	// 状態遷移
 	void ChangeStateNone(void);
 	void ChangeStatePlay(void);
 	void ChangeStateJump(void);
 	void ChangeStateDead(void);
+	void ChangeStateFallDead(void);
 	void ChangeStateEnd(void);
 	void ChangeStateVictory(void);
 
@@ -128,7 +133,8 @@ private:
 	void UpdateNone(void);
 	void UpdatePlay(void);
 	void UpdateJump(void);
-	void UpdateDead(void);
+	void UpdateFallDead(void);//落下死亡をする更新
+	void UpdateDead(void);//死亡爆発をする更新
 	void UpdateEnd(void);
 	void UpdateVictory(void);
 
@@ -140,7 +146,7 @@ private:
 	void ProcessMove(void);
 	void Move(void);
 
-
+	float turnTime_;
 	VECTOR direction_;
 	//操作：回転
 	void ProcessTurn(void);

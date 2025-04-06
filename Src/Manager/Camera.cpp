@@ -1,7 +1,8 @@
 #include <EffekseerForDXLib.h>
 
 #include "../Utility/AsoUtility.h"
-#include "../Manager/InputManager.h"
+#include "InputManager.h"
+#include "SceneManager.h"
 
 #include "../Object/Common/Transform.h"
 
@@ -37,6 +38,9 @@ void Camera::SetBeforeDraw(void)
 
 	switch (mode_)
 	{
+	case Camera::MODE::NONE:
+		SetBeforeDrawNone();
+		break;
 	case Camera::MODE::FIXED_POINT:
 
 		//カメラの上方向更新
@@ -67,6 +71,9 @@ void Camera::SetBeforeDraw(void)
 		break;
 	case Camera::MODE::FOLLOW_POINT:
 		SetBeforeDrawFollowPoint();
+		break;
+	case Camera::MODE::SHAKE:
+		SetBeforeDrawShake();
 		break;
 	}
 
@@ -189,6 +196,73 @@ void Camera::SetBeforeDrawFollowPoint(void)
 	targetPos_ = pos_;
 	targetPos_.y = -100.0f;
 }
+void Camera::SetBeforeDrawShake(void)
+{
+	// 一定時間カメラを揺らす
+	stepShake_ -= SceneManager::GetInstance().GetDeltaTime();
+	if (stepShake_ < 0.0f)
+	{
+		pos_ = defaultPos_;
+		ChangeMode(MODE::NONE);
+		return;
+	}
+
+	// -1.0f～1.0f
+	float f = sinf(stepShake_ * SPEED_SHAKE);
+	// -1000.0f～1000.0f
+	f *= 1000.0f;
+	// -1000 or 1000
+	int d = static_cast<int>(f);
+	// 0 or 1
+	int shake = d % 2;
+	// -1 or 1
+	shake -= 1;
+
+	// 追従対象の位置
+	VECTOR followPos = followTransform_->pos;
+	followPos.y = 0.0f;
+	// 追従対象の向き
+	Quaternion followRot = followTransform_->quaRot;
+	// 追従対象からカメラまでの相対座標
+	VECTOR relativeCPos = followRot.PosAxis(RELATIVE_F2C_POS_FOLLOW);
+	// カメラ位置の更新
+	defaultPos_ = VAdd(followPos, relativeCPos);
+
+	// 移動量
+	VECTOR velocity = VScale(shakeDir_, shake * WIDTH_SHAKE);
+	// 移動先座標
+	pos_ = VAdd(defaultPos_, velocity);
+	//float pow = WIDTH_SHAKE * sinf(stepShake_ * SPEED_SHAKE);
+	//VECTOR velocity = VScale(shakeDir_, pow);
+	//VECTOR newPos = VAdd(defaultPos_, velocity);
+	//pos_ = newPos;
+
+	
+	// カメラ位置から注視点までの相対座標
+	VECTOR relativeTPos = followRot.PosAxis(RELATIVE_C2T_POS);
+	// 注視点の更新
+	targetPos_ = VAdd(pos_, relativeTPos);
+	// カメラの上方向
+	cameraUp_ = followRot.PosAxis(rot_.GetUp());
+}
+void Camera::SetBeforeDrawNone(void)
+{
+	// 追従対象の位置
+	VECTOR followPos = followTransform_->pos;
+	followPos.y = 0.0f;
+	// 追従対象の向き
+	Quaternion followRot = followTransform_->quaRot;
+	// 追従対象からカメラまでの相対座標
+	VECTOR relativeCPos = followRot.PosAxis(RELATIVE_F2C_POS_FOLLOW);
+	// カメラ位置の更新
+	pos_ = VAdd(followPos, relativeCPos);
+	// カメラ位置から注視点までの相対座標
+	VECTOR relativeTPos = followRot.PosAxis(RELATIVE_C2T_POS);
+	// 注視点の更新
+	targetPos_ = VAdd(pos_, relativeTPos);
+	// カメラの上方向
+	cameraUp_ = followRot.PosAxis(rot_.GetUp());
+}
 
 #pragma endregion
 
@@ -250,6 +324,11 @@ void Camera::ChangeMode(MODE mode)
 		break;
 	case Camera::MODE::FOLLOW_POINT:
 		pos_ = { 0.0f, 500.0f, 0.0f };
+		break;
+	case Camera::MODE::SHAKE:
+		stepShake_ = TIME_SHAKE;
+		shakeDir_ = VNorm({ 0.7f, 0.7f ,0.0f });
+		defaultPos_ = pos_;
 		break;
 	}
 

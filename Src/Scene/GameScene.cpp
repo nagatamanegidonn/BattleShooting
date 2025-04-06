@@ -40,22 +40,9 @@ void GameScene::AsyncPreLoad(void)
 		players_.push_back(player);
 	}
 
-	// 複数画像
-	handleIds_ = new int[10 * 6];
-	LoadDivGraph(
-		"Alphabet.png",
-		10 * 6,
-		10, 6,
-		32, 192 / 6,
-		&handleIds_[0]);
-	// 複数画像
-	handleIds_2 = new int[10 * 6];
-	LoadDivGraph(
-		"Alphabet.png",
-		10 * 6,
-		10, 6,
-		32, 192 / 6,
-		&handleIds_2[0]);
+	eventFlag_ = false;
+	eventId_ = -1;//０か1か
+
 
 	stage_ = new Stage;
 }
@@ -79,7 +66,7 @@ void GameScene::Init(void)
 		players_[i]->Init(sPos[i], i, SceneManager::GetInstance().GetPlayerId(i));
 
 		//各プレイヤーのスクリーンの作成
-		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y, true);
+		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
 
 	}
 
@@ -152,27 +139,65 @@ void GameScene::Update(void)
 	SceneManager& Sns = SceneManager::GetInstance();
 
 	//勝敗判定
-	if (players_[0]->IsDead() || players_[1]->IsDead())
+	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
 	{
-		if (players_[0]->IsDead() && players_[1]->IsDead())
-		{
-			Sns.SetWinner(SceneManager::WINNER::DRAW);
-		}
-		else if (players_[0]->IsDead())
-		{
-			Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
-		}
-		else if (players_[1]->IsDead())
-		{
-			Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
-		}
+		Sns.SetWinner(SceneManager::WINNER::DRAW);
+	}
+	else if (players_[0]->GetHp() <= 0)
+	{
+		Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
+		eventFlag_ = true;
+		eventId_ = 0;
 
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
-		return;
+		const VECTOR& dir = players_[eventId_]->GetJumpDir();
+		if (dir.x == Player::DOWN_DIR.x
+			&& dir.y == Player::DOWN_DIR.y
+			&& dir.z == Player::DOWN_DIR.z)
+		{
+			camera_[eventId_]->ChangeMode(Camera::MODE::NONE);
+		}
+		//カメラを揺らす
+		if (players_[eventId_]->GetJumpTime() <= Camera::TIME_SHAKE && players_[eventId_]->GetTrunTime() > 5.0f)
+		{
+			camera_[eventId_]->ChangeMode(Camera::MODE::SHAKE);
+		}
+	}
+	else if (players_[1]->GetHp() <= 0)
+	{
+		Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
+		eventFlag_ = true;
+		eventId_ = 1;
+
+		const VECTOR& dir = players_[eventId_]->GetJumpDir();
+		if (dir.x == Player::DOWN_DIR.x
+			&& dir.y == Player::DOWN_DIR.y
+			&& dir.z == Player::DOWN_DIR.z)
+		{
+			camera_[eventId_]->ChangeMode(Camera::MODE::NONE);
+		}
+		//カメラを揺らす
+		if (players_[eventId_]->GetJumpTime() <= Camera::TIME_SHAKE && players_[eventId_]->GetTrunTime() > 5.0f)
+		{
+			camera_[eventId_]->ChangeMode(Camera::MODE::SHAKE);
+		}
+	}
+
+	if (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END)
+	{
+	}
+	else if (players_[0]->GetState() == Player::STATE::END && eventFlag_)
+	{
+		players_[1]->ChangeState(Player::STATE::VICTORY);
+		eventId_ = 1;
+	}
+	else if (players_[1]->GetState() == Player::STATE::END && eventFlag_)
+	{
+		players_[0]->ChangeState(Player::STATE::VICTORY);
+		eventId_ = 0;
 	}
 
 
-	/*stage_->Update();*/
+	stage_->Update();
 
 
 
@@ -203,71 +228,24 @@ void GameScene::Draw(void)
 {
 	//ロードが完了したか判断
 	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
-	{	
+	{
 		return;
 	}
-#pragma region ゲームシーンの描画
 
-	// 描画
-	//背景描画
-	//backGround_->Draw();
-	stage_->Draw();
-	int screenSize = 100;
-	int mx = Application::SCREEN_SIZE_X - screenSize;
-	int my = Application::SCREEN_SIZE_Y - screenSize;
-
-	int cx = Application::SCREEN_SIZE_X - screenSize;
-	int cy = Application::SCREEN_SIZE_Y - screenSize;
-
-
-	//プレイヤーの描画
-	for (auto& p : players_)
+	if (eventFlag_)
 	{
-		p->Draw();
-
-		VECTOR pos2D = ConvWorldPosToScreenPos(p->GetTransform().pos);
-		DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
-
-		if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
-		{
-			SceneManager::GetInstance().GetCamera()->FadeOut();
-		}
+		EventDraw();
+	}
+	else
+	{
+		GameDraw();
 	}
 
-	int plyNum = 0;
-	//プレイヤーの更新
-	for (auto& plyer : players_)
-	{
-		//HPバーの表示
-		plyer->DrawPram(plyNum);
-		plyNum += 1;
-	}
-
-	//デバッグ描画
-#ifdef _DEBUG
-	DrawDebug();
-#endif
-
-#pragma endregion
-	
 }
 
 void GameScene::Release(void)
 {
-	int num = 10 * 6;
-	for (int i = 0; i < num; i++)
-	{
-		DeleteGraph(handleIds_[i]);
-	}
-	delete[] handleIds_;
 	
-	num = 10 * 6;
-	for (int i = 0; i < num; i++)
-	{
-		DeleteGraph(handleIds_2[i]);
-	}
-	delete[] handleIds_2;
-
 
 
 	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
@@ -403,11 +381,153 @@ void GameScene::Collision(void)
 		float distance = Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Stage::STAGE_RADIUS * Stage::STAGE_RADIUS;
 		if (disPow > distance)//ダメージ半径×攻撃半径
 		{
-			plyer->Damage(100);
-			plyer->ChangeState(Player::STATE::DEAD);
+			plyer->ChangeState(Player::STATE::FALL_DEAD);
 		}
 	}
 	
+
+}
+
+void GameScene::GameDraw(void)
+{
+
+#pragma region ゲームシーンの描画
+
+	// 描画
+	//背景描画
+	//backGround_->Draw();
+	stage_->Draw();
+	int screenSize = 100;
+	int mx = Application::SCREEN_SIZE_X - screenSize;
+	int my = Application::SCREEN_SIZE_Y - screenSize;
+
+	int cx = Application::SCREEN_SIZE_X - screenSize;
+	int cy = Application::SCREEN_SIZE_Y - screenSize;
+
+
+	//プレイヤーの描画
+	int plyNum = 0;
+
+	for (auto& plyer : players_)
+	{
+		plyer->Draw();
+
+		//HPバーの表示
+		plyer->DrawPram(plyNum);
+		plyNum += 1;
+
+		//メインカメラ更新
+		VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
+		DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
+
+		if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
+		{
+			SceneManager::GetInstance().GetCamera()->FadeOut();
+		}
+	}
+
+
+	//デバッグ描画
+#ifdef _DEBUG
+	DrawDebug();
+#endif
+
+#pragma endregion
+
+}
+void GameScene::EventDraw(void)
+{
+	int cx = Application::SCREEN_SIZE_X/2;
+	int cy = Application::SCREEN_SIZE_Y/2;
+
+
+	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++)
+	{
+		// 設定したいスクリーンを作成する
+		SetDrawScreen(screenH[i]);
+		// 画面を初期化
+		ClearDrawScreen();
+		// カメラ設定
+		camera_[i]->SetBeforeDraw();
+		//
+
+#pragma region ゲームシーンの描画
+
+	// 描画
+	//背景描画
+	//backGround_->Draw();
+		stage_->Draw();
+		int screenSize = 100;
+		int mx = Application::SCREEN_SIZE_X - screenSize;
+		int my = Application::SCREEN_SIZE_Y - screenSize;
+
+		//プレイヤーの描画
+		for (auto& plyer : players_)
+		{
+			plyer->Draw();
+
+			//メインカメラ更新
+			VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
+			DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
+
+			if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
+			{
+				SceneManager::GetInstance().GetCamera()->FadeOut();
+			}
+		}
+
+
+		//デバッグ描画
+#ifdef _DEBUG
+		DrawDebug();
+#endif
+
+#pragma endregion
+
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
+	// 画面を初期化
+	ClearDrawScreen();
+
+	int x = 0;
+	int y = 0;
+
+	//描画場所
+	/*for (auto screen : screenH)
+	{
+		DrawGraph(x, y, screen, true);
+
+		if (x >= cx && y >= cy)
+		{
+			x += cx;
+		}
+		else if (x >= cx && y >= 0)
+		{
+			x -= cx;
+			y += cy;
+		}
+		else if (x >= 0 && y >= 0)
+		{
+			x += cx;
+		}
+	}*/
+	if (eventId_ != -1)
+	{
+		DrawGraph(0, 0, screenH[eventId_], true);
+	}
+
+	//プレイヤーパラメーターの描画
+	int plyNum = 0;
+
+	for (auto& plyer : players_)
+	{
+		//HPバーの表示
+		plyer->DrawPram(plyNum);
+		plyNum += 1;
+	}
+
+	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
+	SetDrawScreen(DX_SCREEN_BACK);
 
 }
 
