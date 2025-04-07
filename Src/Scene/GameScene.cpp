@@ -53,8 +53,8 @@ void GameScene::Init(void)
 	float size = 100.0f;
 
 	VECTOR sPos[4] = {
-		{-size,0.0f,size}//ç∂è„
-		,{size,0.0f,size}//âEè„
+		{-size,50.0f,size}//ç∂è„
+		,{size,50.0f,size}//âEè„
 		,{-size,0.0f,-size}//ç∂â∫
 		,{size,0.0f,-size}//âEè„ 
 	};

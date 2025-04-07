@@ -50,10 +50,7 @@ void SelectScene::Init(void)
 
 	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
 
-	for (int ii = 0; ii < PLAYER_MAX; ii++)
-	{
-		FrameImg_[ii] = ResourceManager::GetInstance().Load(ResourceManager::SRC::FRAME).handleId_;
-	}
+	FrameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::FRAME).handleId_;
 
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
@@ -82,13 +79,13 @@ void SelectScene::Init(void)
 		,{size,0.0f,-size}//右上 
 	};
 
-	const int playId[2] = { 0,2 };
+	players_[0]->Init(sPos[0], 0, 0);
+	players_[0]->ChangeState(ViewPlayer::STATE::PLAY);
 
-	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i, playId[i]);
-		players_[i]->ChangeState(ViewPlayer::STATE::PLAY);
-	}
+	players_[1]->Init(sPos[1], 1,2);
+	players_[1]->ChangeState(ViewPlayer::STATE::PLAY);
+
+
 
 	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
 
@@ -165,8 +162,8 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-	DrawGraph(0,0, FrameImg_[0], true);
-	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_[1], true);
+	DrawGraph(0,0, FrameImg_, true);
+	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_, true);
 	/*DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
@@ -214,6 +211,9 @@ void SelectScene::Draw(void)
 void SelectScene::Release(void)
 {
 	SoundManager::GetInstance().AllStop();
+
+
+
 
 }
 

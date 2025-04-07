@@ -86,6 +86,19 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::P4_IMAGE, res);
 
 
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1.mv1");
+	resourcesMap_.emplace(SRC::P1_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2.mv1");
+	resourcesMap_.emplace(SRC::P2_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P3/P3.mv1");
+	resourcesMap_.emplace(SRC::P3_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P4/P4.mv1");
+	resourcesMap_.emplace(SRC::P4_MODEL, res);
+
+
 	// ’e
 	//res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");

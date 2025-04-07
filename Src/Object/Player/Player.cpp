@@ -59,10 +59,13 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
+	transform_.pos = startPos;
+
+
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MODEL).handleId_);
 		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -71,42 +74,36 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
 		playerIconH_= LoadGraph("Data/Image/P1Image.png");
-
 	}
 	else if (pryId == 1)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_MODEL).handleId_);
 		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
 		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
-
 	}
 	else if (pryId == 2)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P3/P3.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_MODEL).handleId_);
 		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
 		playerIconH_= LoadGraph("Data/Image/P3Image.png");
-		transform_.localPos.y = 100.0f;
-
 	}
 	else if (pryId == 3)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P4/P4.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_MODEL).handleId_);
 		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
 		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
 		playerIconH_ = LoadGraph("Data/Image/P4Image.png");
-		transform_.localPos.y = 100.0f;
-
 	}
 	else
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MODEL).handleId_);
 		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -121,7 +118,6 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	//float scale = 10.0f;
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
-	transform_.pos = startPos;
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
