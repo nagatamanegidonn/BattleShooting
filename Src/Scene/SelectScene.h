@@ -11,7 +11,7 @@ public:
 	static constexpr int PLAYER_MAX = 2;		// プレイヤーの最大数
 	static constexpr int SIZE = 20;				// カーソルの半径
 	static constexpr int MOVE = 4;				// カーソルの移動速度
-	static constexpr int CHARACTER_MAX = 2;
+	static constexpr int CHARACTER_MAX = 4;
 
 	
 	// コンストラクタ

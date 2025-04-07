@@ -45,6 +45,8 @@ void SelectScene::Init(void)
 
 	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_IMAGE).handleId_;
 	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_IMAGE).handleId_;
+	playerImg_[2] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_IMAGE).handleId_;
+	playerImg_[3] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_IMAGE).handleId_;
 
 	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
 
@@ -75,14 +77,16 @@ void SelectScene::Init(void)
 	//プレイヤーの設定
 	VECTOR sPos[4] = {
 		{-size,0.0f,size / 2}//左上
-		,{size,0.0f,size / 2}//右上
+		,{size,0.0f,size / 2+70.0f}//右上
 		,{-size,0.0f,-size}//左下
 		,{size,0.0f,-size}//右上 
 	};
 
+	const int playId[2] = { 0,2 };
+
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i, i);
+		players_[i]->Init(sPos[i], i, playId[i]);
 		players_[i]->ChangeState(ViewPlayer::STATE::PLAY);
 	}
 
@@ -341,7 +345,9 @@ void SelectScene::CharacthrSelect(int playerId)
 		isTrg = ins.IsTrgDown(KEY_INPUT_2);
 	}
 
-	for (int ii = 0; ii < CHARACTER_MAX; ii++)
+	const int playId[2] = { 0,2 };
+
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		if (pos[playerId].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
 			pos[playerId].x > ii * (Application::SCREEN_SIZE_X / 2) &&
@@ -357,7 +363,7 @@ void SelectScene::CharacthrSelect(int playerId)
 					isReady_[playerId] = true;
 
 					//プレイヤー選択をSceneManagerの設定
-					SceneManager::GetInstance().SetPlayerId(playerId, ii);
+					SceneManager::GetInstance().SetPlayerId(playerId, playId[ii]);
 				}
 				else
 				{

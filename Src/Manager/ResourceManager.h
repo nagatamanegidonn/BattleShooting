@@ -29,6 +29,8 @@ public:
 
 		P1_IMAGE, // P1キノコ画像
 		P2_IMAGE, // P2キノコ画像
+		P3_IMAGE, // P3画像
+		P4_IMAGE, // P4画像
 
 		SHOT_MODEL,
 		P1_SHOT_MODEL, // P1キノコ弾モデル

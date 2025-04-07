@@ -67,24 +67,54 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
 		playerIconH_= LoadGraph("Data/Image/P1Image.png");
 
 	}
-	else
+	else if (pryId == 1)
 	{
 		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
 		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
-		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
-		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
-
-		// マテリアルの自己発光色を設定
-		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
 		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
+
+	}
+	else if (pryId == 2)
+	{
+		transform_.SetModel(MV1LoadModel("Data/Model/P3/P3.mv1"));
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
+		playerIconH_= LoadGraph("Data/Image/P3Image.png");
+		transform_.localPos.y = 100.0f;
+
+	}
+	else if (pryId == 3)
+	{
+		transform_.SetModel(MV1LoadModel("Data/Model/P4/P4.mv1"));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+
+		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P4Image.png");
+		transform_.localPos.y = 100.0f;
+
+	}
+	else
+	{
+		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
+
+		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P1Image.png");
 
 	}
 

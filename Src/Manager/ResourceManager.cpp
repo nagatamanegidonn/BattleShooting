@@ -78,6 +78,12 @@ void ResourceManager::Init(void)
 	//P2のイメージ画像
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2Image.png");
 	resourcesMap_.emplace(SRC::P2_IMAGE, res);
+	//P1のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P3Image.png");
+	resourcesMap_.emplace(SRC::P3_IMAGE, res);
+	//P2のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P4Image.png");
+	resourcesMap_.emplace(SRC::P4_IMAGE, res);
 
 
 	// 弾
