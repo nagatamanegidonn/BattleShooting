@@ -11,8 +11,11 @@ public:
 	// ÉäÉ\Å[ÉXñº
 	enum class SRC
 	{
+		TITLE_LOGO,
 		START_LOGO,
-		END_LOGO,
+		PLAY_LOGO,
+		EXIT_LOGO,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,

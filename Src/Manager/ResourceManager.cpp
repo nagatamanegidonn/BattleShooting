@@ -26,11 +26,19 @@ void ResourceManager::Init(void)
 
 	// スタートロゴ
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "StartLogo.png");
-	resourcesMap_.emplace(SRC::START_LOGO, res);
+	resourcesMap_.emplace(SRC::TITLE_LOGO, res);
 
+	// スタートロゴ
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "START.png");
+	resourcesMap_.emplace(SRC::START_LOGO, res);
+	// プレイロゴ
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "PLAY.png");
+	resourcesMap_.emplace(SRC::PLAY_LOGO, res);
 	// エンドロゴ
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EndLogo.png");
-	resourcesMap_.emplace(SRC::END_LOGO, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EXIT.png");
+	resourcesMap_.emplace(SRC::EXIT_LOGO, res);
+
+
 
 	// アラート
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Alert.png");

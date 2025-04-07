@@ -37,7 +37,7 @@ void TitleScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	// タイトルロゴ
-	imgTitleLogo_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::START_LOGO).handleId_;
+	imgTitleLogo_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 
 	//背景初期化
 	stage_ = new Stage;
@@ -113,7 +113,7 @@ void TitleScene::DrawLogo(void)
 
 	// タイトルロゴ
 	DrawRotaGraph(
-		cx, cy - 200,
+		cx, cy,
 		1.0f, 0.0f, imgTitleLogo_, true);
 
 	// Pushメッセージ
