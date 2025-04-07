@@ -19,6 +19,8 @@ public:
 		CURSOR,
 		FRAME,
 
+		RIGHT,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,

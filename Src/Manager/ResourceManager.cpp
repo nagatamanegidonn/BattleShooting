@@ -45,6 +45,10 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "SelectFrame.png");
 	resourcesMap_.emplace(SRC::FRAME, res);
 	
+	res = Resource(
+		Resource::TYPE::IMG, Application::PATH_IMAGE + "Right.png");
+	resourcesMap_.emplace(SRC::RIGHT, res);
+
 
 	// ÉAÉâÅ[Ég
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Alert.png");

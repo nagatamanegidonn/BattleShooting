@@ -121,7 +121,7 @@ void TitleScene::DrawLogo(void)
 	SetFontSize(28);
 	int len = (int)strlen(msg.c_str());
 	int width = GetDrawStringWidth(msg.c_str(), len);
-	DrawFormatString(cx - (width / 2), 200, 0x87cefa, msg.c_str());
+	DrawFormatString(cx - (width / 2), 550, 0x87cefa, msg.c_str());
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetFontSize(16);
 

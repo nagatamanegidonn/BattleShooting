@@ -233,7 +233,7 @@ void Player::Draw()
 	}
 	if (state_ == STATE::VICTORY)
 	{
-		SetFontSize(28);//文字のサイズを設定
+		SetFontSize(32);//文字のサイズを設定
 
 		std::string msg = "Result WIN";
 
@@ -670,9 +670,14 @@ void Player::UpdateVictory()
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
-	if (controller_->GetisControl(Controller::MODE::BACK))
+	else if (controller_->GetisControl(Controller::MODE::BACK))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+	}
+	else if(ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		return;
 	}
 }
 

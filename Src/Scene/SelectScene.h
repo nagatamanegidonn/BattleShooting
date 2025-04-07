@@ -38,6 +38,7 @@ private:
 	VECTOR pos[PLAYER_MAX];
 
 	// キャラクター選択が完了しているかどうかの確認用
+	bool isSelect_[PLAYER_MAX];
 	bool isReady_[PLAYER_MAX];
 	bool isStart_;
 
@@ -46,6 +47,8 @@ private:
 	int CursorImg_;
 	int FrameImg_;
 
+	int SelectImg_;
+	
 	// 当たり判定
 	void Collision(void);
 

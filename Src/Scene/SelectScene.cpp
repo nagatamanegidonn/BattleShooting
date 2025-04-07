@@ -49,8 +49,9 @@ void SelectScene::Init(void)
 	playerImg_[3] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_IMAGE).handleId_;
 
 	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
-
 	FrameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::FRAME).handleId_;
+	
+	SelectImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::RIGHT).handleId_;
 
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
@@ -64,6 +65,7 @@ void SelectScene::Init(void)
 	//ゲーム開始準備確認用フラグ
 	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
+		isSelect_[ii] = false;
 		isReady_[ii] = false;
 	}
 	isStart_ = false;
@@ -162,7 +164,7 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-	DrawGraph(0,0, FrameImg_, true);
+	DrawGraph(0, 0, FrameImg_, true);
 	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_, true);
 	/*DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
@@ -172,30 +174,71 @@ void SelectScene::Draw(void)
 
 	SceneManager& sns = SceneManager::GetInstance();
 
+	int ccx = Application::SCREEN_SIZE_X / 4;
+
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
-	if (isReady_[0] && sns.GetPlayerId(0) > -1) {
-		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
-
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 4, Application::SCREEN_SIZE_Y / 4 * 3
+	if (isSelect_[0]) {
+		DrawRotaGraph(ccx, Application::SCREEN_SIZE_Y / 4 * 3
 			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(0)], true);
+		if (sns.GetPlayerId(0) % 2 == 0) {
+			DrawRotaGraph(ccx + 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true);
+		}
+		else
+		{
+			DrawRotaGraph(ccx - 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true, true);
+		}
+	}
+	if (isReady_[0]) {
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
+	}
+	else if (isSelect_[0])
+	{
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_カラーを選択して決定", RGB(0, 0, 255), true);
+	}
+	else
+	{
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_決定１、キャンセル２", RGB(0, 0, 255), true);
 	}
 
 	//プレイヤー2が準備完了したかどうか
-	if (isReady_[1] && sns.GetPlayerId(1) > -1) {
-		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_OK", RGB(0, 0, 255), true);
-
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 4 * 3, Application::SCREEN_SIZE_Y / 4 * 3
+	if (isSelect_[1]) {
+		DrawRotaGraph(ccx * 3, Application::SCREEN_SIZE_Y / 4 * 3
 			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(1)], true, true);
-
+		if (sns.GetPlayerId(1) % 2 == 0) {
+			DrawRotaGraph(ccx * 3 + 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true);
+		}
+		else
+		{
+			DrawRotaGraph(ccx * 3 - 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true, true);
+		}
 	}
+	if (isReady_[1]) {
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_OK", RGB(0, 0, 255), true);
+	}
+	else if(isSelect_[1])
+	{
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_カラーを選択して決定", RGB(0, 0, 255), true);
+	}
+	else
+	{
+		DrawString(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, "p2_決定３、キャンセル４", RGB(0, 0, 255), true);
+	}
+
+	//フォントサイズも元に戻す
+	SetFontSize(16);
+
 
 	//プレイヤーの更新
 	for (auto p : players_)
 	{
 		p->Draw();
 	}
-	
+
 	//プレイヤー１のカーソル（仮）
 	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
 	DrawRotaGraph(pos[0].x, pos[0].y, 1.0f, 0.0f, CursorImg_, true);
@@ -205,7 +248,7 @@ void SelectScene::Draw(void)
 	DrawRotaGraph(pos[1].x, pos[1].y, 1.0f, 0.0f, CursorImg_, true);
 	//-----------------------------------------------------
 
-	
+
 }
 
 void SelectScene::Release(void)
@@ -222,6 +265,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 {
 	//------------------------------------------
 	InputManager& ins = InputManager::GetInstance();
+	SceneManager& sns = SceneManager::GetInstance();
 
 
 	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
@@ -233,7 +277,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
 
 
-	if (isReady_[0] == false)
+	if ((sns.GetPlayerId(0) < 0)&& !isSelect_[0])
 	{
 		if (CheckHitKey(KEY_INPUT_W) || (leftStickY < 0))
 		{
@@ -252,7 +296,37 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 			P1.x -= MOVE;
 		}
 	}
+	else
+	{
+		InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+		bool isTrg = ins.IsTrgDown(KEY_INPUT_1);
+		bool isTrg2 = ins.IsTrgDown(KEY_INPUT_2);
 
+		if (isReady_[0] == false)
+		{
+			int  i = sns.GetPlayerId(0);
+			if ((CheckHitKey(KEY_INPUT_D) || (leftStickX > 0)) && sns.GetPlayerId(0) % 2 == 0)
+			{
+				sns.SetPlayerId(0, i + 1);
+			}
+			else if ((CheckHitKey(KEY_INPUT_A) || (leftStickX < 0)) && sns.GetPlayerId(0) % 2 == 1)
+			{
+				sns.SetPlayerId(0, i - 1);
+			}
+
+			if (isTrg || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
+			{
+				isReady_[0] = true;
+			}
+		}
+		else
+		{
+			if (isTrg2 || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN))
+			{
+				isReady_[0] = false;
+			}
+		}
+	}
 
 	//------------------------------------------
 
@@ -261,7 +335,7 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 	// 左スティックの縦軸
 	auto leftStick2Y = ins.GetJPadInputState(jno2).AKeyLY;
 
-	if (isReady_[1] == false)
+	if ((sns.GetPlayerId(1) < 0) && !isSelect_[1])
 	{
 		if (CheckHitKey(KEY_INPUT_UP) || (leftStick2Y < 0))
 		{
@@ -280,7 +354,37 @@ void SelectScene::GetMove(VECTOR& P1, VECTOR& P2)
 			P2.x -= MOVE;
 		}
 	}
+	else
+	{
+		InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
+		bool isTrg = ins.IsTrgDown(KEY_INPUT_3);
+		bool isTrg2 = ins.IsTrgDown(KEY_INPUT_4);
 
+		if (isReady_[1] == false)
+		{
+			int  i = sns.GetPlayerId(1);
+			if ((CheckHitKey(KEY_INPUT_RIGHT) || (leftStick2X > 0)) && sns.GetPlayerId(1) % 2 == 0)
+			{
+				sns.SetPlayerId(1, i + 1);
+			}
+			else if ((CheckHitKey(KEY_INPUT_LEFT) || (leftStick2X < 0)) && sns.GetPlayerId(1) % 2 == 1)
+			{
+				sns.SetPlayerId(1, i - 1);
+			}
+
+			if (isTrg || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
+			{
+				isReady_[1] = true;
+			}
+		}
+		else
+		{
+			if (isTrg2 || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN))
+			{
+				isReady_[1] = false;
+			}
+		}
+	}
 
 	//------------------------------------------
 }
@@ -339,10 +443,12 @@ void SelectScene::CharacthrSelect(int playerId)
 
 	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
 	bool isTrg = ins.IsTrgDown(KEY_INPUT_1);
+	bool isTrg2 = ins.IsTrgDown(KEY_INPUT_2);
 	if (playerId == 1)//プレイヤー2なら
 	{
 		jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
-		isTrg = ins.IsTrgDown(KEY_INPUT_2);
+		isTrg = ins.IsTrgDown(KEY_INPUT_3);
+		isTrg2 = ins.IsTrgDown(KEY_INPUT_4);
 	}
 
 	const int playId[2] = { 0,2 };
@@ -354,23 +460,30 @@ void SelectScene::CharacthrSelect(int playerId)
 			pos[playerId].y < Application::SCREEN_SIZE_Y / 2 &&
 			pos[playerId].y > 0)
 		{
-			// プレイヤー２が準備完了しているかどうか
+			// プレイヤーが準備完了しているかどうか
 			// true == 準備完了 / false == 準備中
-			if (isTrg || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
+			if (isSelect_[playerId] == false)
 			{
-				if (isReady_[playerId] == false)
+				if (isTrg || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::RIGHT))
 				{
-					isReady_[playerId] = true;
+					isSelect_[playerId] = true;
 
 					//プレイヤー選択をSceneManagerの設定
 					SceneManager::GetInstance().SetPlayerId(playerId, playId[ii]);
 				}
-				else
+			}
+			else
+			{
+				if (isTrg2 || ins.IsPadBtnNew(jno, InputManager::JOYPAD_BTN::DOWN))
 				{
 					SceneManager::GetInstance().SetPlayerId(playerId, -1);
-					isReady_[playerId] = false;
+					isSelect_[playerId] = false;
 				}
 			}
+
 		}
 	}
+
+
+
 }
