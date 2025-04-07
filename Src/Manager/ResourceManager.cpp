@@ -109,6 +109,12 @@ void ResourceManager::Init(void)
 
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
 	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P3/P3Bullet.mv1");
+	resourcesMap_.emplace(SRC::P3_SHOT_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P4/P4Bullet.mv1");
+	resourcesMap_.emplace(SRC::P4_SHOT_MODEL, res);
 
 
 	

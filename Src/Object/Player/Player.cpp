@@ -87,7 +87,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	else if (pryId == 2)
 	{
 		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_MODEL).handleId_);
-		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P3_SHOT_MODEL);
 
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
@@ -96,7 +96,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	else if (pryId == 3)
 	{
 		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_MODEL).handleId_);
-		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P4_SHOT_MODEL);
 
 		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
 		playerIconH_ = LoadGraph("Data/Image/P4Image.png");

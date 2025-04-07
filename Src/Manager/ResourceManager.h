@@ -41,6 +41,8 @@ public:
 		SHOT_MODEL,
 		P1_SHOT_MODEL, // P1キノコ弾モデル
 		P2_SHOT_MODEL, // P2キノコ弾モデル
+		P3_SHOT_MODEL, // P3弾モデル
+		P4_SHOT_MODEL, // P4弾モデル
 
 		ROCK01,
 		ROCK02,
