@@ -46,7 +46,7 @@ void SelectScene::Init(void)
 	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_IMAGE).handleId_;
 	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_IMAGE).handleId_;
 
-	Cursor_ = LoadGraph("Data/Image/Cursor.png");
+	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
 
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
@@ -188,11 +188,11 @@ void SelectScene::Draw(void)
 	
 	//プレイヤー１のカーソル（仮）
 	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, Cursor_, true);
+	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, CursorImg_, true);
 
 	//プレイヤー２のカーソル（仮）
 	//DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, Cursor_, true);
+	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, CursorImg_, true);
 	//-----------------------------------------------------
 
 	

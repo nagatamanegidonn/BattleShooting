@@ -16,6 +16,8 @@ public:
 		PLAY_LOGO,
 		EXIT_LOGO,
 
+		CURSOR,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,

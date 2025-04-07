@@ -37,8 +37,11 @@ void ResourceManager::Init(void)
 	// エンドロゴ
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EXIT.png");
 	resourcesMap_.emplace(SRC::EXIT_LOGO, res);
-
-
+	
+	// カーソル(選択画面)
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Cursor.png");
+	resourcesMap_.emplace(SRC::CURSOR, res);
+	
 
 	// アラート
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Alert.png");
