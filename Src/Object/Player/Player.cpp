@@ -16,6 +16,7 @@
 #include "DirModel.h"
 #include "Player.h"
 #include "../../Manager/SoundManager.h"
+#include <EffekseerForDXLib.h>
 
 
 //Player::Player(Camera& camera) :camera_(camera)
@@ -450,6 +451,9 @@ void Player::InitAnimation(std::string path)
 void Player::InitEffect(void)
 {
 
+	// 自機破壊エフェクト
+	effectDestroyResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::DESTROY).handleId_;
 
 }
 
@@ -548,6 +552,7 @@ void Player::UpdateJump(void)
 			if (playerHp_ <= 0)
 			{
 				ChangeState(STATE::DEAD);
+				jumpTime_ = 0.1f;
 				return;
 			}
 			ChangeState(STATE::PLAY);
@@ -647,15 +652,29 @@ void Player::UpdateDead()
 		transform_.pos = movedPos_;
 		if (jumpTime_ <= 0.0f)
 		{
-			ChangeState(STATE::END);//本来ならここで爆発エフェクト発生
+			// エフェクトが再生されていない場合
+			// 爆発エフェクトを再生する
+			effectDestroyPlayId_ = PlayEffekseer3DEffect(effectDestroyResId_);
+			SetScalePlayingEffekseer3DEffect(effectDestroyPlayId_, 30.0f, 30.0f, 30.0f);
+			SetRotationPlayingEffekseer3DEffect(effectDestroyPlayId_, AsoUtility::Deg2RadF(0.0f), 0.0f, 0.0f);
+			SetPosPlayingEffekseer3DEffect(effectDestroyPlayId_, transform_.pos.x, transform_.pos.y, transform_.pos.z);
 			return;
 		}
 		return;
 	}
-	ChangeState(STATE::END);//本来ならここでエフェクトがひとつもなかったら爆発エフェクト発生
-
-	//この先の処理、エフェクトが終了したらChangeStateする処理
-
+	// エフェクトが再生されているかどうかをチェック
+	int ret = IsEffekseer3DEffectPlaying(effectDestroyPlayId_);
+	if (ret == -1)
+	{
+		ChangeState(STATE::END);
+	}
+	else
+	{
+		SetScalePlayingEffekseer3DEffect(effectDestroyPlayId_, 30.0f, 30.0f, 30.0f);
+		SetRotationPlayingEffekseer3DEffect(effectDestroyPlayId_, AsoUtility::Deg2RadF(0.0f), 0.0f, 0.0f);
+		VECTOR vpos = VAdd(transform_.pos, VScale(transform_.GetBack(), 10.0f));
+		SetPosPlayingEffekseer3DEffect(effectDestroyPlayId_, vpos.x, vpos.y, vpos.z);
+	}
 }
 void Player::UpdateEnd()
 {

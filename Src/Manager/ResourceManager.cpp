@@ -139,6 +139,10 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::BACKGROUNDFOREST, res);
 
 	// Ž©‹@•¬ŽË
+	res = Resource(Resource::TYPE::EFFEKSEER, Application::PATH_EFFECT + "Dead.efkefc");
+	resourcesMap_.emplace(SRC::DESTROY, res);
+
+    // Ž©‹@•¬ŽË
 	res = Resource(Resource::TYPE::EFFEKSEER, Application::PATH_EFFECT + "Jet.efkefc");
 	resourcesMap_.emplace(SRC::JET, res);
 
