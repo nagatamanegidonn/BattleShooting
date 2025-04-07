@@ -69,7 +69,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
-		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
+		playerIconH_= LoadGraph("Data/Image/P1Image.png");
 
 	}
 	else
@@ -84,7 +84,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
-		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
 
 	}
 
@@ -575,6 +575,15 @@ void Player::UpdateFallDead(void)
 			dir = -1;
 		}
 
+		if (turnTime_ < 0.5f && turnTime_ > 0.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+		else if (turnTime_ < 1.5f && turnTime_ > 1.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+
 		rotPow = rotPow.Mult(
 			Quaternion::AngleAxis(
 				AsoUtility::Deg2RadF(dir), AsoUtility::AXIS_Y
@@ -589,6 +598,8 @@ void Player::UpdateFallDead(void)
 
 		if (turnTime_ <= 0.0f)
 		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::FALL, Sound::TIMES::ONCE, true);
+
 			turnTime_ = 10.0f;
 			jumpTime_ = 3.0f;
 			jumpDir_ = DOWN_DIR;
@@ -759,6 +770,8 @@ void Player::ProcessBoost(void)
 	if ((controller_->GetisControl(Controller::MODE::JATTACK)
 		&& jumpTime_ <= 0.0f))
 	{
+		SoundManager::GetInstance().Play(SoundManager::SRC::DASH, Sound::TIMES::ONCE, true);
+
 		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
 		SetJump(dir);
 	}

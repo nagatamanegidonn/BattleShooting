@@ -11,8 +11,11 @@ public:
 	// リソース名
 	enum class SRC
 	{
+		TITLE_LOGO,
 		START_LOGO,
-		END_LOGO,
+		PLAY_LOGO,
+		EXIT_LOGO,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,
@@ -21,12 +24,12 @@ public:
 		ALPHABET,
 		SPEECH_BALLOON,
 
-		P1_IMAGE,
-		P2_IMAGE,
+		P1_IMAGE, // P1キノコ画像
+		P2_IMAGE, // P2キノコ画像
 
 		SHOT_MODEL,
-		P1_SHOT_MODEL,
-		P2_SHOT_MODEL,
+		P1_SHOT_MODEL, // P1キノコ弾モデル
+		P2_SHOT_MODEL, // P2キノコ弾モデル
 
 		ROCK01,
 		ROCK02,

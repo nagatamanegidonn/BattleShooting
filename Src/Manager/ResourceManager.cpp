@@ -26,11 +26,19 @@ void ResourceManager::Init(void)
 
 	// スタートロゴ
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "StartLogo.png");
-	resourcesMap_.emplace(SRC::START_LOGO, res);
+	resourcesMap_.emplace(SRC::TITLE_LOGO, res);
 
+	// スタートロゴ
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "START.png");
+	resourcesMap_.emplace(SRC::START_LOGO, res);
+	// プレイロゴ
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "PLAY.png");
+	resourcesMap_.emplace(SRC::PLAY_LOGO, res);
 	// エンドロゴ
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EndLogo.png");
-	resourcesMap_.emplace(SRC::END_LOGO, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EXIT.png");
+	resourcesMap_.emplace(SRC::EXIT_LOGO, res);
+
+
 
 	// アラート
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Alert.png");
@@ -59,10 +67,10 @@ void ResourceManager::Init(void)
 	
 	
 	//P1のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1MushImage.png");
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1Image.png");
 	resourcesMap_.emplace(SRC::P1_IMAGE, res);
 	//P2のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2MushImage.png");
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2Image.png");
 	resourcesMap_.emplace(SRC::P2_IMAGE, res);
 
 
@@ -76,6 +84,7 @@ void ResourceManager::Init(void)
 
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
 	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
+
 
 	
 	// 背景岩１
