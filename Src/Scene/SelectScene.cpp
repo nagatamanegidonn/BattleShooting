@@ -43,8 +43,8 @@ void SelectScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
-	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_IMAGE).handleId_;
-	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_IMAGE).handleId_;
+	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MUSH_IMAGE).handleId_;
+	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_MUSH_IMAGE).handleId_;
 
 	Cursor_ = LoadGraph("Data/Image/Cursor.png");
 

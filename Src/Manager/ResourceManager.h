@@ -24,12 +24,12 @@ public:
 		ALPHABET,
 		SPEECH_BALLOON,
 
-		P1_IMAGE,
-		P2_IMAGE,
+		P1_MUSH_IMAGE, // P1キノコ画像
+		P2_MUSH_IMAGE, // P2キノコ画像
 
 		SHOT_MODEL,
-		P1_SHOT_MODEL,
-		P2_SHOT_MODEL,
+		P1_MUSH_SHOT_MODEL, // P1キノコ弾モデル
+		P2_MUSH_SHOT_MODEL, // P2キノコ弾モデル
 
 		ROCK01,
 		ROCK02,
