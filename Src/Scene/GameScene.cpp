@@ -318,6 +318,9 @@ void GameScene::Collision(void)
 				dir = VScale(dir, -1);//吹っ飛ばしの方向を反転&×５
 				vsPlyer->SetJump(dir);
 
+				//音の再生
+				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
+
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
@@ -339,6 +342,9 @@ void GameScene::Collision(void)
 				plyer->SetJump(dir);
 				dir = VScale(dir, -1);
 				vsPlyer->SetJump(dir);
+
+				//音の再生
+				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
 
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
