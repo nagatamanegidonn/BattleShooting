@@ -162,15 +162,17 @@ void SelectScene::Draw(void)
 
 
 	//背景
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 
 	//キャラ選択
-	DrawGraph(0,0, FrameImg_[0], true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, RGB(255,255,255), true);
+	DrawBox(20, 20, (Application::SCREEN_SIZE_X / 2) - 20, (Application::SCREEN_SIZE_Y / 2) - 20, RGB(20,20,20), true);
+	DrawBox((Application::SCREEN_SIZE_X / 2) + 20, 20, Application::SCREEN_SIZE_X + 20, (Application::SCREEN_SIZE_Y / 2) - 20, RGB(20,20,20), true);
+	/*DrawGraph(0, 0, FrameImg_[0], true);
 	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_[1], true);
-	/*DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
-	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
-	*/
+	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
+	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);*/
 
 
 	SceneManager& sns = SceneManager::GetInstance();
@@ -200,12 +202,12 @@ void SelectScene::Draw(void)
 	}
 	
 	//プレイヤー１のカーソル（仮）
-	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, CursorImg_, true);
+	DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0xff0000, true);
+	//DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, CursorImg_, true);
 
 	//プレイヤー２のカーソル（仮）
-	//DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, CursorImg_, true);
+	DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x0000ff, true);
+	//DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, CursorImg_, true);
 	//-----------------------------------------------------
 
 	
