@@ -17,6 +17,7 @@ public:
 		EXIT_LOGO,
 
 		CURSOR,
+		FRAME,
 
 		ALERT_MSG,
 		LIGHT,

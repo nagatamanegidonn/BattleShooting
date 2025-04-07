@@ -48,6 +48,11 @@ void SelectScene::Init(void)
 
 	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
 
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
+	{
+		FrameImg_[ii] = ResourceManager::GetInstance().Load(ResourceManager::SRC::FRAME).handleId_;
+	}
+
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
 
@@ -156,9 +161,13 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//ƒLƒƒƒ‰‘I‘ð
-
+	DrawGraph(0,0, FrameImg_[0], true);
+	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_[1], true);
+	/*DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
+	*/
+
 
 	SceneManager& sns = SceneManager::GetInstance();
 

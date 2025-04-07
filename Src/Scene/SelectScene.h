@@ -44,6 +44,7 @@ private:
 	int playerImg_[CHARACTER_MAX];
 
 	int CursorImg_;
+	int FrameImg_[PLAYER_MAX];
 
 	// “–‚½‚è”»’è
 	void Collision(void);

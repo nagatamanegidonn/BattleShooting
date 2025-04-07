@@ -41,6 +41,9 @@ void ResourceManager::Init(void)
 	// カーソル(選択画面)
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Cursor.png");
 	resourcesMap_.emplace(SRC::CURSOR, res);
+	// 選択画面の枠
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "SelectFrame.png");
+	resourcesMap_.emplace(SRC::FRAME, res);
 	
 
 	// アラート
