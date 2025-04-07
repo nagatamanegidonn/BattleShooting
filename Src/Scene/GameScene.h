@@ -7,7 +7,6 @@
 
 class Player;
 class Stage;
-class Grid;
 class Camera;
 
 

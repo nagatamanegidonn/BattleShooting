@@ -19,13 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\BackGround.cpp" />
     <ClCompile Include="Src\Manager\Sound.cpp" />
     <ClCompile Include="Src\Manager\SoundManager.cpp" />
-    <ClCompile Include="Src\Object\BackGround.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController.cpp" />
     <ClCompile Include="Src\Object\Player\DirModel.cpp" />
     <ClCompile Include="Src\Object\Player\ViewPlayer.cpp" />
+    <ClCompile Include="Src\Object\SpaceDome.cpp" />
     <ClCompile Include="Src\Object\Stage.cpp" />
     <ClCompile Include="Src\Object\Player\Controller.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -44,7 +43,6 @@
     <ClCompile Include="Src\Manager\Resource.cpp" />
     <ClCompile Include="Src\Manager\ResourceManager.cpp" />
     <ClCompile Include="Src\Manager\SceneManager.cpp" />
-    <ClCompile Include="Src\Object\Grid.cpp" />
     <ClCompile Include="Src\Scene\ResultScene.cpp" />
     <ClCompile Include="Src\Scene\SceneBase.cpp" />
     <ClCompile Include="Src\Scene\SelectScene.cpp" />
@@ -53,13 +51,12 @@
     <ClCompile Include="Src\Utility\FrameRate.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\BackGround.h" />
     <ClInclude Include="Src\Manager\Sound.h" />
     <ClInclude Include="Src\Manager\SoundManager.h" />
-    <ClInclude Include="Src\Object\BackGround.h" />
     <ClInclude Include="Src\Object\Common\AnimationController.h" />
     <ClInclude Include="Src\Object\Player\DirModel.h" />
     <ClInclude Include="Src\Object\Player\ViewPlayer.h" />
+    <ClInclude Include="Src\Object\SpaceDome.h" />
     <ClInclude Include="Src\Object\Stage.h" />
     <ClInclude Include="Src\Object\Player\Controller.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
@@ -78,7 +75,6 @@
     <ClInclude Include="Src\Manager\Resource.h" />
     <ClInclude Include="Src\Manager\ResourceManager.h" />
     <ClInclude Include="Src\Manager\SceneManager.h" />
-    <ClInclude Include="Src\Object\Grid.h" />
     <ClInclude Include="Src\Scene\ResultScene.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />
     <ClInclude Include="Src\Scene\SelectScene.h" />

@@ -2,6 +2,9 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Utility/AsoUtility.h"
+#include "SpaceDome.h"
+
+
 #include "Common/Transform.h"
 #include "Stage.h"
 
@@ -37,6 +40,14 @@ void Stage::Init(void)
 	//変更する場合は必須
 	transform_.Update();
 
+
+	// スカイドーム
+	Transform spaceDomeTran_;
+	spaceDomeTran_.pos = AsoUtility::VECTOR_ZERO;
+
+	spaceDome_ = new SpaceDome(spaceDomeTran_);
+	spaceDome_->Init();
+
 }
 
 void Stage::Update(void)
@@ -45,6 +56,9 @@ void Stage::Update(void)
 
 void Stage::Draw(void)
 {
+	spaceDome_->Draw();
+
+
 	//3Dモデルの描画
 	MV1DrawModel(transform_.modelId);
 }
@@ -139,4 +153,5 @@ void Stage::DrawDebug(void)
 
 void Stage::Release(void)
 {
+	spaceDome_->Release();
 }
