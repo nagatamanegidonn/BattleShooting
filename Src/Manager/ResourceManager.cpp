@@ -67,23 +67,23 @@ void ResourceManager::Init(void)
 	
 	
 	//P1のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1MushImage.png");
-	resourcesMap_.emplace(SRC::P1_MUSH_IMAGE, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1Image.png");
+	resourcesMap_.emplace(SRC::P1_IMAGE, res);
 	//P2のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2MushImage.png");
-	resourcesMap_.emplace(SRC::P2_MUSH_IMAGE, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2Image.png");
+	resourcesMap_.emplace(SRC::P2_IMAGE, res);
 
 
 	// 弾
 	//res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1Mush/P1Bullet.mv1");
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
 	resourcesMap_.emplace(SRC::SHOT_MODEL, res);
 
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1Mush/P1Bullet.mv1");
-	resourcesMap_.emplace(SRC::P1_MUSH_SHOT_MODEL, res);
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
+	resourcesMap_.emplace(SRC::P1_SHOT_MODEL, res);
 
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2Mush/P2Bullet.mv1");
-	resourcesMap_.emplace(SRC::P2_MUSH_SHOT_MODEL, res);
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
+	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
 
 
 	
