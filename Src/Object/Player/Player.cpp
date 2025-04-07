@@ -59,39 +59,65 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
+	transform_.pos = startPos;
+
+
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1Mush/P1.mv1"));
-		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_MUSH_SHOT_MODEL);
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MODEL).handleId_);
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-		//アニメーションの設定
-		InitAnimation(Application::PATH_MODEL + "P1Mush/P1.mv1");
-		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
 
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+		playerIconH_= LoadGraph("Data/Image/P1Image.png");
+	}
+	else if (pryId == 1)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_MODEL).handleId_);
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
+	}
+	else if (pryId == 2)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_MODEL).handleId_);
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
+		playerIconH_= LoadGraph("Data/Image/P3Image.png");
+	}
+	else if (pryId == 3)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_MODEL).handleId_);
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+
+		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P4Image.png");
 	}
 	else
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P2Mush/P2.mv1"));
-		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_MUSH_SHOT_MODEL);
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MODEL).handleId_);
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
-		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
-		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
+		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+
 		//アニメーションの設定
-		InitAnimation(Application::PATH_MODEL + "P2Mush/P2.mv1");
-
-		// マテリアルの自己発光色を設定
-		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
-		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P1Image.png");
 
 	}
 
 	//float scale = 10.0f;
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
-	transform_.pos = startPos;
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
@@ -575,6 +601,15 @@ void Player::UpdateFallDead(void)
 			dir = -1;
 		}
 
+		if (turnTime_ < 0.5f && turnTime_ > 0.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+		else if (turnTime_ < 1.5f && turnTime_ > 1.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+
 		rotPow = rotPow.Mult(
 			Quaternion::AngleAxis(
 				AsoUtility::Deg2RadF(dir), AsoUtility::AXIS_Y
@@ -589,6 +624,8 @@ void Player::UpdateFallDead(void)
 
 		if (turnTime_ <= 0.0f)
 		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::FALL, Sound::TIMES::ONCE, true);
+
 			turnTime_ = 10.0f;
 			jumpTime_ = 3.0f;
 			jumpDir_ = DOWN_DIR;
@@ -759,6 +796,8 @@ void Player::ProcessBoost(void)
 	if ((controller_->GetisControl(Controller::MODE::JATTACK)
 		&& jumpTime_ <= 0.0f))
 	{
+		SoundManager::GetInstance().Play(SoundManager::SRC::DASH, Sound::TIMES::ONCE, true);
+
 		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
 		SetJump(dir);
 	}

@@ -16,6 +16,9 @@ public:
 		PLAY_LOGO,
 		EXIT_LOGO,
 
+		CURSOR,
+		FRAME,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,
@@ -24,12 +27,20 @@ public:
 		ALPHABET,
 		SPEECH_BALLOON,
 
-		P1_MUSH_IMAGE, // P1キノコ画像
-		P2_MUSH_IMAGE, // P2キノコ画像
+		P1_IMAGE, // P1キノコ画像
+		P2_IMAGE, // P2キノコ画像
+		P3_IMAGE, // P3画像
+		P4_IMAGE, // P4画像
+		
+		P1_MODEL,
+		P2_MODEL,
+		P3_MODEL,
+		P4_MODEL,
+
 
 		SHOT_MODEL,
-		P1_MUSH_SHOT_MODEL, // P1キノコ弾モデル
-		P2_MUSH_SHOT_MODEL, // P2キノコ弾モデル
+		P1_SHOT_MODEL, // P1キノコ弾モデル
+		P2_SHOT_MODEL, // P2キノコ弾モデル
 
 		ROCK01,
 		ROCK02,

@@ -37,8 +37,14 @@ void ResourceManager::Init(void)
 	// エンドロゴ
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EXIT.png");
 	resourcesMap_.emplace(SRC::EXIT_LOGO, res);
-
-
+	
+	// カーソル(選択画面)
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Cursor.png");
+	resourcesMap_.emplace(SRC::CURSOR, res);
+	// 選択画面の枠
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "SelectFrame.png");
+	resourcesMap_.emplace(SRC::FRAME, res);
+	
 
 	// アラート
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Alert.png");
@@ -67,23 +73,42 @@ void ResourceManager::Init(void)
 	
 	
 	//P1のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1MushImage.png");
-	resourcesMap_.emplace(SRC::P1_MUSH_IMAGE, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P1Image.png");
+	resourcesMap_.emplace(SRC::P1_IMAGE, res);
 	//P2のイメージ画像
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2MushImage.png");
-	resourcesMap_.emplace(SRC::P2_MUSH_IMAGE, res);
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P2Image.png");
+	resourcesMap_.emplace(SRC::P2_IMAGE, res);
+	//P1のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P3Image.png");
+	resourcesMap_.emplace(SRC::P3_IMAGE, res);
+	//P2のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P4Image.png");
+	resourcesMap_.emplace(SRC::P4_IMAGE, res);
+
+
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1.mv1");
+	resourcesMap_.emplace(SRC::P1_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2.mv1");
+	resourcesMap_.emplace(SRC::P2_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P3/P3.mv1");
+	resourcesMap_.emplace(SRC::P3_MODEL, res);
+	
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P4/P4.mv1");
+	resourcesMap_.emplace(SRC::P4_MODEL, res);
 
 
 	// 弾
 	//res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "Shot/Shot.mv1");
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1Mush/P1Bullet.mv1");
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
 	resourcesMap_.emplace(SRC::SHOT_MODEL, res);
 
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1Mush/P1Bullet.mv1");
-	resourcesMap_.emplace(SRC::P1_MUSH_SHOT_MODEL, res);
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1Bullet.mv1");
+	resourcesMap_.emplace(SRC::P1_SHOT_MODEL, res);
 
-	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2Mush/P2Bullet.mv1");
-	resourcesMap_.emplace(SRC::P2_MUSH_SHOT_MODEL, res);
+	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P2/P2Bullet.mv1");
+	resourcesMap_.emplace(SRC::P2_SHOT_MODEL, res);
 
 
 	

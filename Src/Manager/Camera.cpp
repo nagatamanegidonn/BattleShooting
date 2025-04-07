@@ -220,7 +220,7 @@ void Camera::SetBeforeDrawShake(void)
 
 	// 追従対象の位置
 	VECTOR followPos = followTransform_->pos;
-	followPos.y = 0.0f;
+	followPos.y = 50.0f;
 	// 追従対象の向き
 	Quaternion followRot = followTransform_->quaRot;
 	// 追従対象からカメラまでの相対座標
@@ -249,7 +249,7 @@ void Camera::SetBeforeDrawNone(void)
 {
 	// 追従対象の位置
 	VECTOR followPos = followTransform_->pos;
-	followPos.y = 0.0f;
+	followPos.y = 50.0f;
 	// 追従対象の向き
 	Quaternion followRot = followTransform_->quaRot;
 	// 追従対象からカメラまでの相対座標

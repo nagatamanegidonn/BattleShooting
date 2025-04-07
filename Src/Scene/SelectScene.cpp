@@ -43,10 +43,14 @@ void SelectScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
-	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MUSH_IMAGE).handleId_;
-	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_MUSH_IMAGE).handleId_;
+	playerImg_[0] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_IMAGE).handleId_;
+	playerImg_[1] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_IMAGE).handleId_;
+	playerImg_[2] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_IMAGE).handleId_;
+	playerImg_[3] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_IMAGE).handleId_;
 
-	Cursor_ = LoadGraph("Data/Image/Cursor.png");
+	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
+
+	FrameImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::FRAME).handleId_;
 
 	pos[0] = AsoUtility::VECTOR_ZERO;
 	pos[1] = AsoUtility::VECTOR_ZERO;
@@ -70,16 +74,18 @@ void SelectScene::Init(void)
 	//プレイヤーの設定
 	VECTOR sPos[4] = {
 		{-size,0.0f,size / 2}//左上
-		,{size,0.0f,size / 2}//右上
+		,{size,0.0f,size / 2+70.0f}//右上
 		,{-size,0.0f,-size}//左下
 		,{size,0.0f,-size}//右上 
 	};
 
-	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 0; i < PLAYER_MAX; i++) {
-		players_[i]->Init(sPos[i], i, i);
-		players_[i]->ChangeState(ViewPlayer::STATE::PLAY);
-	}
+	players_[0]->Init(sPos[0], 0, 0);
+	players_[0]->ChangeState(ViewPlayer::STATE::PLAY);
+
+	players_[1]->Init(sPos[1], 1,2);
+	players_[1]->ChangeState(ViewPlayer::STATE::PLAY);
+
+
 
 	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
 
@@ -156,9 +162,13 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-
+	DrawGraph(0,0, FrameImg_, true);
+	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_, true);
+	/*DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(0, 0, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 0xfff000, true);
 	DrawBox(Application::SCREEN_SIZE_X / 2, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2, 0x000fff, true);
+	*/
+
 
 	SceneManager& sns = SceneManager::GetInstance();
 
@@ -188,11 +198,11 @@ void SelectScene::Draw(void)
 	
 	//プレイヤー１のカーソル（仮）
 	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, Cursor_, true);
+	DrawRotaGraph(pos[0].x, pos[0].y, 1.0f, 0.0f, CursorImg_, true);
 
 	//プレイヤー２のカーソル（仮）
 	//DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, Cursor_, true);
+	DrawRotaGraph(pos[1].x, pos[1].y, 1.0f, 0.0f, CursorImg_, true);
 	//-----------------------------------------------------
 
 	
@@ -201,6 +211,9 @@ void SelectScene::Draw(void)
 void SelectScene::Release(void)
 {
 	SoundManager::GetInstance().AllStop();
+
+
+
 
 }
 
@@ -332,7 +345,9 @@ void SelectScene::CharacthrSelect(int playerId)
 		isTrg = ins.IsTrgDown(KEY_INPUT_2);
 	}
 
-	for (int ii = 0; ii < CHARACTER_MAX; ii++)
+	const int playId[2] = { 0,2 };
+
+	for (int ii = 0; ii < PLAYER_MAX; ii++)
 	{
 		if (pos[playerId].x < Application::SCREEN_SIZE_X / 2 + (ii * Application::SCREEN_SIZE_X / 2) &&
 			pos[playerId].x > ii * (Application::SCREEN_SIZE_X / 2) &&
@@ -348,7 +363,7 @@ void SelectScene::CharacthrSelect(int playerId)
 					isReady_[playerId] = true;
 
 					//プレイヤー選択をSceneManagerの設定
-					SceneManager::GetInstance().SetPlayerId(playerId, ii);
+					SceneManager::GetInstance().SetPlayerId(playerId, playId[ii]);
 				}
 				else
 				{
