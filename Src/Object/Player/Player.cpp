@@ -62,29 +62,29 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1Mush/P1.mv1"));
-		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_MUSH_SHOT_MODEL);
+		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		//アニメーションの設定
-		InitAnimation(Application::PATH_MODEL + "P1Mush/P1.mv1");
-		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+		playerIconH_= LoadGraph("Data/Image/P1Image.png");
 
 	}
 	else
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P2Mush/P2.mv1"));
-		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_MUSH_SHOT_MODEL);
+		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		//アニメーションの設定
-		InitAnimation(Application::PATH_MODEL + "P2Mush/P2.mv1");
+		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
 
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
-		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
 
 	}
 
