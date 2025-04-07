@@ -198,11 +198,11 @@ void SelectScene::Draw(void)
 	
 	//プレイヤー１のカーソル（仮）
 	//DrawBox(pos[0].x - SIZE, pos[0].y - SIZE, pos[0].x + SIZE, pos[0].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[0].x, pos[0].y, 0.03f, 0.0f, CursorImg_, true);
+	DrawRotaGraph(pos[0].x, pos[0].y, 1.0f, 0.0f, CursorImg_, true);
 
 	//プレイヤー２のカーソル（仮）
 	//DrawBox(pos[1].x - SIZE, pos[1].y - SIZE, pos[1].x + SIZE, pos[1].y + SIZE, 0x000000, true);
-	DrawRotaGraph(pos[1].x, pos[1].y, 0.03f, 0.0f, CursorImg_, true);
+	DrawRotaGraph(pos[1].x, pos[1].y, 1.0f, 0.0f, CursorImg_, true);
 	//-----------------------------------------------------
 
 	

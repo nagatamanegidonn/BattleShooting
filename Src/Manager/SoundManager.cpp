@@ -55,7 +55,7 @@ void SoundManager::Init(void)
 	soundMap_.emplace(SRC::ATTRCK, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Damege.mp3");
-	res.ChengeMaxVolume(1.1);
+	res.ChengeMaxVolume(2.0);
 	soundMap_.emplace(SRC::DAMAGE, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Reload.mp3");
