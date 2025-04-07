@@ -100,6 +100,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 
 		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
 		playerIconH_ = LoadGraph("Data/Image/P4Image.png");
+
 	}
 	else
 	{

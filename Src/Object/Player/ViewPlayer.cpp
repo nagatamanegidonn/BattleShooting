@@ -70,6 +70,23 @@ void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
+
+
+		int num = MV1GetMaterialNum(transform_.modelId);
+
+		std::string a = "";
+		std::string tex = "";
+		for (int i = 0; i < num; i++)
+		{
+			a += MV1GetMaterialName(transform_.modelId, i);
+			a += ":";
+			tex += MV1GetMaterialDifMapTexture(transform_.modelId, i);
+			tex += ":";
+		}
+
+		std::string s1 = a;
+		std::string s2 = tex;
+
 	}
 	else if (pryId == 3)
 	{
