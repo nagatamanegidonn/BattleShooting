@@ -1,24 +1,59 @@
-﻿  ViewPlayer.cpp
+﻿  Sound.cpp
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\Sound.cpp(162,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\Sound.cpp(167,19): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+  SoundManager.cpp
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(26,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(30,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(34,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(37,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(40,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(49,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(54,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(58,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(62,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(66,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(70,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\0re32\Desktop\BattleShooting\Src\Manager\SoundManager.cpp(74,22): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+  AnimationController.cpp
+  DirModel.cpp
+  ViewPlayer.cpp
   SpaceDome.cpp
   Stage.cpp
+  Controller.cpp
   Player.cpp
   ShotBase.cpp
+  ShotPlayer.cpp
   GameScene.cpp
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\GameScene.cpp(420,28): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\GameScene.cpp(420,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\GameScene.cpp(470,29): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\GameScene.cpp(470,20): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\GameScene.cpp(426,28): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\GameScene.cpp(426,19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\GameScene.cpp(476,29): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\GameScene.cpp(476,20): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  IntVector3.cpp
+  Transform.cpp
   Application.cpp
+  Fader.cpp
+  Quaternion.cpp
+  Vector2.cpp
+  main.cpp
+  Camera.cpp
+  コードを生成中...
+  コンパイル中...
+  InputManager.cpp
+  Resource.cpp
   ResourceManager.cpp
   SceneManager.cpp
   ResultScene.cpp
+  SceneBase.cpp
   SelectScene.cpp
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(191,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(191,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(195,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\syuny\OneDrive\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(195,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(191,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(191,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(195,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\0re32\Desktop\BattleShooting\Src\Scene\SelectScene.cpp(195,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   TitleScene.cpp
+  AsoUtility.cpp
+  FrameRate.cpp
   コードを生成中...
+  LINK : 前回のインクリメンタル リンクで C:\Users\0re32\Desktop\BattleShooting\x64\Debug\BaseProject.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
 EffekseerForDXLib_vs2019_x64_d.lib(EffekseerForDXLib.obj) : warning LNK4099: PDB '' が 'EffekseerForDXLib_vs2019_x64_d.lib(EffekseerForDXLib.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.Vector3D.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.Vector3D.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.Color.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.Color.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
@@ -99,4 +134,4 @@ EffekseerRendererDX11_vs2019_x64_d.lib(EffekseerMaterialCompilerDX11.obj) : warn
 Effekseer_vs2019_x64_d.lib(ModelLoader.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(ModelLoader.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.MaterialFile.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.MaterialFile.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 Effekseer_vs2019_x64_d.lib(Effekseer.CompiledMaterial.obj) : warning LNK4099: PDB '' が 'Effekseer_vs2019_x64_d.lib(Effekseer.CompiledMaterial.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
-  BaseProject.vcxproj -> C:\Users\syuny\OneDrive\Desktop\BattleShooting\x64\Debug\BaseProject.exe
+  BaseProject.vcxproj -> C:\Users\0re32\Desktop\BattleShooting\x64\Debug\BaseProject.exe
