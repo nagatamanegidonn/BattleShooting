@@ -53,8 +53,8 @@ void SoundManager::Init(void)
 	res.ChengeMaxVolume(0.8);
 	soundMap_.emplace(SRC::ATTRCK, res);
 
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Damege.mp3");
-	res.ChengeMaxVolume(1.0);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Lobot_Hit.mp3");
+	res.ChengeMaxVolume(1.1);
 	soundMap_.emplace(SRC::DAMAGE, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Reload.mp3");
@@ -71,7 +71,7 @@ void SoundManager::Init(void)
 	
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Fall.mp3");
 	res.ChengeMaxVolume(1.1);
-	soundMap_.emplace(SRC::FALL, res);
+	soundMap_.emplace(SRC::RELOAD, res);
 
 	//res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "TitleBGM.mp3");
 	//soundMap_.emplace(SRC::TITLE_BGM, res);
