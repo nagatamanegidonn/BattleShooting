@@ -1,8 +1,7 @@
-
+#include <EffekseerForDXLib.h>
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "../../Manager/ResourceManager.h"
-#include "../../Manager/Camera.h"
 
 #include "../../Application.h"
 
@@ -40,6 +39,7 @@ Player::Player()
 	direction_ = AsoUtility::VECTOR_ZERO;
 	direction_.y = ROT_POW;
 
+	ChangeState(STATE::PLAY);
 }
 Player::~Player()
 {
@@ -59,39 +59,66 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		ResourceManager::GetInstance().LoadModelDuplicate(
 			ResourceManager::SRC::PLAYER_SHIP));*/
 
+	transform_.pos = startPos;
+
+
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_MODEL));
 		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+
 		//アニメーションの設定
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
-		playerIconH_= LoadGraph("Data/Image/P1MushImage.png");
+		playerIconH_= LoadGraph("Data/Image/P1Image.png");
+	}
+	else if (pryId == 1)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_MODEL));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P2Image.png");
+	}
+	else if (pryId == 2)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P3_MODEL));
+		shotModel_= ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P3_SHOT_MODEL);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
+		playerIconH_= LoadGraph("Data/Image/P3Image.png");
+	}
+	else if (pryId == 3)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P4_MODEL));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P4_SHOT_MODEL);
+
+		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P4Image.png");
 
 	}
 	else
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
-		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P2_SHOT_MODEL);
+		transform_.SetModel(ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_MODEL));
+		shotModel_ = ResourceManager::GetInstance().LoadModelDuplicate(ResourceManager::SRC::P1_SHOT_MODEL);
 
-		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
-		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
+		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+
 		//アニメーションの設定
-		InitAnimation(Application::PATH_MODEL + "P2/P2.mv1");
-
-		// マテリアルの自己発光色を設定
-		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
-		playerIconH_ = LoadGraph("Data/Image/P2MushImage.png");
+		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
+		playerIconH_ = LoadGraph("Data/Image/P1Image.png");
 
 	}
 
 	//float scale = 10.0f;
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
-	transform_.pos = startPos;
 	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
@@ -197,16 +224,17 @@ void Player::Draw()
 		return;
 	}
 
+	
 	// モデルの描画
 	MV1DrawModel(transform_.modelId);
-	
+
 	if (state_ == STATE::DEAD|| state_ == STATE::FALL_DEAD)
 	{
 		return;
 	}
 	if (state_ == STATE::VICTORY)
 	{
-		SetFontSize(28);//文字のサイズを設定
+		SetFontSize(32);//文字のサイズを設定
 
 		std::string msg = "Result WIN";
 
@@ -423,6 +451,9 @@ void Player::InitAnimation(std::string path)
 void Player::InitEffect(void)
 {
 
+	// 自機破壊エフェクト
+	effectDestroyResId_ = ResourceManager::GetInstance().Load(
+		ResourceManager::SRC::DESTROY).handleId_;
 
 }
 
@@ -521,6 +552,7 @@ void Player::UpdateJump(void)
 			if (playerHp_ <= 0)
 			{
 				ChangeState(STATE::DEAD);
+				jumpTime_ = 0.1f;
 				return;
 			}
 			ChangeState(STATE::PLAY);
@@ -575,6 +607,15 @@ void Player::UpdateFallDead(void)
 			dir = -1;
 		}
 
+		if (turnTime_ < 0.5f && turnTime_ > 0.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+		else if (turnTime_ < 1.5f && turnTime_ > 1.43f)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::TURN, Sound::TIMES::ONCE, true);
+		}
+
 		rotPow = rotPow.Mult(
 			Quaternion::AngleAxis(
 				AsoUtility::Deg2RadF(dir), AsoUtility::AXIS_Y
@@ -589,6 +630,8 @@ void Player::UpdateFallDead(void)
 
 		if (turnTime_ <= 0.0f)
 		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::FALL, Sound::TIMES::ONCE, true);
+
 			turnTime_ = 10.0f;
 			jumpTime_ = 3.0f;
 			jumpDir_ = DOWN_DIR;
@@ -609,15 +652,29 @@ void Player::UpdateDead()
 		transform_.pos = movedPos_;
 		if (jumpTime_ <= 0.0f)
 		{
-			ChangeState(STATE::END);//本来ならここで爆発エフェクト発生
+			// エフェクトが再生されていない場合
+			// 爆発エフェクトを再生する
+			effectDestroyPlayId_ = PlayEffekseer3DEffect(effectDestroyResId_);
+			SetScalePlayingEffekseer3DEffect(effectDestroyPlayId_, 30.0f, 30.0f, 30.0f);
+			SetRotationPlayingEffekseer3DEffect(effectDestroyPlayId_, AsoUtility::Deg2RadF(0.0f), 0.0f, 0.0f);
+			SetPosPlayingEffekseer3DEffect(effectDestroyPlayId_, transform_.pos.x, transform_.pos.y, transform_.pos.z);
 			return;
 		}
 		return;
 	}
-	ChangeState(STATE::END);//本来ならここでエフェクトがひとつもなかったら爆発エフェクト発生
-
-	//この先の処理、エフェクトが終了したらChangeStateする処理
-
+	// エフェクトが再生されているかどうかをチェック
+	int ret = IsEffekseer3DEffectPlaying(effectDestroyPlayId_);
+	if (ret == -1)
+	{
+		ChangeState(STATE::END);
+	}
+	else
+	{
+		SetScalePlayingEffekseer3DEffect(effectDestroyPlayId_, 30.0f, 30.0f, 30.0f);
+		SetRotationPlayingEffekseer3DEffect(effectDestroyPlayId_, AsoUtility::Deg2RadF(0.0f), 0.0f, 0.0f);
+		VECTOR vpos = VAdd(transform_.pos, VScale(transform_.GetBack(), 10.0f));
+		SetPosPlayingEffekseer3DEffect(effectDestroyPlayId_, vpos.x, vpos.y, vpos.z);
+	}
 }
 void Player::UpdateEnd()
 {
@@ -632,9 +689,14 @@ void Player::UpdateVictory()
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
-	if (controller_->GetisControl(Controller::MODE::BACK))
+	else if (controller_->GetisControl(Controller::MODE::BACK))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+	}
+	else if(ins.IsTrgDown(KEY_INPUT_SPACE))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		return;
 	}
 }
 
@@ -759,6 +821,8 @@ void Player::ProcessBoost(void)
 	if ((controller_->GetisControl(Controller::MODE::JATTACK)
 		&& jumpTime_ <= 0.0f))
 	{
+		SoundManager::GetInstance().Play(SoundManager::SRC::DASH, Sound::TIMES::ONCE, true);
+
 		VECTOR dir = VScale(transform_.GetForward(), 2.0f);
 		SetJump(dir);
 	}

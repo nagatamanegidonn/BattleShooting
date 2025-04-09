@@ -7,7 +7,6 @@
 
 class Player;
 class Stage;
-class Grid;
 class Camera;
 
 
@@ -35,7 +34,7 @@ private:
 	bool eventFlag_;
 	int eventId_;
 
-	std::vector<std::shared_ptr<Player>> players_;
+	std::vector<std::unique_ptr<Player>> players_;
 	Camera* camera_[SceneManager::PLAYER_SIZE];
 	int screenH[SceneManager::PLAYER_SIZE];
 

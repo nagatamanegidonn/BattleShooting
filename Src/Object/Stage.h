@@ -2,6 +2,8 @@
 
 #include "Common/Transform.h"
 
+class SpaceDome;
+
 class Stage
 {
 
@@ -59,5 +61,7 @@ private:
 
 	// ƒ‚ƒfƒ‹§Œä‚ÌŠî–{î•ñ
 	Transform transform_;
+
+	SpaceDome* spaceDome_;
 
 };

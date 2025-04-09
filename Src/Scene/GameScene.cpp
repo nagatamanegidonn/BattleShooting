@@ -13,7 +13,6 @@
 #include "../Manager/Camera.h"
 
 #include "../Object/Stage.h"
-#include "../Object/Grid.h"
 #include "../Object/Shot/ShotPlayer.h"
 #include "../Object/Player/Player.h"
 
@@ -36,8 +35,8 @@ void GameScene::AsyncPreLoad(void)
 	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
 		camera_[i] = new Camera();
 
-		auto  player = std::make_shared<Player>();
-		players_.push_back(player);
+		auto  player = std::make_unique<Player>();
+		players_.push_back(std::move(player));
 	}
 
 	eventFlag_ = false;
@@ -54,8 +53,8 @@ void GameScene::Init(void)
 	float size = 100.0f;
 
 	VECTOR sPos[4] = {
-		{-size,0.0f,size}//左上
-		,{size,0.0f,size}//右上
+		{-size,50.0f,size}//左上
+		,{size,50.0f,size}//右上
 		,{-size,0.0f,-size}//左下
 		,{size,0.0f,-size}//右上 
 	};
@@ -79,7 +78,7 @@ void GameScene::Init(void)
 	camera->ChangeMode(Camera::MODE::FOLLOW_POINT);
 
 	int c = 0;
-	for (auto p : players_)
+	for (auto& p : players_)
 	{
 		//本体カメラの設定
 		if (c == 0)
@@ -94,7 +93,7 @@ void GameScene::Init(void)
 		// カメラ
 		camera_[c]->Init();
 
-		camera_[c]->ChangeMode(Camera::MODE::FOLLOW);
+		camera_[c]->ChangeMode(Camera::MODE::NONE);
 		camera_[c]->SetFollow(&p->GetTransform());
 		c++;
 	}
@@ -142,6 +141,13 @@ void GameScene::Update(void)
 	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
 	{
 		Sns.SetWinner(SceneManager::WINNER::DRAW);
+
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE)
+			&& (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END))
+		{
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+			return;
+		}
 	}
 	else if (players_[0]->GetHp() <= 0)
 	{
@@ -202,7 +208,7 @@ void GameScene::Update(void)
 
 
 	//プレイヤーの更新
-	for (auto p : players_)
+	for (auto& p : players_)
 	{
 		p->Update();
 	}
@@ -239,6 +245,8 @@ void GameScene::Draw(void)
 	else
 	{
 		GameDraw();
+
+
 	}
 
 }
@@ -319,6 +327,9 @@ void GameScene::Collision(void)
 				dir = VScale(dir, -1);//吹っ飛ばしの方向を反転&×５
 				vsPlyer->SetJump(dir);
 
+				//音の再生
+				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
+
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
 				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
@@ -340,6 +351,9 @@ void GameScene::Collision(void)
 				plyer->SetJump(dir);
 				dir = VScale(dir, -1);
 				vsPlyer->SetJump(dir);
+
+				//音の再生
+				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
 
 				// 爆発エフェクトを再生する
 				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
@@ -418,7 +432,7 @@ void GameScene::GameDraw(void)
 
 		//メインカメラ更新
 		VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
-		DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
+		//DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
 
 		if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
 		{
@@ -426,6 +440,39 @@ void GameScene::GameDraw(void)
 		}
 	}
 
+	if (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END)
+	{
+		SetFontSize(28);//文字のサイズを設定
+
+		std::string msg = "Result WIN";
+
+		SceneManager& Sns = SceneManager::GetInstance();
+
+		switch (Sns.GetWinner())
+		{
+			//プレイヤー１の勝利
+		case SceneManager::WINNER::PLAYER_ONE:
+			msg = "PLAYER1 WIN";
+			break;
+			//プレイヤー２の勝利
+		case SceneManager::WINNER::PLAYER_TWO:
+			msg = "PLAYER2 WIN";
+			break;
+		case SceneManager::WINNER::DRAW:
+			msg = "DRAW";
+			break;
+		}
+
+		int cx = Application::SCREEN_SIZE_X / 2;
+		int cy = Application::SCREEN_SIZE_Y / 2;
+
+		int len = (int)strlen(msg.c_str());
+		int width = GetDrawStringWidth(msg.c_str(), len);
+		DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetFontSize(16);
+	}
 
 	//デバッグ描画
 #ifdef _DEBUG
@@ -468,7 +515,6 @@ void GameScene::EventDraw(void)
 
 			//メインカメラ更新
 			VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
-			DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
 
 			if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
 			{
@@ -519,11 +565,56 @@ void GameScene::EventDraw(void)
 	//プレイヤーパラメーターの描画
 	int plyNum = 0;
 
+	bool eventFlag = false;
 	for (auto& plyer : players_)
 	{
-		//HPバーの表示
-		plyer->DrawPram(plyNum);
-		plyNum += 1;
+		if (plyer->GetState()==Player::STATE::END)
+		{
+			eventFlag = true;
+		}
+	}
+	if (eventFlag)
+	{
+		if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
+		{
+			SetFontSize(28);//文字のサイズを設定
+
+			std::string msg = "Result WIN";
+
+			SceneManager& Sns = SceneManager::GetInstance();
+
+			switch (Sns.GetWinner())
+			{
+				//プレイヤー１の勝利
+			case SceneManager::WINNER::PLAYER_ONE:
+				msg = "PLAYER1 WIN";
+				break;
+				//プレイヤー２の勝利
+			case SceneManager::WINNER::PLAYER_TWO:
+				msg = "PLAYER2 WIN";
+				break;
+			case SceneManager::WINNER::DRAW:
+				msg = "DRAW";
+				break;
+			}
+
+			int cx = Application::SCREEN_SIZE_X / 2;
+			int cy = Application::SCREEN_SIZE_Y / 2;
+
+			int len = (int)strlen(msg.c_str());
+			int width = GetDrawStringWidth(msg.c_str(), len);
+			DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
+
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			SetFontSize(16);
+		}
+
+		for (auto& plyer : players_)
+		{
+			//HPバーの表示
+			plyer->DrawPram(plyNum);
+			plyNum += 1;
+		}
 	}
 
 	// (３Ｄ描画で使用するカメラの設定などがリセットされる)

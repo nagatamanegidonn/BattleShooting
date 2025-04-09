@@ -11,7 +11,7 @@ public:
 	static constexpr int PLAYER_MAX = 2;		// プレイヤーの最大数
 	static constexpr int SIZE = 20;				// カーソルの半径
 	static constexpr int MOVE = 4;				// カーソルの移動速度
-	static constexpr int CHARACTER_MAX = 2;
+	static constexpr int CHARACTER_MAX = 4;
 
 	
 	// コンストラクタ
@@ -32,19 +32,23 @@ public:
 
 private:
 
-	std::vector<std::shared_ptr<ViewPlayer>> players_;
+	std::vector<std::unique_ptr<ViewPlayer>> players_;
 
 	// カーソル座標
 	VECTOR pos[PLAYER_MAX];
 
 	// キャラクター選択が完了しているかどうかの確認用
+	bool isSelect_[PLAYER_MAX];
 	bool isReady_[PLAYER_MAX];
 	bool isStart_;
 
 	int playerImg_[CHARACTER_MAX];
 
-	int Cursor_;
+	int CursorImg_;
+	int FrameImg_;
 
+	int SelectImg_;
+	
 	// 当たり判定
 	void Collision(void);
 

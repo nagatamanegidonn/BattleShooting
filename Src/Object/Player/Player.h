@@ -14,7 +14,6 @@ class ShotPlayer;
 class Controller;
 class DirModel;
 
-class Camera;
 
 class Player
 {

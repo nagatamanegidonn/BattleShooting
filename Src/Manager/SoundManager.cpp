@@ -23,11 +23,11 @@ void SoundManager::Init(void)
 	Sound res;
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "TitleBGM.mp3");
-	res.ChengeMaxVolume(0.9);
+	res.ChengeMaxVolume(0.8);
 	soundMap_.emplace(SRC::TITLE_BGM, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SelectBGM.mp3");
-	res.ChengeMaxVolume(1.1);
+	res.ChengeMaxVolume(1.0);
 	soundMap_.emplace(SRC::SELECT_BGM, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM1.mp3");
@@ -36,8 +36,8 @@ void SoundManager::Init(void)
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM2.mp3");
 	res.ChengeMaxVolume(0.6);
 	soundMap_.emplace(SRC::BTTLE_BGM_2, res);
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM3.mp3");
-	res.ChengeMaxVolume(0.6);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM3.mp3");//ç°âÒégÇ§ÇÃÇÕÇ±ÇÍ
+	res.ChengeMaxVolume(0.5);
 	soundMap_.emplace(SRC::BTTLE_BGM_3, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "GameBGM.mp3");
@@ -45,19 +45,33 @@ void SoundManager::Init(void)
 	soundMap_.emplace(SRC::RESULT_BGM, res);
 
 
-
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Lobot_Hit.mp3");
+	res.ChengeMaxVolume(0.9);
+	soundMap_.emplace(SRC::IMPACT, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/shot.mp3");
-	res.ChengeMaxVolume(0.9);
+	res.ChengeMaxVolume(0.8);
 	soundMap_.emplace(SRC::ATTRCK, res);
 
-	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Lobot_Hit.mp3");
-	res.ChengeMaxVolume(1.1);
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Damege.mp3");
+	res.ChengeMaxVolume(1.0);
 	soundMap_.emplace(SRC::DAMAGE, res);
 
 	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Reload.mp3");
-	res.ChengeMaxVolume(1.1);
+	res.ChengeMaxVolume(1.0);
 	soundMap_.emplace(SRC::RELOAD, res);
+	
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/MoveStrat.mp3");
+	res.ChengeMaxVolume(1.1);
+	soundMap_.emplace(SRC::DASH, res);
+	
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/TurnMove.mp3");
+	res.ChengeMaxVolume(1.0);
+	soundMap_.emplace(SRC::TURN, res);
+	
+	res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "SE/Fall.mp3");
+	res.ChengeMaxVolume(1.1);
+	soundMap_.emplace(SRC::FALL, res);
 
 	//res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "TitleBGM.mp3");
 	//soundMap_.emplace(SRC::TITLE_BGM, res);

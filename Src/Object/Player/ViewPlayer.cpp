@@ -9,8 +9,6 @@
 
 #include "../Common/AnimationController.h"
 
-#include "../Shot/ShotPlayer.h"
-
 #include "Controller.h"
 #include "DirModel.h"
 #include "ViewPlayer.h"
@@ -43,7 +41,7 @@ void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P1/P1.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P1_MODEL).handleId_);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -51,9 +49,9 @@ void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 		InitAnimation(Application::PATH_MODEL + "P1/P1.mv1");
 
 	}
-	else
+	else if (pryId == 1)
 	{
-		transform_.SetModel(MV1LoadModel("Data/Model/P2/P2.mv1"));
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P2_MODEL).handleId_);
 
 		MV1SetMaterialDifColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
 		MV1SetMaterialEmiColor(transform_.modelId, 3, GetColorF(0.5f, 0.5f, 1.0f, 1.0f));
@@ -63,6 +61,37 @@ void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 		// マテリアルの自己発光色を設定
 		MV1SetMaterialEmiColor(transform_.modelId, 4, GetColorF(0.2f, 0.2f, 0.2f, 1.0f));
 
+	}
+	else if (pryId == 2)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_MODEL).handleId_);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P3/P3.mv1");
+
+
+		int num = MV1GetMaterialNum(transform_.modelId);
+
+		std::string a = "";
+		std::string tex = "";
+		for (int i = 0; i < num; i++)
+		{
+			a += MV1GetMaterialName(transform_.modelId, i);
+			a += ":";
+			tex += MV1GetMaterialDifMapTexture(transform_.modelId, i);
+			tex += ":";
+		}
+
+		std::string s1 = a;
+		std::string s2 = tex;
+
+	}
+	else if (pryId == 3)
+	{
+		transform_.SetModel(ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_MODEL).handleId_);
+
+		//アニメーションの設定
+		InitAnimation(Application::PATH_MODEL + "P4/P4.mv1");
 	}
 
 	//トランスフォームの設定
@@ -125,7 +154,7 @@ void ViewPlayer::InitAnimation(std::string path)
 
 	animationController_ = std::make_unique<AnimationController>(transform_.modelId);
 	animationController_->Add((int)ANIM_TYPE::IDLE, path, 20.0f, 0);
-	animationController_->Add((int)ANIM_TYPE::RUN, path, 20.0f, 1);
+	animationController_->Add((int)ANIM_TYPE::RUN, path, 20.0f, 0);
 
 	animationController_->Play((int)ANIM_TYPE::IDLE);
 

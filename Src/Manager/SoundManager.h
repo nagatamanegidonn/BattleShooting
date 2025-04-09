@@ -19,10 +19,15 @@ public:
 		ENTER_SOUND,	//決定音
 		SELECT_SOUND,	//選択しているときの効果音
 		DAMAGE_SOUND,	//ダメージを受けた時の効果音
-		
+
+		IMPACT,
+
 		ATTRCK,
 		DAMAGE,
 		RELOAD,
+		DASH,
+		TURN,
+		FALL,
 	};
 
 	// 明示的にインステンスを生成する

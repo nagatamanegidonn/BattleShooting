@@ -11,8 +11,16 @@ public:
 	// リソース名
 	enum class SRC
 	{
+		TITLE_LOGO,
 		START_LOGO,
-		END_LOGO,
+		PLAY_LOGO,
+		EXIT_LOGO,
+
+		CURSOR,
+		FRAME,
+
+		RIGHT,
+
 		ALERT_MSG,
 		LIGHT,
 		SKYDOME,
@@ -21,17 +29,29 @@ public:
 		ALPHABET,
 		SPEECH_BALLOON,
 
-		P1_IMAGE,
-		P2_IMAGE,
+		P1_IMAGE, // P1キノコ画像
+		P2_IMAGE, // P2キノコ画像
+		P3_IMAGE, // P3画像
+		P4_IMAGE, // P4画像
+		
+		P1_MODEL,
+		P2_MODEL,
+		P3_MODEL,
+		P4_MODEL,
+
 
 		SHOT_MODEL,
-		P1_SHOT_MODEL,
-		P2_SHOT_MODEL,
+		P1_SHOT_MODEL, // P1キノコ弾モデル
+		P2_SHOT_MODEL, // P2キノコ弾モデル
+		P3_SHOT_MODEL, // P3弾モデル
+		P4_SHOT_MODEL, // P4弾モデル
 
 		ROCK01,
 		ROCK02,
 		BACKGROUNDCITY,
 		BACKGROUNDFOREST,
+
+		DESTROY,
 
 		JET,
 		BOOST,

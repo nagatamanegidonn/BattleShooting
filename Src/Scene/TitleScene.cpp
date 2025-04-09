@@ -37,7 +37,7 @@ void TitleScene::Init(void)
 	SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	// タイトルロゴ
-	imgTitleLogo_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::START_LOGO).handleId_;
+	imgTitleLogo_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::TITLE_LOGO).handleId_;
 
 	//背景初期化
 	stage_ = new Stage;
@@ -65,11 +65,15 @@ void TitleScene::Update(void)
 	{
 		SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
 	}*/
-	
+
+	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
+	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
 
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_SPACE))
+	if (ins.IsTrgDown(KEY_INPUT_SPACE)
+		|| ins.IsPadBtnTrgDown(jno, InputManager::JOYPAD_BTN::START)
+		|| ins.IsPadBtnTrgDown(jno2, InputManager::JOYPAD_BTN::START))
 	{
 		SceneManager::GetInstance().ResetGame();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
@@ -113,7 +117,7 @@ void TitleScene::DrawLogo(void)
 
 	// タイトルロゴ
 	DrawRotaGraph(
-		cx, cy - 200,
+		cx, cy,
 		1.0f, 0.0f, imgTitleLogo_, true);
 
 	// Pushメッセージ
@@ -121,7 +125,7 @@ void TitleScene::DrawLogo(void)
 	SetFontSize(28);
 	int len = (int)strlen(msg.c_str());
 	int width = GetDrawStringWidth(msg.c_str(), len);
-	DrawFormatString(cx - (width / 2), 200, 0x87cefa, msg.c_str());
+	DrawFormatString(cx - (width / 2), 550, 0x87cefa, msg.c_str());
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetFontSize(16);
 
