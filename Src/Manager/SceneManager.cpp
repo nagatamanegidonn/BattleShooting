@@ -89,14 +89,7 @@ void SceneManager::Init3D(void)
 	SetFogColor(5, 5, 5);
 	SetFogStartEnd(3000.0f, 15000.0f);
 
-}
-
-void SceneManager::Update(void)
-{
-
-	if (scene_ == nullptr)
-	{
-		return;
+} 
 	}
 
 	// デルタタイム
