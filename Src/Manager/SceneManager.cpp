@@ -89,9 +89,10 @@ void SceneManager::Init3D(void)
 	SetFogColor(5, 5, 5);
 	SetFogStartEnd(3000.0f, 15000.0f);
 
-} 
-	}
+}
 
+void SceneManager::Update(void)
+{
 	// デルタタイム
 	auto nowTime = std::chrono::system_clock::now();
 	deltaTime_ = static_cast<float>(
@@ -104,12 +105,10 @@ void SceneManager::Init3D(void)
 		Fade();
 	}
 
-
 	scene_->Update();
 
 	// カメラ更新
 	camera_->Update();
-
 }
 
 void SceneManager::Draw(void)
