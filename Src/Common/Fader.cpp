@@ -20,11 +20,11 @@ void Fader::SetFade(STATE state)
 	{
 		isPreEnd_ = false;
 		isEnd_ = false;
-	}
-	else if (state_ == STATE::FADE_OUT)
-	{
-		loadTime_ = 0.0f;
-		loadCut_ = 0;
+		if (state_ == STATE::FADE_OUT)
+		{
+			loadTime_ = 0.0f;
+			loadCut_ = 0;
+		}
 	}
 }
 

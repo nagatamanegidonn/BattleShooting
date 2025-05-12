@@ -36,7 +36,7 @@ void GameScene::AsyncPreLoad(void)
 		camera_[i] = new Camera();
 
 		auto  player = std::make_unique<Player>();
-		players_.push_back(std::move(player));
+		players_.push_back(std::move(player)); 
 	}
 
 	eventFlag_ = false;
@@ -44,6 +44,7 @@ void GameScene::AsyncPreLoad(void)
 
 
 	stage_ = new Stage;
+
 }
 void GameScene::Init(void)
 {
