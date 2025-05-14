@@ -540,24 +540,6 @@ void GameScene::EventDraw(void)
 	int y = 0;
 
 	//•`‰æêŠ
-	/*for (auto screen : screenH)
-	{
-		DrawGraph(x, y, screen, true);
-
-		if (x >= cx && y >= cy)
-		{
-			x += cx;
-		}
-		else if (x >= cx && y >= 0)
-		{
-			x -= cx;
-			y += cy;
-		}
-		else if (x >= 0 && y >= 0)
-		{
-			x += cx;
-		}
-	}*/
 	if (eventId_ != -1)
 	{
 		DrawGraph(0, 0, screenH[eventId_], true);
