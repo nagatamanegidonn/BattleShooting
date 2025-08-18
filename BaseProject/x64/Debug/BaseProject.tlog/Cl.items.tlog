@@ -1,11 +1,11 @@
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Manager\Sound.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\Sound.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Manager\SoundManager.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\SoundManager.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Common\AnimationController.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\AnimationController.obj
+C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Player\Controller.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\Controller.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Player\DirModel.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\DirModel.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Player\ViewPlayer.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\ViewPlayer.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\SpaceDome.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\SpaceDome.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Stage.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\Stage.obj
-C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Player\Controller.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\Controller.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Player\Player.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\Player.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Shot\ShotBase.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\ShotBase.obj
 C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\Src\Object\Shot\ShotPlayer.cpp;C:\Users\n_sagara\source\repos\nagatamanegidonn\BattleShooting\BaseProject\x64\Debug\ShotPlayer.obj

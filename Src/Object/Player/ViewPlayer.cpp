@@ -34,10 +34,6 @@ void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 {
 
 	// モデル制御の基本情報
-	/*transform_.SetModel(
-		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::PLAYER_SHIP));*/
-
 	//プレイキャラごとに代わる
 	if (pryId == 0)
 	{

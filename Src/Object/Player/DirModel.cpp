@@ -23,7 +23,6 @@ void DirModel::Init(int i)
 	float scale = 0.1f;
 	transform_.scl = { scale, scale, scale };
 	transform_.pos = AsoUtility::VECTOR_ZERO;
-	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
 		AsoUtility::Deg2RadF(0.0f),
@@ -38,13 +37,13 @@ void DirModel::Init(int i)
 
 	if (i==0)
 	{
-		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 0.5f));
-		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(1.0f, 0.0f, 0.0f, 0.5f));
+		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(COLOR_CLEAR_RED.x, COLOR_CLEAR_RED.y, COLOR_CLEAR_RED.z, COLOR_CLEAR_RED.w));
+		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(COLOR_CLEAR_RED.x, COLOR_CLEAR_RED.y, COLOR_CLEAR_RED.z, COLOR_CLEAR_RED.w));
 	}
 	else
 	{
-		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 0.5f));
-		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(0.0f, 0.0f, 1.0f, 0.5f));
+		MV1SetMaterialDifColor(transform_.modelId, 0, GetColorF(COLOR_CLEAR_BULE.x, COLOR_CLEAR_BULE.y, COLOR_CLEAR_BULE.z, COLOR_CLEAR_BULE.w));
+		MV1SetMaterialEmiColor(transform_.modelId, 0, GetColorF(COLOR_CLEAR_BULE.x, COLOR_CLEAR_BULE.y, COLOR_CLEAR_BULE.z, COLOR_CLEAR_BULE.w));
 	}
 }
 

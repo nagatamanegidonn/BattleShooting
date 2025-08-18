@@ -11,6 +11,12 @@ public:
 
 	static constexpr int PLAYER_SIZE = 2;
 
+	//3D用
+	//static constexpr VECTOR  LIGHT_DIR = { 0.00f, -1.00f, 1.00f };
+	//static constexpr float  FOG_START = 3000.0f;
+	//static constexpr float  FOG_END = 15000.0f;
+
+
 	// シーン管理用
 	enum class SCENE_ID
 	{
@@ -28,7 +34,7 @@ public:
 		PLAYER_TWO,
 		DRAW,
 	};
-	
+
 	// インスタンスの生成
 	static void CreateInstance(void);
 
@@ -48,10 +54,10 @@ public:
 
 	//ゲームのリセット
 	void ResetGame(void);
-//プレイキャラを扱う変数
+	//プレイキャラを扱う変数
 	int GetPlayerId(int i) const;
-	void SetPlayerId(int i,int setNum);
-//勝者の変数を扱う関数
+	void SetPlayerId(int i, int setNum);
+	//勝者の変数を扱う関数
 	WINNER GetWinner(void) const;
 	void SetWinner(WINNER win);//勝者の設定
 
@@ -90,7 +96,7 @@ private:
 	// デルタタイム
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
-	
+
 
 	//ゲームに使う変数
 	int playerId_[PLAYER_SIZE];

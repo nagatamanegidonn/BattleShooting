@@ -29,7 +29,9 @@ public:
 
 	// ’e‚Ì”­ËŠÔŠu
 	static constexpr float TIME_DELAY_SHOT = 0.2f;
-	static constexpr float TIME_RELOAD = 2.0f;
+	static constexpr float TIME_RELOAD_RATE = 0.1f;
+
+	static constexpr float RELOAD_TIME_LOW = 0.5f;//Å’x‘•“UŠÔ
 
 	//”¼Œa
 	static constexpr float ATTRCK_RADIUS = 25.0f;
@@ -42,12 +44,13 @@ public:
 	enum class STATE
 	{
 		NONE,
-		PLAY,
-		JUMP,
-		FALL_DEAD,
-		DEAD,
-		VICTORY,
-		END
+		PLAY,		//’Êí‘€ì
+		RELOAD,		//ƒŠƒ[ƒh
+		FALL,		//—‰º
+		FALL_DEAD,	//—‰º€–S
+		LIFE_DEAD,	//‘Ì—Í€–S
+		VICTORY,	//Ÿ—˜
+		END//
 	};
 
 	// ƒAƒjƒ[ƒVƒ‡ƒ“í•Ê
@@ -64,7 +67,7 @@ public:
     void Init(VECTOR startPos,int playerNo,int pryId);  // ‰Šú‰»
     void Update();  // XV
     void Draw();  // •`‰æ
-    void DrawPram(int plyarNo);  // •`‰æ
+    void DrawUI(int plyarNo);  // •`‰æ
 
 	// ó‘Ô‘JˆÚ
 	void ChangeState(STATE state);
@@ -74,7 +77,7 @@ public:
 	const int& GetModelId(void) const { return transform_.modelId; }
 
 	const STATE& GetState(void) const { return state_; }
-	const bool IsDead(void) const { return state_ == STATE::DEAD; }
+	const bool IsDead(void) const { return state_ == STATE::LIFE_DEAD; }
 
 	const VECTOR& GetJumpDir(void) const { return jumpDir_; }
 	const float& GetJumpTime(void) const { return jumpTime_; }
@@ -121,7 +124,8 @@ private:
 	// ó‘Ô‘JˆÚ
 	void ChangeStateNone(void);
 	void ChangeStatePlay(void);
-	void ChangeStateJump(void);
+	void ChangeStateReload(void);
+	void ChangeStateFall(void);
 	void ChangeStateDead(void);
 	void ChangeStateFallDead(void);
 	void ChangeStateEnd(void);
@@ -131,9 +135,10 @@ private:
 	// XVƒXƒeƒbƒv
 	void UpdateNone(void);
 	void UpdatePlay(void);
-	void UpdateJump(void);
+	void UpdateReload(void);
+	void UpdateFall(void);
 	void UpdateFallDead(void);//—‰º€–S‚ğ‚·‚éXV
-	void UpdateDead(void);//€–S”š”­‚ğ‚·‚éXV
+	void UpdateLifeDead(void);//€–S”š”­‚ğ‚·‚éXV
 	void UpdateEnd(void);
 	void UpdateVictory(void);
 
@@ -158,15 +163,15 @@ private:
 
 	// ’e
 	std::vector<ShotPlayer*> shots_;
-	//’e‚Ìƒ‚ƒfƒ‹
-	int shotModel_;
-	// ’e‚Ì”­ËŠÔŠu
-	float deleyShot_;
-	//’e”
-	int magazineShot_;
-	int magazineMaxShot_;
-	float reloadSet_;//’e‚ß‚ÌŠÔŠu
-	float reloadTime_;
+	int shotModel_;		//’e‚Ìƒ‚ƒfƒ‹
+	float deleyShot_;	// ’e‚Ì”­ËŠÔŠu
+
+	//’e”AƒŠƒ[ƒhŠÖŒW
+	int shotMagazine_;		//’e”
+	int shotMagazineMax_;	//Å‘å’e”
+	float reloadSet_;		//’e‚ß‚ÌŠÔŠu
+	float reloadTime_;		//
+
 	// ‘€ìF’e”­Ë
 	void ProcessShot(void);
 	// ©‹@‚Ì’e‚ğ”­Ë

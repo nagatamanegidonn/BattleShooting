@@ -7,6 +7,10 @@ class DirModel
 {
 public:
 
+
+	static constexpr FLOAT4 COLOR_CLEAR_RED = { 1.0f, 0.0f, 0.0f, 0.5f };
+	static constexpr FLOAT4 COLOR_CLEAR_BULE = { 0.0f, 0.0f, 1.0f, 0.5f };
+
 	DirModel();  // コンストラクタ
 	~DirModel(); // デストラクタ
 

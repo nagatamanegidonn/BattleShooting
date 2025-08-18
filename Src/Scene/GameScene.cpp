@@ -266,9 +266,6 @@ void GameScene::Release(void)
 	stage_->Release();
 	delete stage_;
 
-	//backGround_->Release();
-	//delete backGround_;
-
 	//エフェクトの開放
 	StopEffekseer3DEffect(effectHitPlayId_);
 
@@ -368,7 +365,7 @@ void GameScene::Collision(void)
 			for (auto& shot : shots)
 			{
 				if (shot->IsShot() &&
-					(vsPlyer->GetState() == Player::STATE::PLAY || vsPlyer->GetState() == Player::STATE::JUMP))
+					(vsPlyer->GetState() == Player::STATE::PLAY ||vsPlyer->GetState() == Player::STATE::RELOAD || vsPlyer->GetState() == Player::STATE::FALL))
 				{
 
 					//弾の当たり判定
@@ -378,7 +375,6 @@ void GameScene::Collision(void)
 					{
 						//plyerに攻撃が当たっている
 						vsPlyer->Damage(1);
-						//hitStop_ = 0.5f;
 
 						//ふっ飛ばし処理
 						VECTOR dir = VScale(VScale(VNorm(VSub(shot->GetPos(), vsPlyer->GetTransform().pos)), -1), 0.5f);
@@ -428,7 +424,7 @@ void GameScene::GameDraw(void)
 		plyer->Draw();
 
 		//HPバーの表示
-		plyer->DrawPram(plyNum);
+		plyer->DrawUI(plyNum);
 		plyNum += 1;
 
 		//メインカメラ更新
@@ -595,7 +591,7 @@ void GameScene::EventDraw(void)
 		for (auto& plyer : players_)
 		{
 			//HPバーの表示
-			plyer->DrawPram(plyNum);
+			plyer->DrawUI(plyNum);
 			plyNum += 1;
 		}
 	}

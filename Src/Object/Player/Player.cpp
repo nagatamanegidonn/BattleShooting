@@ -17,15 +17,15 @@
 #include "../../Manager/SoundManager.h"
 
 
-//Player::Player(Camera& camera) :camera_(camera)
 Player::Player()
 {
 	// èÛë‘ä«óù
 	stateChanges_.emplace(STATE::NONE, std::bind(&Player::ChangeStateNone, this));
 	stateChanges_.emplace(STATE::PLAY, std::bind(&Player::ChangeStatePlay, this));
-	stateChanges_.emplace(STATE::JUMP, std::bind(&Player::ChangeStateJump, this));
+	stateChanges_.emplace(STATE::RELOAD, std::bind(&Player::ChangeStateReload, this));
+	stateChanges_.emplace(STATE::FALL, std::bind(&Player::ChangeStateFall, this));
 	stateChanges_.emplace(STATE::FALL_DEAD, std::bind(&Player::ChangeStateFallDead, this));
-	stateChanges_.emplace(STATE::DEAD, std::bind(&Player::ChangeStateDead, this));
+	stateChanges_.emplace(STATE::LIFE_DEAD, std::bind(&Player::ChangeStateDead, this));
 	stateChanges_.emplace(STATE::END, std::bind(&Player::ChangeStateEnd, this));
 	stateChanges_.emplace(STATE::VICTORY, std::bind(&Player::ChangeStateVictory, this));
 
@@ -54,10 +54,6 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	dirModel_ = std::make_shared<DirModel>();
 	dirModel_->Init(playerNo);
 
-	// ÉÇÉfÉãêßå‰ÇÃäÓñ{èÓïÒ
-	/*transform_.SetModel(
-		ResourceManager::GetInstance().LoadModelDuplicate(
-			ResourceManager::SRC::PLAYER_SHIP));*/
 
 	transform_.pos = startPos;
 
@@ -116,10 +112,8 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 
 	}
 
-	//float scale = 10.0f;
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
-	//transform_.pos = { 10.0f, 20.0f, 30.0f };
 	transform_.quaRot = Quaternion::Euler(
 		0.0f,
 		AsoUtility::Deg2RadF(0.0f),
@@ -163,9 +157,9 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 	//ïœêîÅFçUåÇä÷åW
 	//íeî≠éÀå„ÇÃçdíºéûä‘ÉZÉbÉg
 	deleyShot_ = TIME_DELAY_SHOT;
-	magazineMaxShot_ = magazineShot_ = 20;
+	shotMagazineMax_ = shotMagazine_ = 20;
 	reloadTime_ = 0.0f;
-	reloadSet_ = TIME_RELOAD;
+	reloadSet_ = 0.0f;
 	// èâä˙èÛë‘
 	ChangeState(STATE::PLAY);
 
@@ -177,37 +171,15 @@ void Player::Update()
 {
 	controller_->Update();
 
-	
-	//ÉäÉçÅ[Éhçdíº
-	if (reloadTime_ > 0.0f)
-	{
-		reloadTime_ -= SceneManager::GetInstance().GetDeltaTime();
-		for (int i = 0; i < static_cast<int>(magazineMaxShot_); i++)
-		{
-			if (reloadTime_ <= reloadSet_)
-			{
-				reloadSet_ -= 0.1f;
-				magazineShot_ += 1;
-				if (magazineShot_ % 2 == 0)
-				{
-					SoundManager::GetInstance().Play(SoundManager::SRC::RELOAD, Sound::TIMES::ONCE, true);
-				}
-			}
-		}
-	}
-	else
-	{
-		// çXêVÉXÉeÉbÉv
-		stateUpdate_();
-	}
 
-	transform_.Update();
 
-	/*size_t size = shots_.size();
-	for (int i = 0; i < size; i++)
+	// çXêVÉXÉeÉbÉv
+	stateUpdate_();
+
+	if (invincibleTime_ <= 0.0f || (int)invincibleTime_ % 2 == 0)
 	{
-		shots_[i]->Update();
-	}*/
+		transform_.Update();
+	}
 
 	rideDamagePos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetBack(), 0));
 	rideAttrckPos_ = VAdd(transform_.pos, VScale(transform_.quaRot.GetForward(), 40));
@@ -228,7 +200,7 @@ void Player::Draw()
 	// ÉÇÉfÉãÇÃï`âÊ
 	MV1DrawModel(transform_.modelId);
 
-	if (state_ == STATE::DEAD|| state_ == STATE::FALL_DEAD)
+	if (state_ == STATE::LIFE_DEAD|| state_ == STATE::FALL_DEAD)
 	{
 		return;
 	}
@@ -319,7 +291,7 @@ void Player::Draw()
 		shots_[i]->Draw();
 	}
 }
-void Player::DrawPram(int plyarNo)
+void Player::DrawUI(int plyarNo)
 {
 	int plyNum = -1;
 	bool plyFlag = true;
@@ -359,16 +331,16 @@ void Player::DrawPram(int plyarNo)
 	}
 
 	//íeÇÃï`âÊ
-	for (int i = 0; i < magazineMaxShot_; i++)
+	for (int i = 0; i < shotMagazineMax_; i++)
 	{
 		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.75f, 0.0f, shotFreamH_, true, plyFlag);
 	}
-	for (int i = 0; i < magazineShot_; i++)
+	for (int i = 0; i < shotMagazine_; i++)
 	{
 		DrawRotaGraph(cx2 + (plyNum * 15 * i), 50, 0.65f, 0.0f, shotGaugeH_, true, plyFlag);
 	}
 
-	if (magazineShot_ <= 0)
+	if (shotMagazine_ <= 0)
 	{
 		DrawFormatString(cx - 120, 80, 0xffffff, "YÉ{É^ÉìñîÇÕQÅAÅ_ÉLÅ[Ç≈ÉäÉçÅ[Éh");
 	}
@@ -412,7 +384,7 @@ const void Player::SetJump(VECTOR vec)
 {
 	//ëÄçÏâ¬î\èÛë‘Ç»ÇÁêÅÇ¡îÚÇŒÇ∑
 
-	ChangeState(STATE::JUMP);
+	ChangeState(STATE::FALL);
 	jumpDir_ = vec;
 	jumpTime_ = 1.0f;
 }
@@ -457,6 +429,7 @@ void Player::InitEffect(void)
 
 }
 
+//stateÇ…ÇÊÇÈUpdateÇÃïœçX
 #pragma region ïœêîstate_Ç…ÇÊÇÈä÷êîstateUpdate_ÇÃïœçX
 
 void Player::ChangeState(STATE state)
@@ -480,14 +453,18 @@ void Player::ChangeStatePlay()
 {
 	stateUpdate_ = std::bind(&Player::UpdatePlay, this);
 }
-void Player::ChangeStateJump(void)
+void Player::ChangeStateReload(void)
 {
-	stateUpdate_ = std::bind(&Player::UpdateJump, this);
+	stateUpdate_ = std::bind(&Player::UpdateReload, this);
+}
+void Player::ChangeStateFall(void)
+{
+	stateUpdate_ = std::bind(&Player::UpdateFall, this);
 }
 void Player::ChangeStateDead()
 {
 	playerHp_ = 0;
-	stateUpdate_ = std::bind(&Player::UpdateDead, this);
+	stateUpdate_ = std::bind(&Player::UpdateLifeDead, this);
 }
 void Player::ChangeStateFallDead(void)
 {
@@ -536,7 +513,31 @@ void Player::UpdatePlay()
 	transform_.pos = movedPos_;
 
 }
-void Player::UpdateJump(void)
+void Player::UpdateReload(void)
+{
+	if (reloadTime_ <= 0.0f && shotMagazine_ == shotMagazineMax_)
+	{
+		ChangeState(STATE::PLAY);
+		return;
+	}
+
+
+	reloadTime_ -= SceneManager::GetInstance().GetDeltaTime();
+
+	if (reloadTime_ <= reloadSet_)
+	{
+		reloadSet_ -= TIME_RELOAD_RATE;
+		shotMagazine_ += 1;//íeêîÇí«â¡
+		//ëïìUâπÅAçƒê∂
+		if (shotMagazine_ % 2 == 0)
+		{
+			SoundManager::GetInstance().Play(SoundManager::SRC::RELOAD, Sound::TIMES::ONCE, true);
+		}
+	}
+
+
+}
+void Player::UpdateFall(void)
 {
 	if (invincibleTime_ > 0.0f)
 	{
@@ -551,7 +552,7 @@ void Player::UpdateJump(void)
 			//ëÃóÕÇ™ÇOÇ»ÇÁéÄñSèÛë‘Ç…Ç∑ÇÈ
 			if (playerHp_ <= 0)
 			{
-				ChangeState(STATE::DEAD);
+				ChangeState(STATE::LIFE_DEAD);
 				jumpTime_ = 0.1f;
 				return;
 			}
@@ -638,7 +639,7 @@ void Player::UpdateFallDead(void)
 		}
 	}
 }
-void Player::UpdateDead()
+void Player::UpdateLifeDead()
 {
 	if (jumpTime_ > 0.0f)
 	{
@@ -725,9 +726,6 @@ void Player::ProcessMove(void)
 	if ((leftStickX > 0.0f) || (ins.IsNew(KEY_INPUT_D))) { dir = VAdd(dir, AsoUtility::DIR_R); }
 
 
-	//movePow_ = AsoUtility::VECTOR_ZERO;
-
-
 }
 void Player::Move(void)
 {
@@ -743,14 +741,6 @@ void Player::Move(void)
 	if (controller_->GetisControl(Controller::MODE::FORWARD)) { forward = transform_.GetForward(); }
 	if (controller_->GetisControl(Controller::MODE::BACK)) { forward = transform_.GetBack(); }
 
-	/*for (auto& key : controlKey_[DIR::UP])
-	{
-		if (input.IsNew(key)) {forward = transform_.GetForward(); }
-	}
-	for (auto& key : controlKey_[DIR::DOWN])
-	{
-		if (input.IsNew(key)) { forward = transform_.GetBack(); }
-	}*/
 
 	// à⁄ìÆ
 	movePow_ =
@@ -834,7 +824,7 @@ void Player::ProcessShot(void)
 
 	//éÀåÇçUåÇ
 	if (controller_->GetisControl(Controller::MODE::ATTACK)
-		&& deleyShot_ <= 0.0f && magazineShot_ > 0)
+		&& deleyShot_ <= 0.0f && shotMagazine_ > 0)
 	{
 		// íeÇê∂ê¨(ï˚å¸ÇÕâºÇ≈ê≥ñ ï˚å¸)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
@@ -843,16 +833,20 @@ void Player::ProcessShot(void)
 		SoundManager::GetInstance().Play(SoundManager::SRC::ATTRCK, Sound::TIMES::ONCE, true);
 
 		//íeêîÅ[ÇP
-		magazineShot_ -= 1;
+		shotMagazine_ -= 1;
 		//íeî≠éÀå„ÇÃçdíºéûä‘ÉZÉbÉg
 		deleyShot_ = TIME_DELAY_SHOT;
 	}
 	//íeÇÃÉäÉçÅ[Éh
-	if (controller_->GetisControl(Controller::MODE::XBUTTUN) && (magazineShot_ < magazineMaxShot_))
+	if (controller_->GetisControl(Controller::MODE::XBUTTUN) && (shotMagazine_ < shotMagazineMax_))
 	{
-		reloadTime_ = 0.1f * (magazineMaxShot_ - magazineShot_);
-		reloadSet_ = 0.1f * (magazineMaxShot_ - magazineShot_) - 0.1f;
-		//reloadTime_ = TIME_RELOAD;
+		reloadTime_ = TIME_RELOAD_RATE * (shotMagazineMax_ - shotMagazine_);
+
+		reloadTime_ += RELOAD_TIME_LOW * ((float)shotMagazine_ / (float)shotMagazineMax_);
+
+		reloadSet_ = TIME_RELOAD_RATE * (shotMagazineMax_ - shotMagazine_ - 1);
+		ChangeState(STATE::RELOAD);
+
 	}
 
 	// íeî≠éÀå„ÇÃçdíºéûä‘Çå∏ÇÁÇµÇƒÇ¢Ç≠

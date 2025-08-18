@@ -47,9 +47,6 @@ void SceneManager::Init(void)
 	//ƒQ[ƒ€‚ÌŸ”s“™•Ï”‚Ì‰Šú‰»
 	ResetGame();
 
-	scene_ = new TitleScene();
-	scene_->Init();
-
 	isSceneChanging_ = false;
 
 	// ƒfƒ‹ƒ^ƒ^ƒCƒ€
@@ -59,8 +56,10 @@ void SceneManager::Init(void)
 	Init3D();
 
 	// ‰ŠúƒV[ƒ“‚ÌÝ’è
-	//ChangeScene(SCENE_ID::TITLE);
-
+	//DoChangeScene(SCENE_ID::TITLE);
+	
+	scene_ = new TitleScene();
+	scene_->Init();
 }
 
 void SceneManager::Init3D(void)
@@ -145,7 +144,7 @@ void SceneManager::Draw(void)
 #ifdef _DEBUG
 	SetFontSize(16);
 	 // ”ñ“¯Šú“Ç‚Ýž‚Ý‚Ì”‚ð•`‰æ
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "”ñ“¯Šú“Ç‚Ýž‚Ý‚Ì” %d", GetASyncLoadNum());
+	DrawFormatString(0, 0, 0xffffff, "”ñ“¯Šú“Ç‚Ýž‚Ý‚Ì” %d", GetASyncLoadNum());
 #endif
 
 }
@@ -207,12 +206,6 @@ int SceneManager::LoadCunt(void) const
 {
 	return fader_->GetLoadCut();
 }
-//
-//bool SceneManager::IsLoading(void) const
-//{
-//	return (fader_->GetState() == Fader::STATE::LOADING);
-//}
-
 
 void SceneManager::ResetGame(void)
 {
@@ -306,6 +299,9 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 
 	waitSceneId_ = SCENE_ID::NONE;
 
+	// ˆÃ“]‚©‚ç  ‚Ö
+	fader_->SetFade(Fader::STATE::LOADING);
+	isSceneChanging_ = true;
 }
 
 void SceneManager::Fade(void)
@@ -329,8 +325,7 @@ void SceneManager::Fade(void)
 		{
 			// Š®‘S‚ÉˆÃ“]‚µ‚Ä‚©‚çƒV[ƒ“‘JˆÚ
 			DoChangeScene(waitSceneId_);
-			// ˆÃ“]‚©‚ç  ‚Ö
-			fader_->SetFade(Fader::STATE::LOADING);
+			
 		}
 		break;
 	case Fader::STATE::LOADING:
