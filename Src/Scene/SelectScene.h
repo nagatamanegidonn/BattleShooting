@@ -54,4 +54,7 @@ private:
 
 
 	void CharacthrSelect(int playerId);
+
+
+	void DrawUserSetUp(int id);
 };

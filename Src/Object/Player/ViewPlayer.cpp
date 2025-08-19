@@ -9,8 +9,6 @@
 
 #include "../Common/AnimationController.h"
 
-#include "Controller.h"
-#include "DirModel.h"
 #include "ViewPlayer.h"
 #include "../../Manager/SoundManager.h"
 
@@ -32,6 +30,7 @@ ViewPlayer::~ViewPlayer()
 
 void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 {
+	MV1DrawModel(transform_.modelId);
 
 	// モデル制御の基本情報
 	//プレイキャラごとに代わる

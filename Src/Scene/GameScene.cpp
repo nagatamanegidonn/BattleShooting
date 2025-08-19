@@ -14,9 +14,22 @@
 
 #include "../Object/Stage.h"
 #include "../Object/Shot/ShotPlayer.h"
-#include "../Object/Player/Player.h"
+#include "../Object/Player/GameClass/Player.h"
+#include "../Object/Player/GameClass/Mush.h"
+#include "../Object/Player/GameClass/Bamboo.h"
 
 #include "GameScene.h"
+
+
+namespace{
+	float LENGE = 100.0f;
+	VECTOR sPos[4] = {
+		{-LENGE,50.0f,LENGE}	//左上
+		,{LENGE,50.0f,LENGE}	//右上
+		,{-LENGE,0.0f,-LENGE}	//左下
+		,{LENGE,0.0f,-LENGE}	//右上 
+	};
+}
 
 GameScene::GameScene(void)
 {
@@ -24,6 +37,7 @@ GameScene::GameScene(void)
 
 GameScene::~GameScene(void)
 {
+
 }
 
 void GameScene::AsyncPreLoad(void)
@@ -35,8 +49,22 @@ void GameScene::AsyncPreLoad(void)
 	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
 		camera_[i] = new Camera();
 
-		auto  player = std::make_unique<Player>();
-		players_.push_back(std::move(player)); 
+		//auto  player = std::make_unique<Player>();
+
+		//プレイキャラごとに代わる
+		if (SceneManager::GetInstance().GetPlayerId(i) == 0
+			|| SceneManager::GetInstance().GetPlayerId(i) == 1)
+		{			
+			auto  player = std::make_unique<Mush>();
+			players_.push_back(std::move(player));
+		}
+		else if (SceneManager::GetInstance().GetPlayerId(i) == 2
+			||SceneManager::GetInstance().GetPlayerId(i) == 3)
+		{			
+			auto  player = std::make_unique<Bamboo>();
+			players_.push_back(std::move(player));
+		}
+
 	}
 
 	eventFlag_ = false;
@@ -51,14 +79,8 @@ void GameScene::Init(void)
 	//非同期処理を無効にする
 	SetUseASyncLoadFlag(false);
 
-	float size = 100.0f;
 
-	VECTOR sPos[4] = {
-		{-size,50.0f,size}//左上
-		,{size,50.0f,size}//右上
-		,{-size,0.0f,-size}//左下
-		,{size,0.0f,-size}//右上 
-	};
+	
 
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
@@ -321,18 +343,12 @@ void GameScene::Collision(void)
 				plyer->Damage(1);
 				//ふっ飛ばし処理
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
-				plyer->SetJump(VScale(dir, 1.5f));
+				plyer->SetJump(VScale(dir, vsPlyer->GetJumpAttrckRate()));
 				dir = VScale(dir, -1);//吹っ飛ばしの方向を反転&×５
 				vsPlyer->SetJump(dir);
 
-				//音の再生
-				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
-
-				// 爆発エフェクトを再生する
-				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
-				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
+				//音、エフェクトの再生
+				PlayImpacEffect(cPos);
 			}
 
 			//攻撃箇所同士が衝突
@@ -346,18 +362,12 @@ void GameScene::Collision(void)
 
 				//ふっ飛ばし処理
 				VECTOR dir = VNorm(VSub(plyer->GetTransform().pos, vsPlyer->GetTransform().pos));
-				plyer->SetJump(dir);
-				dir = VScale(dir, -1);
-				vsPlyer->SetJump(dir);
+				plyer->SetJump(VScale(dir, vsPlyer->GetJumpAttrckRate() - plyer->GetJumpDefenseRate()));
+				dir = VScale(dir, -1);//方向反転
+				vsPlyer->SetJump(VScale(dir, plyer->GetJumpAttrckRate() - vsPlyer->GetJumpDefenseRate()));
 
-				//音の再生
-				SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
-
-				// 爆発エフェクトを再生する
-				effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
-				SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
-				SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
-				SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
+				//音、エフェクトの再生
+				PlayImpacEffect(cPos);
 			}
 
 			//弾の当たり判定
@@ -365,7 +375,7 @@ void GameScene::Collision(void)
 			for (auto& shot : shots)
 			{
 				if (shot->IsShot() &&
-					(vsPlyer->GetState() == Player::STATE::PLAY ||vsPlyer->GetState() == Player::STATE::RELOAD || vsPlyer->GetState() == Player::STATE::FALL))
+					(vsPlyer->GetState() == Player::STATE::PLAY ||vsPlyer->GetState() == Player::STATE::RELOAD || vsPlyer->GetState() == Player::STATE::JUMP))
 				{
 
 					//弾の当たり判定
@@ -631,3 +641,18 @@ void GameScene::DrawDebug(void)
 	SetFontSize(16);
 
 }
+
+void GameScene::PlayImpacEffect(const VECTOR& cPos)
+{
+	//音の再生
+	SoundManager::GetInstance().Play(SoundManager::SRC::IMPACT, Sound::TIMES::ONCE, true);
+
+	 float rRot = static_cast<float>(rand() % 360);  // 0~359度の範囲
+
+	// 爆発エフェクトを再生する
+	effectHitPlayId_ = PlayEffekseer3DEffect(effectHitResId_);
+	SetScalePlayingEffekseer3DEffect(effectHitPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
+	SetRotationPlayingEffekseer3DEffect(effectHitPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
+	SetPosPlayingEffekseer3DEffect(effectHitPlayId_, cPos.x, cPos.y, cPos.z);
+}
+

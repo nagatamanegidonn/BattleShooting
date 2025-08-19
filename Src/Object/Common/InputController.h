@@ -9,32 +9,19 @@ public:
 	enum class KEY
 	{
 		OK,
-		OK_SECOND,
+		BACK,
 		OK_MOUSE,
 		START,
 
-		A_KEY,
-		B_KEY,
-		C_KEY,
-		D_KEY,
-
-		FORWARD,
-		BACK,
+		
+		MOVE_FORWARD,
+		MOVE_BACK,
 		RIGHT,
 		LEFT,
+		RELOAD,
+		ATTRCK_SHOT,
+		ATTRCK_DASH,
 		
-		R_FORWARD,
-		R_BACK,
-		R_RIGHT,
-		R_LEFT,
-		
-		DRAW,
-		CLOSE,
-		ATTRCK,
-		DASH,
-		ROLL,
-
-		AIM,
 	};
 
 	enum class PeripheralType {
@@ -59,6 +46,8 @@ public:
 	float GetLStickY()const;
 
 	bool IsPeripheralTriggered(const PeripheralType type) const;
+
+	void SetConrolPlayer(int playerNo);
 
 private:
 	struct InputState

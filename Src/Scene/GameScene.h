@@ -14,7 +14,7 @@ class GameScene : public SceneBase
 {
 public:
 
-	static constexpr float BLAST_SCALE = 30.0f;
+	static constexpr float BLAST_SCALE = 90.0f;
 
 
 	// コンストラクタ
@@ -59,4 +59,5 @@ private:
 	//デバッグ用の描画
 	void DrawDebug(void);
 
+	void PlayImpacEffect(const VECTOR& cPos);
 };

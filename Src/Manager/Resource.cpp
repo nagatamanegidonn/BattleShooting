@@ -105,7 +105,7 @@ void Resource::Release(void)
 	case Resource::TYPE::MODEL:
 	{
 		MV1DeleteModel(handleId_);
-		auto ids = duplicateModelIds_;
+		auto &ids = duplicateModelIds_;
 		for (auto id : ids)
 		{
 			MV1DeleteModel(id);

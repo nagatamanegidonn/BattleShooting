@@ -9,7 +9,7 @@
 #include "../Manager/Camera.h"
 
 #include "../Object/Stage.h"
-#include "../Object/Player/Player.h"
+#include "../Object/Player/GameClass/Player.h"
 
 #include "TitleScene.h"
 
@@ -30,7 +30,7 @@ void TitleScene::AsyncPreLoad(void)
 }
 void TitleScene::Init(void)
 {
-	//非同期読み込みを有効にする
+	//非同期読み込みを無効にする
 	SetUseASyncLoadFlag(false);
 
 	// カメラモード：定点カメラ

@@ -180,6 +180,7 @@ void SelectScene::Draw(void)
 
 	//プレイヤー１が準備完了したかどうか
 	SetFontSize(25);
+
 	if (isSelect_[0]) {
 		DrawRotaGraph(ccx, Application::SCREEN_SIZE_Y / 4 * 3
 			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(0)], true);
@@ -487,5 +488,40 @@ void SelectScene::CharacthrSelect(int playerId)
 	}
 
 
+
+}
+
+void SelectScene::DrawUserSetUp(int id)
+{
+	SceneManager& sns = SceneManager::GetInstance();
+
+	int ccx = Application::SCREEN_SIZE_X / 4;
+
+	std::string txt = "p2_決定３、キャンセル４";
+
+	if (isSelect_[id]) {
+		DrawRotaGraph(ccx, Application::SCREEN_SIZE_Y / 4 * 3
+			, 0.3f, 0.0f, playerImg_[sns.GetPlayerId(id)], true);
+		if (sns.GetPlayerId(id) % 2 == 0) {
+			DrawRotaGraph(ccx + 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true);
+		}
+		else
+		{
+			DrawRotaGraph(ccx - 200, Application::SCREEN_SIZE_Y / 4 * 3
+				, 0.3f, 0.0f, SelectImg_, true, true);
+		}
+	}
+	if (isReady_[id]) {
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_OK", RGB(0, 0, 255), true);
+	}
+	else if (isSelect_[id])
+	{
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_カラーを選択して決定", RGB(0, 0, 255), true);
+	}
+	else
+	{
+		DrawString(0, Application::SCREEN_SIZE_Y / 2, "p1_決定１、キャンセル２", RGB(0, 0, 255), true);
+	}
 
 }

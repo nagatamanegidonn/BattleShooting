@@ -129,7 +129,6 @@ void ShotBase::Draw(void)
 
 			break;
 		case ShotBase::STATE::BLAST:
-			MV1DrawModel(transform_.modelId);
 			break;
 		case ShotBase::STATE::END:
 			break;
@@ -221,7 +220,7 @@ void ShotBase::PlayBlastEffect(void)
 	effectBlastPlayId_ = PlayEffekseer3DEffect(effectBlastResId_);
 	SetScalePlayingEffekseer3DEffect(
 		effectBlastPlayId_, BLAST_SCALE, BLAST_SCALE, BLAST_SCALE);
-	SetRotationPlayingEffekseer3DEffect(effectBlastPlayId_, 0.0f, 0.0f, 0.0f);
+	SetRotationPlayingEffekseer3DEffect(effectBlastPlayId_, AsoUtility::Deg2RadF(90.0f), 0.0f, 0.0f);
 	VECTOR pos = transform_.pos;
 	SetPosPlayingEffekseer3DEffect(effectBlastPlayId_, pos.x, pos.y, pos.z);
 }

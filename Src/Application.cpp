@@ -35,7 +35,7 @@ void Application::Init(void)
 {
 
 	// アプリケーションの初期設定
-	SetWindowText("春コン2025チームC");
+	SetWindowText("ブラッシュアップ用");
 	
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
@@ -49,6 +49,13 @@ void Application::Init(void)
 		isInitFail_ = true;
 		return;
 	}
+
+	// ２重起動検査回避用
+	SRand(GetNowCount());
+
+	//この2つすごい大事・・・・・・
+	SetDoubleStartValidFlag(true);
+	SetAlwaysRunFlag(true);
 
 	SetWaitVSyncFlag(0); // 垂直同期無効化
 	frameRate_ = new FrameRate; // フレームレート

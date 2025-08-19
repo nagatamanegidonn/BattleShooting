@@ -49,7 +49,7 @@ public:
 	bool Play(SRC src, Sound::TIMES times, VECTOR pos, float radius);	//ŽOŽŸŒ³‰¹Œ¹—p
 
 	void Stop(SRC src);	//‰¹Œ¹‚ð’âŽ~‚·‚é
-	void AllStop(void);	//‰¹Œ¹‚ð’âŽ~‚·‚é
+	void AllStop(void);	//‰¹Œ¹‚ð‚·‚×‚Ä’âŽ~‚·‚é
 
 	bool CheckMove(SRC src);
 

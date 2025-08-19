@@ -1,5 +1,8 @@
 #include <DxLib.h>
 #include <string>
+
+#include "../Application.h"
+
 #include "../Manager/SceneManager.h"
 #include "SceneBase.h"
 
@@ -44,7 +47,7 @@ void SceneBase::LoadingDraw(void)
 
 	// DrawStringToHandle Ç…ìnÇ∑ç€Ç‡ÅATCHARå^ÇÃï∂éöóÒÇégóp
 	//DrawStringToHandle(950, 750, loadStr.c_str(), 0xffffff, 0);
-	DrawFormatString(500, 300, 0xffffff, loadStr.c_str());
+	DrawFormatString(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, 0xffffff, loadStr.c_str());
 	SetFontSize(16);
 }
 

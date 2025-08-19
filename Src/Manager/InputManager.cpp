@@ -27,43 +27,40 @@ void InputManager::Init(void)
 	// ゲームで使用したいキーを、
 	// 事前にここで登録しておいてください
 	InputManager::GetInstance().Add(KEY_INPUT_RETURN);
-
 	InputManager::GetInstance().Add(KEY_INPUT_SPACE);
-	InputManager::GetInstance().Add(KEY_INPUT_N);
 	InputManager::GetInstance().Add(KEY_INPUT_Z);
 
-	InputManager::GetInstance().Add(KEY_INPUT_V);
-
-	InputManager::GetInstance().Add(KEY_INPUT_Q);
-	InputManager::GetInstance().Add(KEY_INPUT_BACKSLASH);
-
-	InputManager::GetInstance().Add(KEY_INPUT_W);
-	InputManager::GetInstance().Add(KEY_INPUT_A);
-	InputManager::GetInstance().Add(KEY_INPUT_S);
-	InputManager::GetInstance().Add(KEY_INPUT_D);
-	
-	InputManager::GetInstance().Add(KEY_INPUT_T);
-	InputManager::GetInstance().Add(KEY_INPUT_F);
-	InputManager::GetInstance().Add(KEY_INPUT_G);
-	InputManager::GetInstance().Add(KEY_INPUT_H);
-	
-	InputManager::GetInstance().Add(KEY_INPUT_I);
-	InputManager::GetInstance().Add(KEY_INPUT_J);
-	InputManager::GetInstance().Add(KEY_INPUT_K);
-	InputManager::GetInstance().Add(KEY_INPUT_L);
-	
+	// 1P
 	InputManager::GetInstance().Add(KEY_INPUT_UP);
-	InputManager::GetInstance().Add(KEY_INPUT_LEFT);
 	InputManager::GetInstance().Add(KEY_INPUT_DOWN);
+	InputManager::GetInstance().Add(KEY_INPUT_LEFT);
 	InputManager::GetInstance().Add(KEY_INPUT_RIGHT);
+	InputManager::GetInstance().Add(KEY_INPUT_N);
+	InputManager::GetInstance().Add(KEY_INPUT_M);
+	InputManager::GetInstance().Add(KEY_INPUT_Q);
+	InputManager::GetInstance().Add(KEY_INPUT_B);
 
-	InputManager::GetInstance().Add(KEY_INPUT_BACK);
+	InputManager::GetInstance().Add(KEY_INPUT_F);
+
 	InputManager::GetInstance().Add(KEY_INPUT_1);
 	InputManager::GetInstance().Add(KEY_INPUT_2);
 	InputManager::GetInstance().Add(KEY_INPUT_3);
 	InputManager::GetInstance().Add(KEY_INPUT_4);
+	InputManager::GetInstance().Add(KEY_INPUT_5);
+	InputManager::GetInstance().Add(KEY_INPUT_6);
 
+	// 2P
+	InputManager::GetInstance().Add(KEY_INPUT_W);
+	InputManager::GetInstance().Add(KEY_INPUT_S);
+	InputManager::GetInstance().Add(KEY_INPUT_A);
+	InputManager::GetInstance().Add(KEY_INPUT_D);
+	InputManager::GetInstance().Add(KEY_INPUT_LCONTROL);
+
+	InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
 	InputManager::GetInstance().Add(KEY_INPUT_RSHIFT);
+	InputManager::GetInstance().Add(KEY_INPUT_BACKSLASH);
+	InputManager::GetInstance().Add(KEY_INPUT_SLASH);
+	InputManager::GetInstance().Add(KEY_INPUT_BACK);
 
 
 	InputManager::MouseInfo info;
@@ -194,10 +191,6 @@ InputManager::InputManager(void)
 	mouseInput_ = -1;
 }
 
-InputManager::InputManager(const InputManager& manager)
-{
-}
-
 const InputManager::Info& InputManager::Find(int key) const
 {
 
@@ -278,7 +271,7 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 	JOYPAD_IN_STATE ret = JOYPAD_IN_STATE();
 
 	auto type = GetJPadType(no);
-	
+
 	switch (type)
 	{
 	case InputManager::JOYPAD_TYPE::OTHER:
@@ -286,7 +279,7 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 	case InputManager::JOYPAD_TYPE::XBOX_360:
 	{
 	}
-		break;
+	break;
 	case InputManager::JOYPAD_TYPE::XBOX_ONE:
 	{
 
@@ -311,11 +304,6 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		idx = static_cast<int>(JOYPAD_BTN::DOWN);
 		ret.ButtonsNew[idx] = d.Buttons[0];// A
 
-
-		idx = static_cast<int>(JOYPAD_BTN::START);
-		ret.ButtonsNew[idx] = d.Buttons[7];//
-
-
 		idx = static_cast<int>(JOYPAD_BTN::R_TRIGGER);
 		ret.ButtonsNew[idx] = x.RightTrigger;// R_TRIGGER
 
@@ -323,28 +311,33 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		ret.ButtonsNew[idx] = x.LeftTrigger; // L_TRIGGER
 
 		// 右肩ボタン (R1)新規
-		idx = static_cast<int>(JOYPAD_BTN::R_BUTTON);  // Rボタンのボタンコード（R1）
+		idx = static_cast<int>(JOYPAD_BTN::R_BTN);  // Rボタンのボタンコード（R1）
 		ret.ButtonsNew[idx] = d.Buttons[5];  // R1 ボタン（通常はインデックス5）
 		// 左肩ボタン (R1)新規
-		idx = static_cast<int>(JOYPAD_BTN::L_BUTTON);  // Rボタンのボタンコード（R1）
+		idx = static_cast<int>(JOYPAD_BTN::L_BTN);  // Rボタンのボタンコード（R1）
 		ret.ButtonsNew[idx] = d.Buttons[4];  // R1 ボタン（通常はインデックス5）
+		
+		
+		// スタートボタン新規
+		idx = static_cast<int>(JOYPAD_BTN::START);
+		ret.ButtonsNew[idx] = d.Buttons[7];//
 
 
 		// 左スティック
 		ret.AKeyLX = d.X;
 		ret.AKeyLY = d.Y;
-		
+
 		// 右スティック
 		ret.AKeyRX = d.Rx;
 		ret.AKeyRY = d.Ry;
 
 	}
-		break;
+	break;
 	case InputManager::JOYPAD_TYPE::DUAL_SHOCK_4:
 		break;
 	case InputManager::JOYPAD_TYPE::DUAL_SENSE:
 	{
-		
+
 		auto d = GetJPadDInputState(no);
 		int idx;
 
@@ -363,18 +356,17 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 
 		idx = static_cast<int>(JOYPAD_BTN::DOWN);
 		ret.ButtonsNew[idx] = d.Buttons[1];// ×
-		
 
 		// 左スティック
 		ret.AKeyLX = d.X;
 		ret.AKeyLY = d.Y;
-		
+
 		// 右スティック
 		ret.AKeyRX = d.Z;
 		ret.AKeyRY = d.Rz;
 
 	}
-		break;
+	break;
 	case InputManager::JOYPAD_TYPE::SWITCH_JOY_CON_L:
 		break;
 	case InputManager::JOYPAD_TYPE::SWITCH_JOY_CON_R:
@@ -392,6 +384,10 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 bool InputManager::IsPadBtnNew(JOYPAD_NO no, JOYPAD_BTN btn) const
 {
 	return padInfos_[static_cast<int>(no)].IsNew[static_cast<int>(btn)];
+}
+bool InputManager::IsPadBtnNew(JOYPAD_NO no, const int btn) const
+{
+	return padInfos_[static_cast<int>(no)].IsNew[btn];
 }
 
 bool InputManager::IsPadBtnTrgDown(JOYPAD_NO no, JOYPAD_BTN btn) const

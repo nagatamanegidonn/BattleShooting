@@ -2,6 +2,7 @@
 #include <map>
 #include <Dxlib.h>
 #include "../Common/Vector2.h"
+#include "../Common/Vector2F.h"
 
 class InputManager
 {
@@ -42,11 +43,14 @@ public:
 		RIGHT,
 		TOP,
 		DOWN,
-		START,
 		R_TRIGGER,
 		L_TRIGGER,
-		R_BUTTON,
-		L_BUTTON,
+
+		R_BTN,
+		L_BTN,
+
+		START,
+
 		MAX
 	};
 
@@ -115,6 +119,7 @@ public:
 
 	// ボタンが押された
 	bool IsPadBtnNew(JOYPAD_NO no, JOYPAD_BTN btn) const;
+	bool IsPadBtnNew(JOYPAD_NO no, const int btn) const;
 	bool IsPadBtnTrgDown(JOYPAD_NO no, JOYPAD_BTN btn) const;
 	bool IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const;
 
@@ -159,7 +164,7 @@ private:
 
 	// マウスカーソルの位置
 	Vector2 mousePos_;
-	
+
 	// マウスボタンの入力状態
 	int mouseInput_;
 
@@ -169,7 +174,7 @@ private:
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	InputManager(void);
-	InputManager(const InputManager& manager);
+	InputManager(const InputManager& manager) = default;
 	~InputManager(void) = default;
 
 	// 配列の中からキー情報を取得する

@@ -1,6 +1,6 @@
 #include <DxLib.h>
 
-#include "../Manager/InputManager.h"
+#include "../../Manager/InputManager.h"
 #include "InputController.h"
 
 #define PAD_INPUT_RSTICK_UP      (0x10000000)
@@ -13,7 +13,7 @@ InputController::InputController(int padType)
 {
     inputTable_ =
     {
-        {KEY::OK,
+        {KEY::OK,//決定
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
                 {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
@@ -22,112 +22,68 @@ InputController::InputController(int padType)
                 {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},   //
             }
         },
-        {KEY::OK_SECOND,
+        {KEY::BACK,//決定２
             {
-                {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
-                {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
-                {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
+                {PeripheralType::KEYBOARD,KEY_INPUT_BACK},
+                {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
             }
         },
-        {KEY::START,
+        {KEY::START,//   スタートボタン
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_P},
                 {PeripheralType::GAME_PAD,PAD_INPUT_R},     //STARTボタン
             }
         },
 
-        //左十字移動
-        {KEY::FORWARD,
+        //移動
+        {KEY::MOVE_FORWARD,
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_W},
-                {PeripheralType::GAME_PAD,PAD_INPUT_UP},   
+                {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
             }
         },
-        {KEY::BACK,
+        {KEY::MOVE_BACK,
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_S},
-                {PeripheralType::GAME_PAD,PAD_INPUT_DOWN},  
+                {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
+
             }
         },
-        {KEY::RIGHT,
+        {KEY::RIGHT,//移動方向の変更
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_D},
-                {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},    
-            }
-        },
-        {KEY::LEFT,
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_A},
-                {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},    
-            }
-        },
-        //右十字移動
-        {KEY::R_FORWARD,
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_UP},
-                {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_UP},
-            }
-        },
-        {KEY::R_BACK,
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_DOWN},
-                {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_DOWN},
-            }
-        },
-        {KEY::R_RIGHT,
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_RIGHT},
+                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_BTN},
+                //{PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},    
                 {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_RIGHT},
             }
         },
-        {KEY::R_LEFT,
+        {KEY::LEFT,//移動方向の変更
             {
-                {PeripheralType::KEYBOARD,KEY_INPUT_LEFT},
+                {PeripheralType::KEYBOARD,KEY_INPUT_A},
+                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_BTN},
+                //{PeripheralType::GAME_PAD,PAD_INPUT_LEFT},    
                 {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_LEFT},
             }
         },
 
-        {KEY::DRAW,//抜刀コマンド
+        {KEY::RELOAD,//装填コマンド
             {
-                {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
-                {PeripheralType::KEYBOARD,KEY_INPUT_F},
+                {PeripheralType::KEYBOARD,KEY_INPUT_Q},
                 {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::TOP},
                 {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},
             }
         },
-        {KEY::CLOSE,//納刀コマンド
+        {KEY::ATTRCK_SHOT,//攻撃コマンド(射撃)
+            {
+                {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
+                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_TRIGGER}, 
+            }
+        },
+        {KEY::ATTRCK_DASH,//攻撃コマンド(タックル)
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_F},
-                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::LEFT}, 
-                {PeripheralType::MOUSE,MOUSE_INPUT_RIGHT},
-            }
-        },
-        {KEY::ATTRCK,//攻撃コマンド
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
-                {PeripheralType::GAME_PAD,PAD_INPUT_X},
-                {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},
-            }
-        },
-        {KEY::DASH,//ダッシュコマンド
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
-                {PeripheralType::KEYBOARD,KEY_INPUT_LSHIFT},
-                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_BTN},
-            }
-        },
-        {KEY::ROLL,//回避コマンド
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
-                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::DOWN}, //Aボタン
-                {PeripheralType::GAME_PAD,PAD_INPUT_A},                             //Aボタン
-            }
-        },
-        {KEY::AIM,//注目コマンド
-            {
-                {PeripheralType::KEYBOARD,KEY_INPUT_Q},
-                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER}, //Aボタン
-                //{PeripheralType::GAME_PAD,PAD_INPUT_A},                             //Aボタン
+                {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER},
+                //{PeripheralType::GAME_PAD,PAD_INPUT_X}
             }
         },
     };
@@ -314,6 +270,177 @@ bool InputController::IsPeripheralTriggered(const PeripheralType type) const
     }
 
     return false;
+}
+
+void InputController::SetConrolPlayer(int playerNo)
+{
+    if (playerNo == 0)
+    {
+        inputTable_ =
+        {
+            {KEY::OK,//決定
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
+                    {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::RIGHT},     //Bボタン
+                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},   //
+                }
+            },
+            {KEY::BACK,//決定２
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_BACK},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
+                }
+            },
+            {KEY::START,//   スタートボタン
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_P},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_R},     //STARTボタン
+                }
+            },
+
+            //移動
+            {KEY::MOVE_FORWARD,
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_W},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
+                }
+            },
+            {KEY::MOVE_BACK,
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_S},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
+
+                }
+            },
+            {KEY::RIGHT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_D},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_BTN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},    
+                    {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_RIGHT},
+                }
+            },
+            {KEY::LEFT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_A},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_BTN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},    
+                    {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_LEFT},
+                }
+            },
+
+            {KEY::RELOAD,//装填コマンド
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_Q},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::TOP},
+                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},
+                }
+            },
+            {KEY::ATTRCK_SHOT,//攻撃コマンド(射撃)
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_TRIGGER},
+                }
+            },
+            {KEY::ATTRCK_DASH,//攻撃コマンド(タックル)
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_F},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER},
+                    //{PeripheralType::GAME_PAD,PAD_INPUT_X}
+                }
+            },
+        };
+    }
+    else if (playerNo == 1)
+    {
+        inputTable_ =
+        {
+            {KEY::OK,//決定
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
+                    {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::RIGHT},     //Bボタン
+                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},   //
+                }
+            },
+            {KEY::BACK,//決定２
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_BACK},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
+                }
+            },
+            {KEY::START,//   スタートボタン
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_P},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_R},     //STARTボタン
+                }
+            },
+
+            //移動
+            {KEY::MOVE_FORWARD,
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_UP},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
+                }
+            },
+            {KEY::MOVE_BACK,
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_DOWN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
+
+                }
+            },
+            {KEY::RIGHT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RIGHT},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_BTN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},    
+                    {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_RIGHT},
+                }
+            },
+            {KEY::LEFT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_LEFT},
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_BTN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},    
+                    {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_LEFT},
+                }
+            },
+
+            {KEY::RELOAD,//装填コマンド
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_BACKSLASH},//(/の反転)
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::TOP},
+                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},
+                }
+            },
+            {KEY::ATTRCK_SHOT,//攻撃コマンド(射撃)
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RSHIFT},//(右側のシフトキー)
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_TRIGGER},
+                }
+            },
+            {KEY::ATTRCK_DASH,//攻撃コマンド(タックル)
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_SLASH},//(/)
+                    {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER},
+                    //{PeripheralType::GAME_PAD,PAD_INPUT_X}
+                }
+            },
+        };
+    }
+
+
+
+
+    for (const auto& keyValue : inputTable_)
+    {
+        currentInput_[keyValue.first] = false;
+    }
+    lastInput_ = currentInput_;
 }
 
 bool InputController::IsStick(uint32_t value)const
