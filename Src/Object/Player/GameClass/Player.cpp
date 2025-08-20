@@ -1,6 +1,6 @@
 #include <EffekseerForDXLib.h>
 #include "../../Manager/SceneManager.h"
-#include "../../Manager/InputManager.h"
+#include "../../Manager/BattleManager.h"
 #include "../../Manager/ResourceManager.h"
 
 #include "../../Application.h"
@@ -12,7 +12,6 @@
 
 #include "../../Shot/ShotPlayer.h"
 
-//#include "Controller.h"
 #include "DirModel.h"
 #include "Player.h"
 #include "../../Manager/SoundManager.h"
@@ -54,7 +53,7 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 {
 
 	//コントローラーの登録
-	inputController_ = std::make_unique<InputController>(playerNo);
+	inputController_ = std::make_unique<InputController>(playerNo + 1);
 	inputController_->SetConrolPlayer(playerNo);
 
 	dirModel_ = std::make_shared<DirModel>();
@@ -211,19 +210,19 @@ void Player::Draw()
 
 		std::string msg = "Result WIN";
 
-		SceneManager& Sns = SceneManager::GetInstance();
+		auto& BattleSns = BattleManager::GetInstance();
 
-		switch (Sns.GetWinner())
+		switch (BattleSns.GetResult())
 		{
 			//プレイヤー１の勝利
-		case SceneManager::WINNER::PLAYER_ONE:
+		case BattleManager::RESULT::PLAYER_ONE:
 			msg = "PLAYER1 WIN";
 			break;
 			//プレイヤー２の勝利
-		case SceneManager::WINNER::PLAYER_TWO:
+		case BattleManager::RESULT::PLAYER_TWO:
 			msg = "PLAYER2 WIN";
 			break;
-		case SceneManager::WINNER::DRAW:
+		case BattleManager::RESULT::DRAW:
 			msg = "DRAW";
 			break;
 		}
@@ -532,11 +531,6 @@ void Player::UpdatePlay()
 	// 現在座標を起点に移動後座標を決める
 	movedPos_ = VAdd(transform_.pos, movePow_);
 
-	//移動後の位置に問題がある確認
-	// 衝突(カプセル)
-	//CollisionCapsule();
-	// 衝突(重力)
-	//CollisionGravity();
 	
 	// 移動後の位置に問題がなければ移動
 	transform_.pos = movedPos_;
@@ -568,18 +562,6 @@ void Player::UpdateReload(void)
 	}
 
 
-	//reloadTime_ -= SceneManager::GetInstance().GetDeltaTime();
-
-	//if (reloadTime_ <= reloadSet_)
-	//{
-	//	reloadSet_ -= TIME_RELOAD_RATE;
-	//	shotMagazine_ += 1;//弾数を追加
-	//	//装填音、再生
-	//	if (shotMagazine_ % 2 == 0)
-	//	{
-	//		SoundManager::GetInstance().Play(SoundManager::SRC::RELOAD, Sound::TIMES::ONCE, true);
-	//	}
-	//}
 
 
 }
@@ -729,9 +711,7 @@ void Player::UpdateEnd()
 }
 void Player::UpdateVictory()
 {
-	InputManager& ins = InputManager::GetInstance();
-	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
-
+	
 	if (inputController_ ->IsTriggered(InputController::KEY::OK))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
@@ -740,11 +720,6 @@ void Player::UpdateVictory()
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
 	}
-	else if(ins.IsTrgDown(KEY_INPUT_SPACE))
-	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-		return;
-	}
 }
 
 #pragma endregion
@@ -752,31 +727,10 @@ void Player::UpdateVictory()
 void Player::ProcessMove(void)
 {
 	Move();
-
-	InputManager& ins = InputManager::GetInstance();
-	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
-
-	// 左スティックの横軸
-	auto leftStickX = ins.GetJPadInputState(jno).AKeyLX;
-	// 左スティックの縦軸
-	auto leftStickY = ins.GetJPadInputState(jno).AKeyLY;
-
-
-
-	VECTOR dir = AsoUtility::VECTOR_ZERO;
-	float rotRad = 0.0f;
-
-	if ((leftStickY < 0.0f) || (ins.IsNew(KEY_INPUT_W))) { dir = VAdd(dir, AsoUtility::DIR_F); }
-	if ((leftStickX < 0.0f) || (ins.IsNew(KEY_INPUT_A))) { dir = VAdd(dir, AsoUtility::DIR_L); }
-	if ((leftStickY > 0.0f) || (ins.IsNew(KEY_INPUT_S))) { dir = VAdd(dir, AsoUtility::DIR_B); }
-	if ((leftStickX > 0.0f) || (ins.IsNew(KEY_INPUT_D))) { dir = VAdd(dir, AsoUtility::DIR_R); }
-
-
 }
 void Player::Move(void)
 {
-	auto& input = InputManager::GetInstance();
-
+	
 	movePow_ = AsoUtility::VECTOR_ZERO;
 	
 	// 前方向を取得(仮)
@@ -802,8 +756,7 @@ void Player::ProcessTurn(void)
 void Player::Turn(VECTOR axis)
 {
 
-	auto& input = InputManager::GetInstance();
-
+	
 	bool isMove = (inputController_->IsNew(InputController::KEY::MOVE_FORWARD)
 		|| inputController_->IsNew(InputController::KEY::MOVE_BACK));
 	
@@ -851,8 +804,6 @@ void Player::Turn(VECTOR axis)
 
 void Player::ProcessBoost(void)
 {
-	auto& ins = InputManager::GetInstance();
-
 	//タックル攻撃
 	if (inputController_->IsTriggered(InputController::KEY::ATTRCK_DASH)
 		&& jumpTime_ <= 0.0f)
@@ -866,8 +817,6 @@ void Player::ProcessBoost(void)
 
 void Player::ProcessShot(void)
 {
-	auto& ins = InputManager::GetInstance();
-
 	//射撃攻撃
 	if (inputController_->IsNew(InputController::KEY::ATTRCK_SHOT)
 		&& deleyShot_ <= 0.0f && shotMagazine_ > 0)

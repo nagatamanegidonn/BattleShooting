@@ -314,6 +314,7 @@ void InputController::SetConrolPlayer(int playerNo)
 
                 }
             },
+            
             {KEY::RIGHT,//移動方向の変更
                 {
                     {PeripheralType::KEYBOARD,KEY_INPUT_D},
@@ -349,6 +350,39 @@ void InputController::SetConrolPlayer(int playerNo)
                     {PeripheralType::KEYBOARD,KEY_INPUT_F},
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER},
                     //{PeripheralType::GAME_PAD,PAD_INPUT_X}
+                }
+            },
+
+
+            //セレクトシーン用
+            {KEY::N_UP,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_W},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_UP},
+                }
+            },
+            {KEY::N_DOWN,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_S},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_DOWN},
+                }
+            },
+            {KEY::N_RIGHT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_D},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},
+                }
+            },
+            {KEY::N_LEFT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_A},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},
+                }
+            },
+            { KEY::N_CHANGE,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_Q},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_X},//C=X,X=Y
                 }
             },
         };
@@ -397,7 +431,7 @@ void InputController::SetConrolPlayer(int playerNo)
                 {
                     {PeripheralType::KEYBOARD,KEY_INPUT_RIGHT},
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::R_BTN},
-                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},    
+                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},
                     {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_RIGHT},
                 }
             },
@@ -405,7 +439,7 @@ void InputController::SetConrolPlayer(int playerNo)
                 {
                     {PeripheralType::KEYBOARD,KEY_INPUT_LEFT},
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_BTN},
-                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},    
+                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},
                     {PeripheralType::GAME_PAD_STICK,PAD_INPUT_RSTICK_LEFT},
                 }
             },
@@ -428,6 +462,39 @@ void InputController::SetConrolPlayer(int playerNo)
                     {PeripheralType::KEYBOARD,KEY_INPUT_SLASH},//(/)
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::L_TRIGGER},
                     //{PeripheralType::GAME_PAD,PAD_INPUT_X}
+                }
+            },
+
+
+            //セレクトシーン用
+            {KEY::N_UP,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_UP},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_UP},
+                }
+            },
+            {KEY::N_DOWN,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_DOWN},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_DOWN},
+                }
+            },
+            {KEY::N_RIGHT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RIGHT},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_RIGHT},
+                }
+            },
+            {KEY::N_LEFT,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_LEFT},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_LEFT},
+                },
+            },
+            {KEY::N_CHANGE,//移動方向の変更
+                {
+                    {PeripheralType::KEYBOARD,KEY_INPUT_BACKSLASH},
+                    {PeripheralType::GAME_PAD,PAD_INPUT_X},//C=X,X=Y
                 }
             },
         };

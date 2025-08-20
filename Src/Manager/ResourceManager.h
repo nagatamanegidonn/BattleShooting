@@ -34,6 +34,8 @@ public:
 		P3_IMAGE, // P3‰æ‘œ
 		P4_IMAGE, // P4‰æ‘œ
 		
+		START_IMAGE,
+
 		P1_MODEL,
 		P2_MODEL,
 		P3_MODEL,

@@ -1,18 +1,36 @@
 #pragma once
 #include<memory>  // shared_ptrを使うために必要c
 
+#include "../Application.h"
+#include "../Manager/BattleManager.h"
+
 #include "SceneBase.h"
 
 class ViewPlayer;
+class SelectPlayer;
 
 class SelectScene : public SceneBase
 {
 public:
-	static constexpr int PLAYER_MAX = 2;		// プレイヤーの最大数
-	static constexpr int SIZE = 20;				// カーソルの半径
-	static constexpr int MOVE = 4;				// カーソルの移動速度
-	static constexpr int CHARACTER_MAX = 4;
 
+	static constexpr float LengeSpaceX = Application::SCREEN_SIZE_X / 3;
+	static constexpr float LengeSpaceY = Application::SCREEN_SIZE_Y / 3;
+
+
+	static constexpr float DISTANCE = 500.0f;
+
+	//プレイヤーの設定
+	static constexpr VECTOR VIEW_STATRT_POS[4] = {
+		{-DISTANCE,0.0f,DISTANCE / 2}			//左上
+		,{DISTANCE,0.0f,DISTANCE / 2 + 70.0f}	//右上
+		,{-DISTANCE,0.0f,-DISTANCE}				//左下
+		,{DISTANCE,0.0f,-DISTANCE}				//右上 
+	};
+
+	static constexpr VECTOR cursorStartPos[BattleManager::PLAYER_SIZE] = {
+		{LengeSpaceX,LengeSpaceY ,0.0f},
+		{LengeSpaceX * 2,LengeSpaceY ,0.0f}
+	};
 	
 	// コンストラクタ
 	SelectScene(void);
@@ -26,35 +44,19 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
-	// カーソルの移動処理
-	void GetMove(VECTOR& P1, VECTOR& P2);
-
 
 private:
 
-	std::vector<std::unique_ptr<ViewPlayer>> players_;
+	std::vector<std::unique_ptr<ViewPlayer>> playerViews_;
+	std::unique_ptr<SelectPlayer> players_[BattleManager::PLAYER_SIZE];
 
 	// カーソル座標
-	VECTOR pos[PLAYER_MAX];
-
-	// キャラクター選択が完了しているかどうかの確認用
-	bool isSelect_[PLAYER_MAX];
-	bool isReady_[PLAYER_MAX];
 	bool isStart_;
 
-	int playerImg_[CHARACTER_MAX];
 
 	int CursorImg_;
 	int FrameImg_;
 
-	int SelectImg_;
+	int startImg_;
 	
-	// 当たり判定
-	void Collision(void);
-
-
-	void CharacthrSelect(int playerId);
-
-
-	void DrawUserSetUp(int id);
 };

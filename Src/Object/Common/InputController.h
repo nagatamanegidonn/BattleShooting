@@ -12,12 +12,19 @@ public:
 		BACK,
 		OK_MOUSE,
 		START,
-
 		
 		MOVE_FORWARD,
 		MOVE_BACK,
+
+		N_UP,
+		N_DOWN,
+		N_RIGHT,
+		N_LEFT,
+		N_CHANGE,
+
 		RIGHT,
 		LEFT,
+
 		RELOAD,
 		ATTRCK_SHOT,
 		ATTRCK_DASH,

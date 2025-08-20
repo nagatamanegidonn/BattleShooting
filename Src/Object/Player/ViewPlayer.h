@@ -23,15 +23,6 @@ public:
 	static constexpr float ROT_POW = 3.25f;
 
 
-	// íeÇÃî≠éÀä‘äu
-	static constexpr float TIME_DELAY_SHOT = 0.2f;
-	static constexpr float TIME_RELOAD = 2.0f;
-
-	//îºåa
-	static constexpr float ATTRCK_RADIUS = 25.0f;
-	static constexpr float DAMAGE_RADIUS = 35.0f;
-
-
 	// èÛë‘
 	enum class STATE
 	{

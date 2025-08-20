@@ -3,6 +3,7 @@
 
 #include "Utility/FrameRate.h"
 
+#include "Manager/BattleManager.h"
 #include "Manager/ResourceManager.h"
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
@@ -73,6 +74,8 @@ void Application::Init(void)
 	SoundManager::CreateInstance();
 	// シーン管理初期化
 	SceneManager::CreateInstance();
+	// キャラクター管理初期化
+	BattleManager::CreateInstance();
 
 }
 
@@ -115,6 +118,7 @@ void Application::Destroy(void)
 
 	InputManager::GetInstance().Destroy();
 	ResourceManager::GetInstance().Destroy();
+	BattleManager::GetInstance().Destroy();
 	SceneManager::GetInstance().Destroy();
 	SoundManager::GetInstance().Destroy();
 

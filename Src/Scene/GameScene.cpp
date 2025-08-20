@@ -7,6 +7,7 @@
 #include "../Utility/AsoUtility.h"//Quaternion等を扱う関数が入っている
 
 #include "../Manager/SoundManager.h"
+#include "../Manager/BattleManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -46,25 +47,24 @@ void GameScene::AsyncPreLoad(void)
 	SetUseASyncLoadFlag(true);
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
+	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++) {
 		camera_[i] = new Camera();
 
 		//auto  player = std::make_unique<Player>();
 
 		//プレイキャラごとに代わる
-		if (SceneManager::GetInstance().GetPlayerId(i) == 0
-			|| SceneManager::GetInstance().GetPlayerId(i) == 1)
+		if (BattleManager::GetInstance().GetCharId(i) == 0
+			|| BattleManager::GetInstance().GetCharId(i) == 1)
 		{			
 			auto  player = std::make_unique<Mush>();
 			players_.push_back(std::move(player));
 		}
-		else if (SceneManager::GetInstance().GetPlayerId(i) == 2
-			||SceneManager::GetInstance().GetPlayerId(i) == 3)
+		else if (BattleManager::GetInstance().GetCharId(i) == 2
+			|| BattleManager::GetInstance().GetCharId(i) == 3)
 		{			
 			auto  player = std::make_unique<Bamboo>();
 			players_.push_back(std::move(player));
 		}
-
 	}
 
 	eventFlag_ = false;
@@ -84,8 +84,8 @@ void GameScene::Init(void)
 
 
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
-		players_[i]->Init(sPos[i], i, SceneManager::GetInstance().GetPlayerId(i));
+	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++) {
+		players_[i]->Init(sPos[i], i, BattleManager::GetInstance().GetCharId(i));
 
 		//各プレイヤーのスクリーンの作成
 		screenH[i] = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
@@ -150,20 +150,20 @@ void GameScene::Update(void)
 
 #ifdef _DEBUG
 	// シーン遷移
-	/*InputManager& ins = InputManager::GetInstance();
+	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::RESULT);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 		return;
-	}*/
+	}
 #endif
 
-	SceneManager& Sns = SceneManager::GetInstance();
+	auto& BattleSns = BattleManager::GetInstance();
 
 	//勝敗判定
 	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
 	{
-		Sns.SetWinner(SceneManager::WINNER::DRAW);
+		BattleSns.SetResult(BattleManager::RESULT::DRAW);
 
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE)
 			&& (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END))
@@ -174,7 +174,7 @@ void GameScene::Update(void)
 	}
 	else if (players_[0]->GetHp() <= 0)
 	{
-		Sns.SetWinner(SceneManager::WINNER::PLAYER_TWO);
+		BattleSns.SetResult(BattleManager::RESULT::PLAYER_TWO);
 		eventFlag_ = true;
 		eventId_ = 0;
 
@@ -193,7 +193,7 @@ void GameScene::Update(void)
 	}
 	else if (players_[1]->GetHp() <= 0)
 	{
-		Sns.SetWinner(SceneManager::WINNER::PLAYER_ONE);
+		BattleSns.SetResult(BattleManager::RESULT::PLAYER_ONE);
 		eventFlag_ = true;
 		eventId_ = 1;
 
@@ -247,8 +247,6 @@ void GameScene::Update(void)
 
 	// カメラ衝突チェック
 	Camera* camera = SceneManager::GetInstance().GetCamera();
-	// カメラモード：
-	//camera->ChangeMode(Camera::MODE::FIXED_POINT);
 
 
 }
@@ -279,7 +277,7 @@ void GameScene::Release(void)
 	
 
 
-	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
+	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++) {
 		camera_[i]->Release();
 		delete camera_[i];
 	}
@@ -422,10 +420,6 @@ void GameScene::GameDraw(void)
 	int mx = Application::SCREEN_SIZE_X - screenSize;
 	int my = Application::SCREEN_SIZE_Y - screenSize;
 
-	int cx = Application::SCREEN_SIZE_X - screenSize;
-	int cy = Application::SCREEN_SIZE_Y - screenSize;
-
-
 	//プレイヤーの描画
 	int plyNum = 0;
 
@@ -453,19 +447,19 @@ void GameScene::GameDraw(void)
 
 		std::string msg = "Result WIN";
 
-		SceneManager& Sns = SceneManager::GetInstance();
+		BattleManager& BattleSns = BattleManager::GetInstance();
 
-		switch (Sns.GetWinner())
+		switch (BattleSns.GetResult())
 		{
 			//プレイヤー１の勝利
-		case SceneManager::WINNER::PLAYER_ONE:
+		case BattleManager::RESULT::PLAYER_ONE:
 			msg = "PLAYER1 WIN";
 			break;
 			//プレイヤー２の勝利
-		case SceneManager::WINNER::PLAYER_TWO:
+		case BattleManager::RESULT::PLAYER_TWO:
 			msg = "PLAYER2 WIN";
 			break;
-		case SceneManager::WINNER::DRAW:
+		case BattleManager::RESULT::DRAW:
 			msg = "DRAW";
 			break;
 		}
@@ -495,7 +489,7 @@ void GameScene::EventDraw(void)
 	int cy = Application::SCREEN_SIZE_Y/2;
 
 
-	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++)
+	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++)
 	{
 		// 設定したいスクリーンを作成する
 		SetDrawScreen(screenH[i]);
@@ -570,19 +564,19 @@ void GameScene::EventDraw(void)
 
 			std::string msg = "Result WIN";
 
-			SceneManager& Sns = SceneManager::GetInstance();
+			BattleManager& BattleSns = BattleManager::GetInstance();
 
-			switch (Sns.GetWinner())
+			switch (BattleSns.GetResult())
 			{
 				//プレイヤー１の勝利
-			case SceneManager::WINNER::PLAYER_ONE:
+			case BattleManager::RESULT::PLAYER_ONE:
 				msg = "PLAYER1 WIN";
 				break;
 				//プレイヤー２の勝利
-			case SceneManager::WINNER::PLAYER_TWO:
+			case BattleManager::RESULT::PLAYER_TWO:
 				msg = "PLAYER2 WIN";
 				break;
-			case SceneManager::WINNER::DRAW:
+			case BattleManager::RESULT::DRAW:
 				msg = "DRAW";
 				break;
 			}

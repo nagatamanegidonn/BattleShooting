@@ -1,3 +1,4 @@
+#include <memory>
 #include <DxLib.h>
 #include "../Application.h"
 #include "Resource.h"
@@ -88,6 +89,11 @@ void ResourceManager::Init(void)
 	//P2のイメージ画像
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "P4Image.png");
 	resourcesMap_.emplace(SRC::P4_IMAGE, res);
+
+
+	//P2のイメージ画像
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "StartFlag.png");
+	resourcesMap_.emplace(SRC::START_IMAGE, res);
 
 
 	res = Resource(Resource::TYPE::MODEL, Application::PATH_MODEL + "P1/P1.mv1");

@@ -35,12 +35,11 @@ private:
 	int eventId_;
 
 	std::vector<std::unique_ptr<Player>> players_;
-	Camera* camera_[SceneManager::PLAYER_SIZE];
-	int screenH[SceneManager::PLAYER_SIZE];
+	Camera* camera_[BattleManager::PLAYER_SIZE];
+	int screenH[BattleManager::PLAYER_SIZE];
 
 	//背景インスタンス
 	Stage* stage_;
-	//Stage* backGround_;
 
 
 	//爆発エフェクト

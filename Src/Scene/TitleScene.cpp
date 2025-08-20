@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
+#include "../Manager/BattleManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -60,12 +61,6 @@ void TitleScene::Update(void)
 	}
 
 
-	/*cntSound_++;
-	if (cntSound_ % 30 == 0 || cntSound_ % 45 == 0)
-	{
-		SoundManager::GetInstance().Play(SoundManager::SRC::DAMAGE, Sound::TIMES::ONCE, true);
-	}*/
-
 	InputManager::JOYPAD_NO jno = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD1);
 	InputManager::JOYPAD_NO jno2 = static_cast<InputManager::JOYPAD_NO>(InputManager::JOYPAD_NO::PAD2);
 
@@ -75,7 +70,7 @@ void TitleScene::Update(void)
 		|| ins.IsPadBtnTrgDown(jno, InputManager::JOYPAD_BTN::START)
 		|| ins.IsPadBtnTrgDown(jno2, InputManager::JOYPAD_BTN::START))
 	{
-		SceneManager::GetInstance().ResetGame();
+		BattleManager::GetInstance().ResetGame();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
 		return;
 	}
@@ -102,7 +97,6 @@ void TitleScene::Draw(void)
 
 void TitleScene::Release(void)
 {
-	//SoundManager::GetInstance().Stop(SoundManager::SRC::TITLE_BGM);
 	SoundManager::GetInstance().AllStop();
 
 	stage_->Release();

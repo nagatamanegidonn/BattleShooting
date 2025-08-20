@@ -12,6 +12,7 @@
 #include "../Scene/ResultScene.h"
 
 #include "ResourceManager.h"
+#include "BattleManager.h"
 #include "Camera.h"
 #include "SceneManager.h"
 
@@ -43,9 +44,6 @@ void SceneManager::Init(void)
 	// ƒJƒƒ‰
 	camera_ = new Camera();
 	camera_->Init();
-
-	//ƒQ[ƒ€‚ÌŸ”s“™•Ï”‚Ì‰Šú‰»
-	ResetGame();
 
 	isSceneChanging_ = false;
 
@@ -207,32 +205,6 @@ int SceneManager::LoadCunt(void) const
 	return fader_->GetLoadCut();
 }
 
-void SceneManager::ResetGame(void)
-{
-	for (int i = 0; i < SceneManager::PLAYER_SIZE; i++) {
-		playerId_[i] = -1;
-	}
-
-	isWinner_ = WINNER::NONE;
-}
-int SceneManager::GetPlayerId(int i) const
-{
-	return playerId_[i];
-	// TODO: return ƒXƒe[ƒgƒƒ“ƒg‚ð‚±‚±‚É‘}“ü‚µ‚Ü‚·
-}
-void SceneManager::SetPlayerId(int i, int setNum)
-{
-	playerId_[i] = setNum;
-}
-//ŸŽÒŠÖŒW
-SceneManager::WINNER SceneManager::GetWinner(void) const
-{
-	return isWinner_;
-}
-void SceneManager::SetWinner(WINNER win)
-{
-	isWinner_ = win;
-}
 
 
 SceneManager::SceneManager(void)

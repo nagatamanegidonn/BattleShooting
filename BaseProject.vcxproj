@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\SelectPlayer.cpp" />
+    <ClCompile Include="Src\Manager\BattleManager.cpp" />
     <ClCompile Include="Src\Object\Player\GameClass\Bamboo.cpp" />
     <ClCompile Include="Src\Object\Player\GameClass\Mush.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
@@ -54,6 +56,8 @@
     <ClCompile Include="Src\Utility\FrameRate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\SelectPlayer.h" />
+    <ClInclude Include="Src\Manager\BattleManager.h" />
     <ClInclude Include="Src\Object\Player\GameClass\Bamboo.h" />
     <ClInclude Include="Src\Object\Player\GameClass\Mush.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />

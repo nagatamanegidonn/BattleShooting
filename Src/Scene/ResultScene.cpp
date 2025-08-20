@@ -2,6 +2,7 @@
 
 #include "../Application.h"
 
+#include "../Manager/BattleManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -44,7 +45,7 @@ void ResultScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
-		SceneManager::GetInstance().ResetGame();
+		BattleManager::GetInstance().ResetGame();
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 
@@ -79,19 +80,19 @@ void ResultScene::Draw(void)
 
 	msg = "Result WIN";
 
-	SceneManager& Sns = SceneManager::GetInstance();
+	auto& BattleSns = BattleManager::GetInstance();
 
-	switch (Sns.GetWinner())
+	switch (BattleSns.GetResult())
 	{
 		//プレイヤー１の勝利
-	case SceneManager::WINNER::PLAYER_ONE:
+	case BattleManager::RESULT::PLAYER_ONE:
 		msg = "PLAYER1 WIN";
 		break;
 		//プレイヤー２の勝利
-	case SceneManager::WINNER::PLAYER_TWO:
+	case BattleManager::RESULT::PLAYER_TWO:
 		msg = "PLAYER2 WIN";
 		break;
-	case SceneManager::WINNER::DRAW:
+	case BattleManager::RESULT::DRAW:
 		msg = "DRAW";
 		break;
 	}

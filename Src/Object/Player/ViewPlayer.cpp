@@ -9,9 +9,9 @@
 
 #include "../Common/AnimationController.h"
 
-#include "ViewPlayer.h"
 #include "../../Manager/SoundManager.h"
 
+#include "ViewPlayer.h"
 
 //Player::Player(Camera& camera) :camera_(camera)
 ViewPlayer::ViewPlayer()
