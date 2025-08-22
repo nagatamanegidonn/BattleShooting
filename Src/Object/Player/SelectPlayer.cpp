@@ -7,6 +7,7 @@
 #include "../Common/InputController.h"
 
 #include "SelectPlayer.h"
+#include "../../Utility/AsoUtility.h"
 
 SelectPlayer::SelectPlayer()
 {
@@ -117,10 +118,27 @@ void SelectPlayer::Draw()
 
 	}
 
+	int cx = Application::SCREEN_SIZE_X / 2;
+
+	
+
 	selectDraw_();
+
+	if (playerNo_ == 0)
+	{
+		AsoUtility::DrawCenterString("PLAYER1", SceneManager::GetInstance().GetFont(), cx - 220, 300, 0x0000ff);
+		if (!isReady_)AsoUtility::DrawCenterString("1P", SceneManager::GetInstance().GetFont(), cursorPos_.x + 15, cursorPos_.y, 0x0000ff);
+
+	}
+	else if (playerNo_ == 1)
+	{
+		AsoUtility::DrawCenterString("PLAYER2", SceneManager::GetInstance().GetFont(), cx + 220, 300, 0xff0000);
+		if (!isReady_)AsoUtility::DrawCenterString("2P", SceneManager::GetInstance().GetFont(), cursorPos_.x + 15, cursorPos_.y, 0xff0000);
+	}
 
 	if (!isReady_)
 	{
+
 		DrawRotaGraph(cursorPos_.x, cursorPos_.y, 1.0f, 0.0f, CursorImg_, true);
 	}
 }
@@ -229,9 +247,9 @@ void SelectPlayer::DrawKeyBord(void)
 	{
 		plyNum = 1;
 	}
-	//プレーヤーアイコンの描画
-	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, keyImgs_[1], true);
-	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, keyImgs_[0], true);
+	//操作アイコンの描画
+	DrawRotaGraph(cx + (plyNum * 100), 400 + 15, 1.0f, 0.0f, keyImgs_[1], true);
+	DrawRotaGraph(cx + (plyNum * 100), 475 + 15, 1.0f, 0.0f, keyImgs_[0], true);
 
 }
 
@@ -252,9 +270,7 @@ void SelectPlayer::DrawPad(void)
 	{
 		plyNum = 1;
 	}
-	//プレーヤーアイコンの描画
-	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, padImgs_[1], true);
-	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, padImgs_[0], true);
-
-
+	//操作アイコンの描画
+	DrawRotaGraph(cx + (plyNum * 100), 400 + 15, 1.0f, 0.0f, padImgs_[1], true);
+	DrawRotaGraph(cx + (plyNum * 100), 475 + 15, 1.0f, 0.0f, padImgs_[0], true);
 }

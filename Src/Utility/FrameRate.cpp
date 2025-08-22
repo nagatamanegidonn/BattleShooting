@@ -30,10 +30,14 @@ void FrameRate::Update(void)
 /*　描画処理　*/
 void FrameRate::Draw(void)
 {
+#ifdef _DEBUG
+
 	// 平均フレームレート 描画
 	DrawFormatString((Application::SCREEN_SIZE_X - TEXT_POS_X),
 					 (Application::SCREEN_SIZE_Y - TEXT_POS_Y),
 					 0xFFFFFF, "%.1ffps", viewFramelate_);
+
+#endif // DEBUG
 }
 
 

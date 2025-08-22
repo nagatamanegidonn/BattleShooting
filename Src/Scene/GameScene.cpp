@@ -40,6 +40,8 @@ GameScene::GameScene(void)
 	goalRot_ = 0.0f;
 
 	winnerImg_ = -1;
+
+	startCnt_ = 5.0f;
 }
 
 GameScene::~GameScene(void)
@@ -142,6 +144,12 @@ void GameScene::Update(void)
 	//ƒ[ƒh‚ªŠ®—¹‚µ‚½‚©”»’f
 	if (GetASyncLoadNum() != 0 || SceneManager::GetInstance().IsLoading())
 	{
+		return;
+	}
+
+	if (startCnt_>0.0f)
+	{
+		startCnt_ -= SceneManager::GetInstance().GetDeltaTime();
 		return;
 	}
 
@@ -319,6 +327,7 @@ void GameScene::Draw(void)
 		return;
 	}
 
+
 	if (eventFlag_)
 	{
 		EventDraw();
@@ -328,6 +337,34 @@ void GameScene::Draw(void)
 		GameDraw();
 	}
 
+
+	if (startCnt_ > 0.0f)
+	{
+		std::string txt = "";
+
+		if (startCnt_ > 3.0f)
+		{
+			txt = "3";
+		}
+		else if (startCnt_ > 2.0f)
+		{
+			txt = "2";
+		}
+		else if (startCnt_ > 1.0f)
+		{
+			txt = "1";
+		}
+		else if (startCnt_ > 0.0f)
+		{
+			txt = "START";
+		}
+
+
+		AsoUtility::DrawCenterString(txt, SceneManager::GetInstance().GetFont(1)
+			, Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 - 200);
+
+
+	}
 }
 
 void GameScene::Release(void)

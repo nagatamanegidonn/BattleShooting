@@ -37,11 +37,20 @@ void SelectScene::AsyncPreLoad(void)
 	//非同期読み込みを有効にする
 	SetUseASyncLoadFlag(true);
 
+
+	int CharId[BattleManager::CHAR_SIZE] = {
+		0,
+		2
+	};
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
-	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++) {
+	for (int i = 0; i < BattleManager::CHAR_SIZE; i++) {
 
 		auto  player = std::make_unique<ViewPlayer>();
 		playerViews_.push_back(std::move(player));
+
+		playerViews_[i]->Init(VIEW_STATRT_POS[i], i, CharId[i]);
+		playerViews_[i]->ChangeState(ViewPlayer::STATE::PLAY);
+
 	}
 
 	CursorImg_ = ResourceManager::GetInstance().Load(ResourceManager::SRC::CURSOR).handleId_;
@@ -62,27 +71,13 @@ void SelectScene::Init(void)
 	//ゲーム開始準備確認用フラグ
 	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++)
 	{
-
 		players_[i] = std::make_unique<SelectPlayer>();
 		players_[i]->Init(cursorStartPos[i], i, -1);
-
 	}
 	isStart_ = false;
 	
 
-	int CharId[BattleManager::CHAR_SIZE] = {
-		0,
-		2
-	};
-	//モデル設置
-	for (int i = 0; i < BattleManager::CHAR_SIZE; i++)
-	{
-
-		playerViews_[i]->Init(VIEW_STATRT_POS[i], i, CharId[i]);
-		playerViews_[i]->ChangeState(ViewPlayer::STATE::PLAY);
-
-	}
-
+	
 	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
 
 }
@@ -159,7 +154,8 @@ void SelectScene::Draw(void)
 	const int cy = Application::SCREEN_SIZE_Y / 2;
 
 	//背景
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x5562bf, true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y / 2 - 28, 0x191970, true);
 
 	//キャラ選択
 	int distanceX = 270;
@@ -183,8 +179,8 @@ void SelectScene::Draw(void)
 
 
 
-	DrawCenterString("キャラ決定", SceneManager::GetInstance().GetFont(), cx, 400);
-	DrawCenterString("カラー変更", SceneManager::GetInstance().GetFont(), cx, 475);
+	AsoUtility::DrawCenterString("キャラ決定", SceneManager::GetInstance().GetFont(), cx, 400);
+	AsoUtility::DrawCenterString("カラー変更", SceneManager::GetInstance().GetFont(), cx, 475);
 
 	for (auto& p : players_)
 	{
@@ -194,7 +190,7 @@ void SelectScene::Draw(void)
 	if (isStart_)
 	{
 		DrawRotaGraph(cx, cy, 1.0f, 0.0f, startImg_, true);
-		DrawCenterString("PUSH  START", SceneManager::GetInstance().GetFont(), cx, Application::SCREEN_SIZE_Y - 50);
+		AsoUtility::DrawCenterString("PUSH  START", SceneManager::GetInstance().GetFont(), cx, Application::SCREEN_SIZE_Y - 50);
 	}
 
 #ifdef _DEBUG
@@ -207,18 +203,4 @@ void SelectScene::Draw(void)
 void SelectScene::Release(void)
 {
 	SoundManager::GetInstance().AllStop();
-}
-
-void SelectScene::DrawCenterString(std::string msg, int font, int posX, int posY)
-{
-	int width = GetDrawStringWidthToHandle(msg.c_str(), -1, font); //使用するフォントで幅取得
-	int outLineScl = 2;
-
-	DrawStringToHandle(posX - (width / 2) + outLineScl, posY, msg.c_str(), 0x000000, font);
-	DrawStringToHandle(posX - (width / 2) - outLineScl, posY, msg.c_str(), 0x000000, font);
-	DrawStringToHandle(posX - (width / 2), posY + outLineScl, msg.c_str(), 0x000000, font);
-	DrawStringToHandle(posX - (width / 2), posY - outLineScl, msg.c_str(), 0x000000, font);
-
-	DrawStringToHandle(posX - (width / 2), posY, msg.c_str(), 0xffffff, font);
-
 }

@@ -12,9 +12,6 @@ public:
 	enum class SRC
 	{
 		TITLE_LOGO,
-		START_LOGO,
-		PLAY_LOGO,
-		EXIT_LOGO,
 
 		CURSOR,
 		FRAME,

@@ -60,6 +60,5 @@ private:
 
 	int startImg_;
 	
-	void DrawCenterString(std::string msg, int font, int posX, int posY);
 
 };

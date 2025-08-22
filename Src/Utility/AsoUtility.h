@@ -115,5 +115,8 @@ public:
 	static void DrawLineXYZ(const VECTOR& pos, const MATRIX& rot, float len = 50.0f);
 	static void DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len = 50.0f);
 
+
+	static void DrawCenterString(std::string msg, int font, int posX, int posY, unsigned int col = 0xffffff);
+
 };
 

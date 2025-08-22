@@ -197,8 +197,9 @@ void Player::Draw()
 
 	// invincibleTime_ ‚ª 1.0f ‚©‚ç 0.0f ‚ÉŒ¸‚Á‚Ä‚¢‚­‚Æ‰¼’è
 	bool isVisible = static_cast<int>((INTERVAL_TIME - invincibleTime_) / BLINK_INTERVAL) % 2 == 0;
+	bool event = (state_ == STATE::LIFE_DEAD || state_ == STATE::FALL_DEAD);
 
-	if (isVisible || invincibleTime_ <= 0.0f) {
+	if (isVisible || event) {
 		// ƒLƒƒƒ‰‚ð•`‰æ‚·‚é
 		MV1DrawModel(transform_.modelId);
 	}
@@ -206,11 +207,7 @@ void Player::Draw()
 		// •`‰æ‚µ‚È‚¢i“_–Å’†j
 	}
 
-	if (state_ == STATE::LIFE_DEAD|| state_ == STATE::FALL_DEAD)
-	{
-		return;
-	}
-	if (state_ == STATE::VICTORY)
+	if (state_ == STATE::VICTORY|| event)
 	{
 		return;
 	}
@@ -251,14 +248,13 @@ void Player::Draw()
 	dirModel_->Draw();
 
 
-	//DrawTriangle3D(zero, one, two, 0x0000ff, true);
-	//DrawTriangle3D( two,one, three, 0x0000ff, true);
-
 #pragma endregion
 
 #ifdef _DEBUG
+
 	DrawSphere3D(rideAttrckPos_, ATTRCK_RADIUS, 10, 0xff0000, 0xff0000, false);
 	DrawSphere3D(rideDamagePos_, DAMAGE_RADIUS, 10, 0x0000ff, 0x0000ff, false);
+
 #endif
 
 	size_t size = shots_.size();

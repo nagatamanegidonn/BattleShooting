@@ -16,7 +16,6 @@ public:
 		TITLE,
 		SELECT,
 		GAME,
-		RESULT
 	};
 
 
@@ -50,7 +49,7 @@ public:
 	bool IsLoading(void) const;
 	int LoadCunt(void) const;
 
-	const int GetFont(void)const { return fontHandle_; }
+	const int GetFont(int i = 0)const { return fontHandle_[i]; }
 
 private:
 
@@ -76,7 +75,7 @@ private:
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 
-	int fontHandle_;
+	int fontHandle_[2];
 	
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

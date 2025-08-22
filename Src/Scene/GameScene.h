@@ -55,6 +55,9 @@ private:
 	float vTime_;
 	float goalRot_;
 
+	//
+	float startCnt_;
+
 	void Collision(void);
 
 	void GameDraw(void);

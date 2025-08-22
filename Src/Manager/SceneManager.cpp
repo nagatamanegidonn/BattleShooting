@@ -9,7 +9,6 @@
 #include "../Scene/TitleScene.h"
 #include "../Scene/SelectScene.h"
 #include "../Scene/GameScene.h"
-#include "../Scene/ResultScene.h"
 
 #include "ResourceManager.h"
 #include "BattleManager.h"
@@ -35,7 +34,8 @@ SceneManager& SceneManager::GetInstance(void)
 void SceneManager::Init(void)
 {
 	//フォントの登録
-	fontHandle_ = CreateFontToHandle("ベストテンDOT", 28, 0);
+	fontHandle_[0] = CreateFontToHandle("ベストテンDOT", 28, 0);
+	fontHandle_[1] = CreateFontToHandle("ベストテンDOT", 300, 0);
 
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
@@ -163,7 +163,8 @@ void SceneManager::Destroy(void)
 
 	delete instance_;
 
-	DeleteFontToHandle(fontHandle_); //フォントの削除
+	DeleteFontToHandle(fontHandle_[0]); //フォントの削除
+	DeleteFontToHandle(fontHandle_[1]); //フォントの削除
 }
 
 void SceneManager::ChangeScene(SCENE_ID nextId)
@@ -262,9 +263,6 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::GAME:
 		scene_ = new GameScene();
-		break;
-	case SCENE_ID::RESULT:
-		scene_ = new ResultScene();
 		break;
 	}
 

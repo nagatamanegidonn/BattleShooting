@@ -553,4 +553,17 @@ void AsoUtility::DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len
 
 }
 
+void AsoUtility::DrawCenterString(std::string msg, int font, int posX, int posY, unsigned int col)
+{
+    int width = GetDrawStringWidthToHandle(msg.c_str(), -1, font); //使用するフォントで幅取得
+    int outLineScl = 2;
+
+    DrawStringToHandle(posX - (width / 2) + outLineScl, posY, msg.c_str(), 0x000000, font);
+    DrawStringToHandle(posX - (width / 2) - outLineScl, posY, msg.c_str(), 0x000000, font);
+    DrawStringToHandle(posX - (width / 2), posY + outLineScl, msg.c_str(), 0x000000, font);
+    DrawStringToHandle(posX - (width / 2), posY - outLineScl, msg.c_str(), 0x000000, font);
+
+    DrawStringToHandle(posX - (width / 2), posY, msg.c_str(), col, font);
+}
+
 

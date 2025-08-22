@@ -29,18 +29,9 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "StartLogo.png");
 	resourcesMap_.emplace(SRC::TITLE_LOGO, res);
 
-	// スタートロゴ
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "START.png");
-	resourcesMap_.emplace(SRC::START_LOGO, res);
-	// プレイロゴ
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "PLAY.png");
-	resourcesMap_.emplace(SRC::PLAY_LOGO, res);
-	// エンドロゴ
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "EXIT.png");
-	resourcesMap_.emplace(SRC::EXIT_LOGO, res);
 	
 	// カーソル(選択画面)
-	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "Cursor.png");
+	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "tile_0203.png");
 	resourcesMap_.emplace(SRC::CURSOR, res);
 	// 選択画面の枠
 	res = Resource(Resource::TYPE::IMG, Application::PATH_IMAGE + "SelectFrame.png");
