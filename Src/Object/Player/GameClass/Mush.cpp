@@ -32,6 +32,6 @@ void Mush::SetParam(void)
 	//‚Ó‚Á”ò‚Î‚µŠÖŒW
 	jumpTime_ = 0.0f;
 	jumpDir_ = AsoUtility::VECTOR_ZERO;
-	jumpAttrckRate_ = 1.5f;
-	jumpDefenseRate_ = 0.5f;
+	jumpAttrckRate_ = ATK_RATE;
+	jumpDefenseRate_ = DEF_RATE;
 }

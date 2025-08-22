@@ -55,6 +55,8 @@ private:
 	// 状態管理
 	STATE state_;
 
+	int charId_;
+
 	// 状態管理(状態遷移時初期処理)
 	std::map<STATE, std::function<void(void)>> stateChanges_;
 	// 状態管理(更新ステップ)
@@ -82,6 +84,9 @@ private:
 
 	//操作：回転
 	void Turn(VECTOR axis);
+
+	//パラメータの表示
+	void DrawParm(std::string pramName, const VECTOR sPos, int lenge, int freaLen, unsigned int color);
 
 
 	// モデル制御の基本情報

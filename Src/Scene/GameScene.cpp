@@ -71,6 +71,7 @@ void GameScene::AsyncPreLoad(void)
 		}
 	}
 
+
 	eventFlag_ = false;
 	eventId_ = -1;//０か1か
 
@@ -158,7 +159,7 @@ void GameScene::Update(void)
 	{
 
 		goalRot_ = (std::sin(vTime_) * 0.5f) * (0.1f);  // 0.1 を往復
-		vTime_ += SceneManager::GetInstance().GetDeltaTime() * 3.0f; 
+		vTime_ += SceneManager::GetInstance().GetDeltaTime() * 3.0f;
 	}
 
 #ifdef _DEBUG
@@ -179,14 +180,6 @@ void GameScene::Update(void)
 	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)//引き分け
 	{
 		BattleSns.SetResult(BattleManager::RESULT::DRAW);
-
-		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE)
-			&& (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END))
-		{
-			FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-			return;
-		}
 	}
 	else if (players_[0]->GetHp() <= 0)//体力勝ち
 	{
@@ -277,8 +270,8 @@ void GameScene::Update(void)
 	}
 	//イベントシーン後の勝敗
 	else if ((players_[0]->GetState() == Player::STATE::END || players_[1]->GetState() == Player::STATE::END
-		|| players_[0]->GetState() == Player::STATE::VICTORY|| players_[1]->GetState() == Player::STATE::VICTORY
-		
+		|| players_[0]->GetState() == Player::STATE::VICTORY || players_[1]->GetState() == Player::STATE::VICTORY
+
 		) && !isVictory_ && eventFlag_)
 	{
 		DeleteGraph(winnerImg_);

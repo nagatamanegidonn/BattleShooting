@@ -17,7 +17,7 @@ public:
 	static constexpr float LengeSpaceY = Application::SCREEN_SIZE_Y / 3;
 
 
-	static constexpr float DISTANCE_X = 700.0f;
+	static constexpr float DISTANCE_X = 600.0f;
 	static constexpr float DISTANCE = 500.0f;
 
 	//ÉvÉåÉCÉÑÅ[ÇÃê›íË
@@ -60,7 +60,6 @@ private:
 
 	int startImg_;
 	
-
 	void DrawCenterString(std::string msg, int font, int posX, int posY);
 
 };

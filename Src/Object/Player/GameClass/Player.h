@@ -211,6 +211,7 @@ protected:
 	int hpFreamH_;
 	int shotGaugeH_;
 	int shotFreamH_;
+	int playerFreamH_;
 	int playerIconH_;
 
 	float damageTime_;

@@ -48,6 +48,8 @@ public:
 	// 状態遷移
 	void ChangeState(const SCENE scene);
 
+	int GetLoadCnt(void)const { return loadMinCnt_; }
+
 private:
 
 	// 静的インスタンス
@@ -68,6 +70,11 @@ private:
 	std::map<SCENE, std::function<void(void)>> sceneChanges_;
 	// 状態管理(ステップ)
 	std::function<void(void)> sceneDraw_;
+
+	//最低ロード時間
+	int loadMinCnt_;
+
+	int manualImg_;
 
 	// 状態遷移
 	void ChangeSceneNone(void);

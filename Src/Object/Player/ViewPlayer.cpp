@@ -30,6 +30,7 @@ ViewPlayer::~ViewPlayer()
 
 void ViewPlayer::Init(VECTOR startPos, int playerNo, int pryId)
 {
+	charId_ = pryId;
 	MV1DrawModel(transform_.modelId);
 
 	// モデル制御の基本情報
@@ -131,15 +132,42 @@ void ViewPlayer::Draw()
 	if (SceneManager::GetInstance().GetSceneID() != SceneManager::SCENE_ID::GAME)
 	{
 		MV1DrawModel(transform_.modelId);
+
+
+
+		const int cx = Application::SCREEN_SIZE_X / 2;
+		const int cy = Application::SCREEN_SIZE_Y / 2;
+
+		int RATE_GAGE = 20;
+
+		float sy = cy / 2 - 100;
+		float sxP1 = cx - (cx / 2) + 100;
+		float sxP2 = cx + (cx / 2) + 100;
+
+		if (charId_ >= 2)
+		{
+			//
+			DrawParm("装填数", { sxP2,sy,0.0f }, RATE_GAGE * 3, RATE_GAGE * 6, 0xf0f000);
+
+			//ATKバー
+			DrawParm("吹っ飛ばし力", { sxP2,sy + 80,0.0f }, RATE_GAGE * 5, RATE_GAGE * 6, 0xff0000);
+
+			//DEFバー
+			DrawParm("吹き飛び耐性", { sxP2,sy + 160,0.0f }, RATE_GAGE * 4, RATE_GAGE * 6, 0x0000ff);
+		}
+		else if (charId_ >= 0)
+		{
+			//
+			DrawParm("装填数", { sxP1,sy,0.0f }, RATE_GAGE * 5, RATE_GAGE * 6, 0xf0f000);
+
+			//ATKバー
+			DrawParm("吹っ飛ばし力", { sxP1,sy + 80,0.0f }, RATE_GAGE * 3, RATE_GAGE * 6, 0xff0000);
+
+			//DEFバー
+			DrawParm("吹き飛び耐性", { sxP1,sy + 160,0.0f }, RATE_GAGE * 3, RATE_GAGE * 6, 0x0000ff);
+		}
 		return;
 	}
-
-	// モデルの描画
-	// 視野範囲内：ディフューズカラーを赤色にする
-
-	
-	MV1DrawModel(transform_.modelId);
-	
 
 }
 
@@ -223,6 +251,7 @@ void ViewPlayer::UpdatePlay()
 void ViewPlayer::UpdateEnd()
 {
 
+
 }
 
 #pragma endregion
@@ -261,5 +290,26 @@ void ViewPlayer::Turn(VECTOR axis)
 		transform_.quaRot = transform_.quaRot.Mult(rotPow);
 
 	}
+
+}
+
+
+
+void ViewPlayer::DrawParm(std::string pramName, const VECTOR sPos, int lenge, int freaLen, unsigned int color)
+{
+	//HPバー
+	int hight = 32;
+	DrawBox(sPos.x - 1, sPos.y - 1, sPos.x + freaLen + 1, sPos.y + hight + 1, 0x000000, true);
+	DrawBox(sPos.x, sPos.y, sPos.x + lenge, sPos.y + hight, color, true);
+
+	int strHight = 32;
+	int outLineScl = 2;
+	DrawStringToHandle(sPos.x, sPos.y - strHight + outLineScl, pramName.c_str(), 0x000000, SceneManager::GetInstance().GetFont());
+	DrawStringToHandle(sPos.x, sPos.y - strHight - outLineScl, pramName.c_str(), 0x000000, SceneManager::GetInstance().GetFont());
+	DrawStringToHandle(sPos.x + outLineScl, sPos.y - strHight, pramName.c_str(), 0x000000, SceneManager::GetInstance().GetFont());
+	DrawStringToHandle(sPos.x - outLineScl, sPos.y - strHight, pramName.c_str(), 0x000000, SceneManager::GetInstance().GetFont());
+
+	DrawStringToHandle(sPos.x, sPos.y - strHight, pramName.c_str(), 0xffffff, SceneManager::GetInstance().GetFont());
+
 
 }

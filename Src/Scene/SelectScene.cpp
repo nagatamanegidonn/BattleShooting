@@ -162,8 +162,9 @@ void SelectScene::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-	DrawRotaGraph(250, 150, 1.0f, 0.0f, FrameImg_, true);
-	DrawRotaGraph(Application::SCREEN_SIZE_X - 250, 150, 1.0f, 0.0f, FrameImg_, true);
+	int distanceX = 270;
+	DrawRotaGraph(distanceX, 150, 1.0f, 0.0f, FrameImg_, true);
+	DrawRotaGraph(Application::SCREEN_SIZE_X - distanceX, 150, 1.0f, 0.0f, FrameImg_, true);
 
 
 	BattleManager& BattleSns = BattleManager::GetInstance();
@@ -178,42 +179,6 @@ void SelectScene::Draw(void)
 	int strx = Application::SCREEN_SIZE_X / 2;
 
 
-	int RATE_GAGE = 20;
-
-	int hp = (1 * RATE_GAGE);
-	int atk = (1 * RATE_GAGE);
-	int def = (1 * RATE_GAGE);
-	int spd = (1 * RATE_GAGE);
-
-	//HPバー
-	int sy = cy - 100;
-	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
-	DrawBox(cx, sy, cx + hp, sy + 32, 0x00ff00, true);
-
-	std::string msg = "弾の多さ";
-	int len = (int)strlen(msg.c_str());
-	int width = GetDrawStringWidth(msg.c_str(), len);
-	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
-
-	//ATKバー
-	sy += 50;
-	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
-	DrawBox(cx, sy, cx + atk, sy + 32, 0xff0000, true);
-
-	msg = "吹っ飛ばし力";
-	len = (int)strlen(msg.c_str());
-	width = GetDrawStringWidth(msg.c_str(), len);
-	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
-
-	//DEFバー
-	sy += 50;
-	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
-	DrawBox(cx, sy, cx + def, sy + 32, 0x0000ff, true);
-
-	msg = "吹き飛び耐性";
-	len = (int)strlen(msg.c_str());
-	width = GetDrawStringWidth(msg.c_str(), len);
-	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
 	
 
 
@@ -229,10 +194,13 @@ void SelectScene::Draw(void)
 	if (isStart_)
 	{
 		DrawRotaGraph(cx, cy, 1.0f, 0.0f, startImg_, true);
-		DrawCenterString("PUSH  START", SceneManager::GetInstance().GetFont(), cx, 50);
+		DrawCenterString("PUSH  START", SceneManager::GetInstance().GetFont(), cx, Application::SCREEN_SIZE_Y - 50);
 	}
 
+#ifdef _DEBUG
 	DrawLine(cx, 0, cx, Application::SCREEN_SIZE_Y, 0xf0000);
+#endif // DEBUG
+
 
 }
 
@@ -244,6 +212,12 @@ void SelectScene::Release(void)
 void SelectScene::DrawCenterString(std::string msg, int font, int posX, int posY)
 {
 	int width = GetDrawStringWidthToHandle(msg.c_str(), -1, font); //使用するフォントで幅取得
+	int outLineScl = 2;
+
+	DrawStringToHandle(posX - (width / 2) + outLineScl, posY, msg.c_str(), 0x000000, font);
+	DrawStringToHandle(posX - (width / 2) - outLineScl, posY, msg.c_str(), 0x000000, font);
+	DrawStringToHandle(posX - (width / 2), posY + outLineScl, msg.c_str(), 0x000000, font);
+	DrawStringToHandle(posX - (width / 2), posY - outLineScl, msg.c_str(), 0x000000, font);
 
 	DrawStringToHandle(posX - (width / 2), posY, msg.c_str(), 0xffffff, font);
 

@@ -4,6 +4,7 @@
 #include "../Application.h"
 
 #include "../Manager/SceneManager.h"
+#include "../Manager/FadeManager.h"
 #include "SceneBase.h"
 
 SceneBase::SceneBase(void)
@@ -46,10 +47,7 @@ void SceneBase::LoadingDraw(void)
 	}
 
 	// DrawStringToHandle ‚É“n‚·Û‚àATCHARŒ^‚Ì•¶š—ñ‚ğg—p
-	//DrawStringToHandle(950, 750, loadStr.c_str(), 0xffffff, 0);
-	//DrawFormatString(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, 0xffffff, loadStr.c_str());
-	
-	DrawStringToHandle(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, loadStr.c_str(), 0xffffff
+	DrawStringToHandle(Application::SCREEN_SIZE_X - 200, Application::SCREEN_SIZE_Y - 50, loadStr.c_str(), 0xffffff
 		, SceneManager::GetInstance().GetFont());
 
 	SetFontSize(16);
@@ -62,7 +60,7 @@ void SceneBase::Release(void)
 bool SceneBase::IsLoad()
 {
 	//ƒ[ƒh‚ªŠ®—¹‚µ‚½‚©”»’f
-	if ((GetASyncLoadNum() == 0) && (SceneManager::GetInstance().LoadCunt() > 3))
+	if ((GetASyncLoadNum() == 0) && (SceneManager::GetInstance().LoadCunt() > FadeManager::GetInstance().GetLoadCnt()))
 	{
 		return true;
 	}

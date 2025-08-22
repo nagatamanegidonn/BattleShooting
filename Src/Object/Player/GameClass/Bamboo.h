@@ -7,6 +7,9 @@ class Bamboo :
 
 public:
 
+	static constexpr float ATK_RATE = 2.0f;
+	static constexpr float DEF_RATE = 1.0f;
+
 	// コンストラクタ
 	Bamboo(void);
 	// デストラクタ

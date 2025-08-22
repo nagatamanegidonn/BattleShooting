@@ -73,8 +73,6 @@ void SoundManager::Init(void)
 	res.ChengeMaxVolume(1.1);
 	soundMap_.emplace(SRC::FALL, res);
 
-	//res = Sound(Sound::TYPE::SOUND_2D, Application::PATH_SOUND + "TitleBGM.mp3");
-	//soundMap_.emplace(SRC::TITLE_BGM, res);
 }
 
 void SoundManager::Release(void)

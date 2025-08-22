@@ -49,6 +49,8 @@ Player::Player()
 }
 Player::~Player()
 {
+	DeleteGraph(playerIconH_);
+	DeleteGraph(playerFreamH_);
 }
 
 void Player::Init(VECTOR startPos, int playerNo, int pryId)
@@ -118,6 +120,8 @@ void Player::Init(VECTOR startPos, int playerNo, int pryId)
 		playerIconH_ = LoadGraph("Data/Image/P1Image.png");
 
 	}
+	
+	playerFreamH_ = LoadGraph((Application::PATH_IMAGE+"SelectScene/Fream.png").c_str());
 
 	float scale = 0.3f;
 	transform_.scl = { scale, scale, scale };
@@ -280,6 +284,7 @@ void Player::DrawUI(int plyarNo)
 		plyFlag = true;
 		cx2 = (400 * (plyNum * -1)) + cx;//左寄せ
 		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), height, 0.1f, 0.0f, playerFreamH_, true, false);
 		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), height, 0.1f, 0.0f, playerIconH_, true, false);
 
 	}
@@ -289,6 +294,7 @@ void Player::DrawUI(int plyarNo)
 		plyFlag = false;
 		cx2 = (400 * (plyNum * -1)) + cx;//右寄せ
 		//プレーヤーアイコンの描画
+		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), height, 0.1f, 0.0f, playerFreamH_, true, true);
 		DrawRotaGraph(cx2 + ((plyNum * -1) * 70), height, 0.1f, 0.0f, playerIconH_, true, true);
 	}
 
@@ -685,7 +691,20 @@ void Player::UpdateLifeDead()
 }
 void Player::UpdateEnd()
 {
-
+	if (BattleManager::GetInstance().GetResult() != BattleManager::RESULT::DRAW)
+	{
+		return;
+	}
+	if (inputController_->IsTriggered(InputController::KEY::OK))
+	{
+		FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+	}
+	else if (inputController_->IsTriggered(InputController::KEY::BACK))
+	{
+		FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+	}
 }
 void Player::UpdateVictory()
 {

@@ -28,7 +28,7 @@ InputController::InputController(int padType)
                 {PeripheralType::GAME_PAD,PAD_INPUT_A},     //Aボタン
             }
         },
-        {KEY::START,//   スタートボタン
+        {KEY::START,//スタートボタン
             {
                 {PeripheralType::KEYBOARD,KEY_INPUT_P},
                 {PeripheralType::GAME_PAD,PAD_INPUT_R},     //STARTボタン

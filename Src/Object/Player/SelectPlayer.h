@@ -31,6 +31,7 @@ private:
 	std::unique_ptr<InputController> inputController_;
 
 	int selectCharId_ = -1;
+	int freamImg_;
 	int charImg_[BattleManager::CHARACTER_MAX];
 
 	// カーソル座標

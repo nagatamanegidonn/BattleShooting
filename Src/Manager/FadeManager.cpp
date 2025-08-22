@@ -1,4 +1,5 @@
 #include "../Application.h"
+#include "SceneManager.h"
 #include "FadeManager.h"
 
 
@@ -32,6 +33,8 @@ FadeManager::FadeManager(void)
 void FadeManager::Init(void)
 {
 	ChangeState(SCENE::NORMAL);
+
+	manualImg_ = LoadGraph((Application::PATH_IMAGE + "Manual.png").c_str());
 }
 
 void FadeManager::Draw(void)
@@ -46,6 +49,7 @@ void FadeManager::Release(void)
 
 void FadeManager::Destroy(void)
 {
+	DeleteGraph(manualImg_);
 }
 
 void FadeManager::ChangeState(const SCENE scene)
@@ -59,10 +63,14 @@ void FadeManager::ChangeState(const SCENE scene)
 void FadeManager::ChangeSceneNone(void)
 {
 	sceneDraw_ = std::bind(&FadeManager::FadeNormalDraw, instance_);
+	loadMinCnt_ = 3;
+
 }
 void FadeManager::ChangeSceneGame(void)
 {
 	sceneDraw_ = std::bind(&FadeManager::FadeGameDraw, instance_);
+	loadMinCnt_ = 8;
+
 }
 
 
@@ -77,9 +85,16 @@ void FadeManager::FadeNormalDraw(void)
 }
 void FadeManager::FadeGameDraw(void)
 {
+	const int cx = Application::SCREEN_SIZE_X / 2;
+	const int cy = Application::SCREEN_SIZE_Y / 2;
+
 	DrawBox(
 		0, 0,
-		Application::SCREEN_SIZE_X,
-		Application::SCREEN_SIZE_Y,
-		0xff0000, true);
+		Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y,
+		0x000000, true);
+
+	if (SceneManager::GetInstance().IsLoading())
+	{
+		DrawRotaGraph(cx, cy, 1.0f, 0.0f, manualImg_, true);
+	}
 }

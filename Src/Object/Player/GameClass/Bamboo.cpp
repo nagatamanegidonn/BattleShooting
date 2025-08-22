@@ -25,13 +25,13 @@ void Bamboo::SetParam(void)
 	//•Ï”FUŒ‚ŠÖŒW
 	//’e”­ËŒã‚Ìd’¼ŠÔƒZƒbƒg
 	deleyShot_ = TIME_DELAY_SHOT;
-	shotMagazineMax_ = shotMagazine_ = 10;
+	shotMagazineMax_ = shotMagazine_ = 15;
 	reloadTime_ = 0.0f;
 	reloadSet_ = 0.0f;
 
 	//‚Ó‚Á”ò‚Î‚µŠÖŒW
 	jumpTime_ = 0.0f;
 	jumpDir_ = AsoUtility::VECTOR_ZERO;
-	jumpAttrckRate_ = 2.0f;
-	jumpDefenseRate_ = 1.0f;
+	jumpAttrckRate_ = ATK_RATE;
+	jumpDefenseRate_ = DEF_RATE;
 }

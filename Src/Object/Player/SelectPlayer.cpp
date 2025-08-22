@@ -20,6 +20,7 @@ SelectPlayer::SelectPlayer()
 SelectPlayer::~SelectPlayer()
 {
 	DeleteGraph(CursorImg_);
+	DeleteGraph(freamImg_);
 	for (int i = 0; i < BattleManager::CHARACTER_MAX; i++)
 	{
 		DeleteGraph(charImg_[i]);
@@ -45,6 +46,8 @@ void SelectPlayer::Init(const VECTOR startPos, int playerNo, int pryId)
 	charImg_[2] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P3_IMAGE).handleId_;
 	charImg_[3] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_IMAGE).handleId_;
 
+
+	freamImg_ = LoadGraph((Application::PATH_IMAGE + "SelectScene/Fream.png").c_str());
 
 	padImgs_[0] = LoadGraph((Application::PATH_IMAGE + "SelectScene/xbox_button_color_y.png").c_str());
 	padImgs_[1] = LoadGraph((Application::PATH_IMAGE + "SelectScene/xbox_button_color_b.png").c_str());
@@ -104,19 +107,22 @@ void SelectPlayer::Update()
 
 void SelectPlayer::Draw()
 {
+	DrawRotaGraph(DrawPos_.x, DrawPos_.y
+		, 0.3f, 0.0f, freamImg_, true, DrawDir_);
+
 	if (BattleManager::GetInstance().GetCharId(playerNo_) != -1)
 	{
 		DrawRotaGraph(DrawPos_.x, DrawPos_.y
 			, 0.3f, 0.0f, charImg_[BattleManager::GetInstance().GetCharId(playerNo_)], true, DrawDir_);
+
 	}
+
+	selectDraw_();
 
 	if (!isReady_)
 	{
 		DrawRotaGraph(cursorPos_.x, cursorPos_.y, 1.0f, 0.0f, CursorImg_, true);
 	}
-
-	selectDraw_();
-
 }
 
 void SelectPlayer::CursorUpdate(void)
@@ -170,16 +176,16 @@ void SelectPlayer::CursorUpdate(void)
 		BattleSns.SetColorId(playerNo_, chrColor_);
 	}
 
-	if (cursorPos_.x < Application::SCREEN_SIZE_X / 2 &&
+	if (cursorPos_.x < static_cast<float>(Application::SCREEN_SIZE_X) / 2 &&
 		cursorPos_.x > 0  &&
-		cursorPos_.y < Application::SCREEN_SIZE_Y / 2 &&
+		cursorPos_.y < static_cast<float>(Application::SCREEN_SIZE_Y) / 2 &&
 		cursorPos_.y > 0)
 	{
 		BattleSns.SetCharcterId(playerNo_, 0 + BattleSns.GetColorId(playerNo_));
 	}
 	else if (cursorPos_.x < Application::SCREEN_SIZE_X &&
-		cursorPos_.x > Application::SCREEN_SIZE_X / 2 &&
-		cursorPos_.y < Application::SCREEN_SIZE_Y / 2 &&
+		cursorPos_.x > static_cast<float>(Application::SCREEN_SIZE_X) / 2 &&
+		cursorPos_.y < static_cast<float>(Application::SCREEN_SIZE_Y) / 2 &&
 		cursorPos_.y > 0)
 	{
 		BattleSns.SetCharcterId(playerNo_, 2 + BattleSns.GetColorId(playerNo_));
@@ -227,13 +233,6 @@ void SelectPlayer::DrawKeyBord(void)
 	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, keyImgs_[1], true);
 	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, keyImgs_[0], true);
 
-
-
-
-	if (!isReady_)
-	{
-		//DrawRotaGraph(cursorPos_.x + 64, cursorPos_.y + 64, 1.0f, 0.0f, enterImg_, true);
-	}
 }
 
 void SelectPlayer::DrawPad(void)
@@ -257,12 +256,5 @@ void SelectPlayer::DrawPad(void)
 	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, padImgs_[1], true);
 	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, padImgs_[0], true);
 
-
-
-
-	if (!isReady_)
-	{
-		//DrawRotaGraph(cursorPos_.x + 64, cursorPos_.y + 64, 1.0f, 0.0f, enterImg_, true);
-	}
 
 }

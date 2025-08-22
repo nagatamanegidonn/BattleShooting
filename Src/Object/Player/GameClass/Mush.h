@@ -6,6 +6,9 @@ class Mush :
 {
 public:
 
+	static constexpr float ATK_RATE = 1.5f;
+	static constexpr float DEF_RATE = 0.5f;
+
 	// コンストラクタ
 	Mush(void);
 	// デストラクタ
