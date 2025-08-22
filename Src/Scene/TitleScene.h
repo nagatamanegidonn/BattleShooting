@@ -10,6 +10,7 @@ class TitleScene : public SceneBase
 
 public:
 
+	static constexpr float FLASH_TIME = 1.0f;
 
 	// コンストラクタ
 	TitleScene(void);
@@ -27,8 +28,14 @@ private:
 
 	// タイトルロゴ
 	int imgTitleLogo_;
+	int pushImg_;
 
+	float sceneTotalTime_;
+	float sizeRate_;
 	
+	bool isSceneChange_;
+	float sceneChangeTime_;
+
 	//背景インスタンス
 	Stage* stage_;
 

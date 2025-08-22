@@ -280,11 +280,9 @@ void InputController::SetConrolPlayer(int playerNo)
         {
             {KEY::OK,//決定
                 {
-                    {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
                     {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
                     {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::RIGHT},     //Bボタン
-                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},   //
                 }
             },
             {KEY::BACK,//決定２
@@ -393,11 +391,9 @@ void InputController::SetConrolPlayer(int playerNo)
         {
             {KEY::OK,//決定
                 {
-                    {PeripheralType::KEYBOARD,KEY_INPUT_RETURN},
-                    {PeripheralType::KEYBOARD,KEY_INPUT_SPACE},
+                    {PeripheralType::KEYBOARD,KEY_INPUT_RSHIFT},
                     {PeripheralType::GAME_PAD,PAD_INPUT_B},     //Bボタン
                     {PeripheralType::GAME_PAD_INS,(int)InputManager::JOYPAD_BTN::RIGHT},     //Bボタン
-                    {PeripheralType::MOUSE,MOUSE_INPUT_LEFT},   //
                 }
             },
             {KEY::BACK,//決定２

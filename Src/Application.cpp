@@ -8,6 +8,7 @@
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
 #include "Manager/SoundManager.h"
+#include "Manager/FadeManager.h"
 
 #include "Application.h"
 
@@ -17,6 +18,7 @@ const std::string Application::PATH_IMAGE = "Data/Image/";
 const std::string Application::PATH_MODEL = "Data/Model/";
 const std::string Application::PATH_EFFECT = "Data/Effect/";
 const std::string Application::PATH_SOUND = "Data/Sound/";
+const std::string Application::PATH_FONT = "Data/Font/";
 
 void Application::CreateInstance(void)
 {
@@ -52,11 +54,11 @@ void Application::Init(void)
 	}
 
 	// ２重起動検査回避用
-	SRand(GetNowCount());
+	//SRand(GetNowCount());
 
 	//この2つすごい大事・・・・・・
-	SetDoubleStartValidFlag(true);
-	SetAlwaysRunFlag(true);
+	/*SetDoubleStartValidFlag(true);
+	SetAlwaysRunFlag(true);*/
 
 	SetWaitVSyncFlag(0); // 垂直同期無効化
 	frameRate_ = new FrameRate; // フレームレート
@@ -76,7 +78,18 @@ void Application::Init(void)
 	SceneManager::CreateInstance();
 	// キャラクター管理初期化
 	BattleManager::CreateInstance();
+	// 初期化
+	FadeManager::CreateInstance();
 
+
+	if (AddFontResourceEx(
+		(Application::PATH_FONT + "FontDot.otf").c_str(),
+		FR_PRIVATE,
+		NULL)
+		== -1)
+	{
+		return;
+	}
 }
 
 void Application::Run(void)
@@ -121,6 +134,14 @@ void Application::Destroy(void)
 	BattleManager::GetInstance().Destroy();
 	SceneManager::GetInstance().Destroy();
 	SoundManager::GetInstance().Destroy();
+	FadeManager::GetInstance().Destroy();
+
+
+	RemoveFontResourceEx(
+		(Application::PATH_FONT + "FontDot.otf").c_str(),
+		FR_PRIVATE,
+		NULL);
+
 
 	// Effekseerを終了する。
 	Effkseer_End();

@@ -50,6 +50,8 @@ public:
 	bool IsLoading(void) const;
 	int LoadCunt(void) const;
 
+	const int GetFont(void)const { return fontHandle_; }
+
 private:
 
 	// 静的インスタンス
@@ -74,7 +76,7 @@ private:
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 
-
+	int fontHandle_;
 	
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

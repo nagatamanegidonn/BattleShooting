@@ -35,6 +35,12 @@ public:
 
 	static constexpr float RELOAD_TIME_LOW = 0.3f;//ç≈ë¨ëïìUéûä‘
 
+
+	
+	// ñ≥ìGéûä‘
+	static constexpr float INTERVAL_TIME = 1.0f;
+
+	
 	//îºåa
 	static constexpr float ATTRCK_RADIUS = 25.0f;
 	static constexpr float DAMAGE_RADIUS = 35.0f;
@@ -95,7 +101,7 @@ public:
 
 	const void Damage(int damage);
 	const void SetJump(VECTOR vec);
-	VECTOR& GetPos(int id);
+	const VECTOR GetPos(int id);
 
 	// íe
 	const std::vector<ShotPlayer*>& GetShots(void) const { return shots_; }

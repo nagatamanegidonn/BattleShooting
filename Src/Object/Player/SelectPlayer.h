@@ -15,12 +15,12 @@ public:
 	static constexpr int SIZE = 20;				// カーソルの半径
 	static constexpr int MOVE = 4;				// カーソルの移動速度
 
-	SelectPlayer();  // コンストラクタ
-	~SelectPlayer(); // デストラクタ
+	SelectPlayer(void);  // コンストラクタ
+	~SelectPlayer(void); // デストラクタ
 
 	void Init(const VECTOR startPos, int playerNo, int pryId);  // 初期化
-	void Update();  // 更新
-	void Draw();  // 描画
+	void Update(void);  // 更新
+	void Draw(void);  // 描画
 
 	const VECTOR GetPos(void)const { return cursorPos_; }
 	const bool IsReady(void)const { return isReady_; }
@@ -50,6 +50,11 @@ private:
 	//描画処理
 	VECTOR DrawPos_;
 	bool DrawDir_;
-	//std::function<void(void)> selectDraw_;
+	std::function<void(void)> selectDraw_;
+	void DrawKeyBord(void);
+	void DrawPad(void);
+
+	int keyImgs_[2];
+	int padImgs_[2];
 };
 

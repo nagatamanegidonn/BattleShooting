@@ -7,6 +7,7 @@ class BattleManager
 public:
 
 	static constexpr int PLAYER_SIZE = 2;
+	static constexpr int CHAR_SIZE = 2;
 
 	static constexpr int COLOR_SIZE = 2;
 	static constexpr int CHARACTER_MAX = 4;//キャラの種類（色含む）

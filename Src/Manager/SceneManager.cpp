@@ -34,6 +34,8 @@ SceneManager& SceneManager::GetInstance(void)
 
 void SceneManager::Init(void)
 {
+	//フォントの登録
+	fontHandle_ = CreateFontToHandle("ベストテンDOT", 28, 0);
 
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
@@ -58,6 +60,7 @@ void SceneManager::Init(void)
 	
 	scene_ = new TitleScene();
 	scene_->Init();
+
 }
 
 void SceneManager::Init3D(void)
@@ -160,6 +163,7 @@ void SceneManager::Destroy(void)
 
 	delete instance_;
 
+	DeleteFontToHandle(fontHandle_); //フォントの削除
 }
 
 void SceneManager::ChangeScene(SCENE_ID nextId)

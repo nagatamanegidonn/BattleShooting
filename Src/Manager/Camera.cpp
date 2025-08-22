@@ -48,20 +48,6 @@ void Camera::SetBeforeDraw(void)
 		pos_ = { 0.0f, 1000.0f, 0.0f };
 		targetPos_ = { 0.0f, -100.0f, 0.0f };
 
-		/*rot_ = Quaternion::Identity();
-
-		Quaternion rotPow = Quaternion();
-
-		rotPow = rotPow.Mult(
-			Quaternion::AngleAxis(
-				AsoUtility::Deg2RadF(90.0f), AsoUtility::AXIS_X
-			));
-		
-		 âÒì]ó»Çâ¡Ç¶ÇÈ(çáê¨)
-		rot_ = rot_.Mult(rotPow);
-		SetBeforeDrawFixedPoint();
-		pos_ = { 0.0f, 1000.0f , 0.0f};
-		targetPos_ = { 0.0f, 0.0f, 0.0f };*/
 		break;
 	case Camera::MODE::FREE:
 		SetBeforeDrawFree();

@@ -1,7 +1,10 @@
 #include <EffekseerForDXLib.h>
+
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/BattleManager.h"
 #include "../../Manager/ResourceManager.h"
+#include "../../Manager/SoundManager.h"
+#include "../../Manager/FadeManager.h"
 
 #include "../../Application.h"
 
@@ -14,7 +17,6 @@
 
 #include "DirModel.h"
 #include "Player.h"
-#include "../../Manager/SoundManager.h"
 
 namespace {
 	int hpImageSize = 68;
@@ -190,7 +192,7 @@ void Player::Draw()
 	const float BLINK_INTERVAL = 0.1f; // 点滅の間隔（秒）
 
 	// invincibleTime_ が 1.0f から 0.0f に減っていくと仮定
-	bool isVisible = static_cast<int>((1.0f - invincibleTime_) / BLINK_INTERVAL) % 2 == 0;
+	bool isVisible = static_cast<int>((INTERVAL_TIME - invincibleTime_) / BLINK_INTERVAL) % 2 == 0;
 
 	if (isVisible || invincibleTime_ <= 0.0f) {
 		// キャラを描画する
@@ -206,36 +208,6 @@ void Player::Draw()
 	}
 	if (state_ == STATE::VICTORY)
 	{
-		SetFontSize(32);//文字のサイズを設定
-
-		std::string msg = "Result WIN";
-
-		auto& BattleSns = BattleManager::GetInstance();
-
-		switch (BattleSns.GetResult())
-		{
-			//プレイヤー１の勝利
-		case BattleManager::RESULT::PLAYER_ONE:
-			msg = "PLAYER1 WIN";
-			break;
-			//プレイヤー２の勝利
-		case BattleManager::RESULT::PLAYER_TWO:
-			msg = "PLAYER2 WIN";
-			break;
-		case BattleManager::RESULT::DRAW:
-			msg = "DRAW";
-			break;
-		}
-
-		int cx = Application::SCREEN_SIZE_X / 2;
-		int cy = Application::SCREEN_SIZE_Y / 2;
-
-		int len = (int)strlen(msg.c_str());
-		int width = GetDrawStringWidth(msg.c_str(), len);
-		DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
-
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		SetFontSize(16);
 		return;
 	}
 
@@ -364,7 +336,7 @@ void Player::DrawUI(int plyarNo)
 const void Player::Damage(int damage)
 {
 	reloadTime_ = 0.0f;
-	if (invincibleTime_ > 0.0f)
+	if (invincibleTime_ > 0.0f || state_ == STATE::FALL_DEAD || state_ == STATE::END)
 	{
 		return;
 	}
@@ -378,33 +350,39 @@ const void Player::Damage(int damage)
 		playerHp_ = 0;
 	}
 	//無敵時間を設定
-	invincibleTime_ = 1.0f;
+	invincibleTime_ = INTERVAL_TIME;
 }
 const void Player::SetJump(VECTOR vec)
 {
 	//操作可能状態なら吹っ飛ばす
+	if (state_ == STATE::FALL_DEAD || state_ == STATE::END)
+	{
+		return;
+	}
 
 	ChangeState(STATE::JUMP);
 	jumpDir_ = vec;
 	jumpTime_ = 1.0f;
 }
 
-VECTOR& Player::GetPos(int id)
+const VECTOR Player::GetPos(int id)
 {
+	VECTOR returnPos = AsoUtility::VECTOR_ZERO;
+
 	switch (id)
 	{
 	case 0://乗り物のdamage位置
-		return rideDamagePos_;
+		returnPos = rideDamagePos_;
 		break;
 	case 1://乗り物の攻撃地点
-		return rideAttrckPos_;
+		returnPos = rideAttrckPos_;
 		break;
 	case 2:
-		return transform_.pos;
+		returnPos = transform_.pos;
 		break;
 	}
 
-	return transform_.pos;
+	return returnPos;
 	// TODO: return ステートメントをここに挿入します
 }
 
@@ -714,10 +692,12 @@ void Player::UpdateVictory()
 	
 	if (inputController_ ->IsTriggered(InputController::KEY::OK))
 	{
+		FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 	else if (inputController_->IsTriggered(InputController::KEY::BACK))
 	{
+		FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
 	}
 }
@@ -858,12 +838,12 @@ void Player::CreateShot(void)
 	// 弾の生成フラグ
 	bool isCreate = false;
 
-	for (auto v : shots_)
+	for (auto shot : shots_)
 	{
-		if (v->GetState() == ShotPlayer::STATE::END)
+		if (shot->GetState() == ShotPlayer::STATE::END)
 		{
 			// 以前に生成したインスタンスを使い回し
-			v->Create(transform_.pos, transform_.GetForward(),shotModel_);
+			shot->Create(transform_.pos, transform_.GetForward(),shotModel_);
 			isCreate = true;
 			break;
 		}

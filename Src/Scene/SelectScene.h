@@ -17,14 +17,15 @@ public:
 	static constexpr float LengeSpaceY = Application::SCREEN_SIZE_Y / 3;
 
 
+	static constexpr float DISTANCE_X = 700.0f;
 	static constexpr float DISTANCE = 500.0f;
 
 	//プレイヤーの設定
 	static constexpr VECTOR VIEW_STATRT_POS[4] = {
-		{-DISTANCE,0.0f,DISTANCE / 2}			//左上
-		,{DISTANCE,0.0f,DISTANCE / 2 + 70.0f}	//右上
-		,{-DISTANCE,0.0f,-DISTANCE}				//左下
-		,{DISTANCE,0.0f,-DISTANCE}				//右上 
+		{-DISTANCE_X,0.0f,DISTANCE / 2}			//左上
+		,{300.0f,0.0f,DISTANCE / 2 + 70.0f}	//右上
+		,{-DISTANCE_X,0.0f,-DISTANCE}				//左下
+		,{DISTANCE_X,0.0f,-DISTANCE}				//右上 
 	};
 
 	static constexpr VECTOR cursorStartPos[BattleManager::PLAYER_SIZE] = {
@@ -59,4 +60,7 @@ private:
 
 	int startImg_;
 	
+
+	void DrawCenterString(std::string msg, int font, int posX, int posY);
+
 };

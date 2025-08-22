@@ -11,6 +11,7 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
+#include "../Manager/FadeManager.h"
 #include "../Manager/Camera.h"
 
 #include "../Object/Stage.h"
@@ -34,11 +35,16 @@ namespace{
 
 GameScene::GameScene(void)
 {
+	isVictory_ = false;
+	vTime_ = 0.0f;
+	goalRot_ = 0.0f;
+
+	winnerImg_ = -1;
 }
 
 GameScene::~GameScene(void)
 {
-
+	DeleteGraph(winnerImg_);
 }
 
 void GameScene::AsyncPreLoad(void)
@@ -49,8 +55,6 @@ void GameScene::AsyncPreLoad(void)
 	// 初期化: i = 1、条件式: i <= 5、更新: i++
 	for (int i = 0; i < BattleManager::PLAYER_SIZE; i++) {
 		camera_[i] = new Camera();
-
-		//auto  player = std::make_unique<Player>();
 
 		//プレイキャラごとに代わる
 		if (BattleManager::GetInstance().GetCharId(i) == 0
@@ -100,25 +104,25 @@ void GameScene::Init(void)
 	// カメラモード：定点カメラ
 	camera->ChangeMode(Camera::MODE::FOLLOW_POINT);
 
-	int c = 0;
-	for (auto& p : players_)
+	int i = 0;
+	for (auto& player : players_)
 	{
 		//本体カメラの設定
-		if (c == 0)
+		if (i == 0)
 		{
-			camera->SetFollow(&p->GetTransform());
+			camera->SetFollow(&player->GetTransform());
 		}
 		else//2つ目以降なら
 		{
-			camera->SetSubFollow(&p->GetTransform());
+			camera->SetSubFollow(&player->GetTransform());
 		}
 
 		// カメラ
-		camera_[c]->Init();
+		camera_[i]->Init();
 
-		camera_[c]->ChangeMode(Camera::MODE::NONE);
-		camera_[c]->SetFollow(&p->GetTransform());
-		c++;
+		camera_[i]->ChangeMode(Camera::MODE::NONE);
+		camera_[i]->SetFollow(&player->GetTransform());
+		i++;
 	}
 	
 	// 自機破壊エフェクト
@@ -148,8 +152,19 @@ void GameScene::Update(void)
 		int t = 0;
 	}
 
+
+	if (BattleManager::GetInstance().GetResult() == BattleManager::RESULT::PLAYER_ONE
+		|| BattleManager::GetInstance().GetResult() == BattleManager::RESULT::PLAYER_TWO)
+	{
+
+		goalRot_ = (std::sin(vTime_) * 0.5f) * (0.1f);  // 0.1 を往復
+		vTime_ += SceneManager::GetInstance().GetDeltaTime() * 3.0f; 
+	}
+
 #ifdef _DEBUG
 	// シーン遷移
+	FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
+
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
@@ -161,18 +176,19 @@ void GameScene::Update(void)
 	auto& BattleSns = BattleManager::GetInstance();
 
 	//勝敗判定
-	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
+	if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)//引き分け
 	{
 		BattleSns.SetResult(BattleManager::RESULT::DRAW);
 
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE)
 			&& (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END))
 		{
+			FadeManager::GetInstance().ChangeState(FadeManager::SCENE::NORMAL);
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 			return;
 		}
 	}
-	else if (players_[0]->GetHp() <= 0)
+	else if (players_[0]->GetHp() <= 0)//体力勝ち
 	{
 		BattleSns.SetResult(BattleManager::RESULT::PLAYER_TWO);
 		eventFlag_ = true;
@@ -191,7 +207,7 @@ void GameScene::Update(void)
 			camera_[eventId_]->ChangeMode(Camera::MODE::SHAKE);
 		}
 	}
-	else if (players_[1]->GetHp() <= 0)
+	else if (players_[1]->GetHp() <= 0)//体力勝ち
 	{
 		BattleSns.SetResult(BattleManager::RESULT::PLAYER_ONE);
 		eventFlag_ = true;
@@ -236,6 +252,57 @@ void GameScene::Update(void)
 		p->Update();
 	}
 
+	//ゲーム中の勝敗
+	if (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END && !isVictory_ && !eventFlag_)
+	{
+		DeleteGraph(winnerImg_);
+
+		switch (BattleSns.GetResult())
+		{
+			//プレイヤー１の勝利
+		case BattleManager::RESULT::PLAYER_ONE:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/P1Win.png").c_str());
+			break;
+			//プレイヤー２の勝利
+		case BattleManager::RESULT::PLAYER_TWO:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/P2Win.png").c_str());
+			break;
+		case BattleManager::RESULT::DRAW:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/Draw.png").c_str());
+			break;
+		}
+		isVictory_ = true;
+		vTime_ = 3.0f;
+		goalRot_ = 0.0f;
+	}
+	//イベントシーン後の勝敗
+	else if ((players_[0]->GetState() == Player::STATE::END || players_[1]->GetState() == Player::STATE::END
+		|| players_[0]->GetState() == Player::STATE::VICTORY|| players_[1]->GetState() == Player::STATE::VICTORY
+		
+		) && !isVictory_ && eventFlag_)
+	{
+		DeleteGraph(winnerImg_);
+
+		switch (BattleSns.GetResult())
+		{
+			//プレイヤー１の勝利
+		case BattleManager::RESULT::PLAYER_ONE:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/P1Win.png").c_str());
+			break;
+			//プレイヤー２の勝利
+		case BattleManager::RESULT::PLAYER_TWO:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/P2Win.png").c_str());
+			break;
+		case BattleManager::RESULT::DRAW:
+			winnerImg_ = LoadGraph((Application::PATH_IMAGE + "Game/Draw.png").c_str());
+			break;
+		}
+		isVictory_ = true;
+		vTime_ = 3.0f;
+		goalRot_ = 0.0f;
+	}
+
+
 	// 衝突判定
 	Collision();
 
@@ -266,8 +333,6 @@ void GameScene::Draw(void)
 	else
 	{
 		GameDraw();
-
-
 	}
 
 }
@@ -335,7 +400,7 @@ void GameScene::Collision(void)
 			VECTOR cPos = VScale(VAdd(plyer->GetTransform().pos, vsPlyer->GetTransform().pos), 0.5f);
 
 			float disPow = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
-			if (disPow < Player::DAMAGE_RADIUS * Player::ATTRCK_RADIUS)//ダメージ半径×攻撃半径
+			if (disPow < Player::DAMAGE_RADIUS * Player::DAMAGE_RADIUS + Player::ATTRCK_RADIUS * Player::ATTRCK_RADIUS)//ダメージ半径×攻撃半径
 			{
 				//plyerに相手のマシンの攻撃が当たっている
 				plyer->Damage(1);
@@ -409,7 +474,7 @@ void GameScene::Collision(void)
 
 void GameScene::GameDraw(void)
 {
-
+	
 #pragma region ゲームシーンの描画
 
 	// 描画
@@ -433,7 +498,6 @@ void GameScene::GameDraw(void)
 
 		//メインカメラ更新
 		VECTOR pos2D = ConvWorldPosToScreenPos(plyer->GetTransform().pos);
-		//DrawCircle(pos2D.x, pos2D.y, 10, 0x0000ff);
 
 		if ((mx < pos2D.x) || (my < pos2D.y) || (screenSize > pos2D.x) || (screenSize > pos2D.y))
 		{
@@ -441,44 +505,16 @@ void GameScene::GameDraw(void)
 		}
 	}
 
-	if (players_[0]->GetState() == Player::STATE::END && players_[1]->GetState() == Player::STATE::END)
-	{
-		SetFontSize(28);//文字のサイズを設定
-
-		std::string msg = "Result WIN";
-
-		BattleManager& BattleSns = BattleManager::GetInstance();
-
-		switch (BattleSns.GetResult())
-		{
-			//プレイヤー１の勝利
-		case BattleManager::RESULT::PLAYER_ONE:
-			msg = "PLAYER1 WIN";
-			break;
-			//プレイヤー２の勝利
-		case BattleManager::RESULT::PLAYER_TWO:
-			msg = "PLAYER2 WIN";
-			break;
-		case BattleManager::RESULT::DRAW:
-			msg = "DRAW";
-			break;
-		}
-
-		int cx = Application::SCREEN_SIZE_X / 2;
-		int cy = Application::SCREEN_SIZE_Y / 2;
-
-		int len = (int)strlen(msg.c_str());
-		int width = GetDrawStringWidth(msg.c_str(), len);
-		DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
-
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		SetFontSize(16);
-	}
-
 	//デバッグ描画
 #ifdef _DEBUG
 	DrawDebug();
 #endif
+
+	if ((players_[0]->GetState() == Player::STATE::END || players_[1]->GetState() == Player::STATE::END) && isVictory_)
+	{
+		int cx = Application::SCREEN_SIZE_X / 2;
+		DrawRotaGraph(cx, 550, 1.0f, goalRot_, winnerImg_, true);
+	}
 
 #pragma endregion
 
@@ -523,15 +559,15 @@ void GameScene::EventDraw(void)
 			}
 		}
 
-
-		//デバッグ描画
-#ifdef _DEBUG
-		DrawDebug();
-#endif
-
 #pragma endregion
 
 	}
+
+	//デバッグ描画
+#ifdef _DEBUG
+	DrawDebug();
+#endif
+
 	SetDrawScreen(DX_SCREEN_BACK);
 	// 画面を初期化
 	ClearDrawScreen();
@@ -551,46 +587,21 @@ void GameScene::EventDraw(void)
 	bool eventFlag = false;
 	for (auto& plyer : players_)
 	{
-		if (plyer->GetState()==Player::STATE::END)
+		if (plyer->GetState() == Player::STATE::END)
 		{
 			eventFlag = true;
 		}
 	}
+
+
 	if (eventFlag)
 	{
-		if (players_[0]->GetHp() <= 0 && players_[1]->GetHp() <= 0)
+		if (players_[0]->GetHp() <= 0 || players_[1]->GetHp() <= 0 && isVictory_)
 		{
-			SetFontSize(28);//文字のサイズを設定
-
-			std::string msg = "Result WIN";
-
-			BattleManager& BattleSns = BattleManager::GetInstance();
-
-			switch (BattleSns.GetResult())
-			{
-				//プレイヤー１の勝利
-			case BattleManager::RESULT::PLAYER_ONE:
-				msg = "PLAYER1 WIN";
-				break;
-				//プレイヤー２の勝利
-			case BattleManager::RESULT::PLAYER_TWO:
-				msg = "PLAYER2 WIN";
-				break;
-			case BattleManager::RESULT::DRAW:
-				msg = "DRAW";
-				break;
-			}
-
-			int cx = Application::SCREEN_SIZE_X / 2;
-			int cy = Application::SCREEN_SIZE_Y / 2;
-
-			int len = (int)strlen(msg.c_str());
-			int width = GetDrawStringWidth(msg.c_str(), len);
-			DrawFormatString(cx - (width / 2), cy, 0xffffff, msg.c_str());
-
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-			SetFontSize(16);
+			DrawRotaGraph(cx, 550, 1.0f, goalRot_, winnerImg_, true);
 		}
+
+
 
 		for (auto& plyer : players_)
 		{

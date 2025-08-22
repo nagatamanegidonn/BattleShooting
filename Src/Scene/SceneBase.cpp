@@ -47,7 +47,11 @@ void SceneBase::LoadingDraw(void)
 
 	// DrawStringToHandle Ç…ìnÇ∑ç€Ç‡ÅATCHARå^ÇÃï∂éöóÒÇégóp
 	//DrawStringToHandle(950, 750, loadStr.c_str(), 0xffffff, 0);
-	DrawFormatString(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, 0xffffff, loadStr.c_str());
+	//DrawFormatString(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, 0xffffff, loadStr.c_str());
+	
+	DrawStringToHandle(Application::SCREEN_SIZE_X - 300, Application::SCREEN_SIZE_Y - 50, loadStr.c_str(), 0xffffff
+		, SceneManager::GetInstance().GetFont());
+
 	SetFontSize(16);
 }
 

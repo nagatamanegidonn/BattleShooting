@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "../Manager/SceneManager.h"
+#include "../Manager/FadeManager.h"
 #include "../Application.h"
 #include "Fader.h"
 
@@ -109,11 +110,9 @@ void Fader::Draw(void)
 	case STATE::LOADING:
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)alpha_);
-		DrawBox(
-			0, 0,
-			Application::SCREEN_SIZE_X,
-			Application::SCREEN_SIZE_Y,
-			0x000000, true);
+
+		FadeManager::GetInstance().Draw();
+
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		break;
 	}

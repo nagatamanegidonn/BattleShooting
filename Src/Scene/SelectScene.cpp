@@ -11,6 +11,7 @@
 #include "../Object/Player/ViewPlayer.h"
 
 #include "SelectScene.h"
+#include "../Manager/FadeManager.h"
 
 namespace {
 
@@ -68,14 +69,19 @@ void SelectScene::Init(void)
 	}
 	isStart_ = false;
 	
+
+	int CharId[BattleManager::CHAR_SIZE] = {
+		0,
+		2
+	};
 	//モデル設置
-	playerViews_[0]->Init(VIEW_STATRT_POS[0], 0, 0);
-	playerViews_[0]->ChangeState(ViewPlayer::STATE::PLAY);
+	for (int i = 0; i < BattleManager::CHAR_SIZE; i++)
+	{
 
-	playerViews_[1]->Init(VIEW_STATRT_POS[1], 1,2);
-	playerViews_[1]->ChangeState(ViewPlayer::STATE::PLAY);
+		playerViews_[i]->Init(VIEW_STATRT_POS[i], i, CharId[i]);
+		playerViews_[i]->ChangeState(ViewPlayer::STATE::PLAY);
 
-
+	}
 
 	SoundManager::GetInstance().Play(SoundManager::SRC::SELECT_BGM, Sound::TIMES::LOOP);
 
@@ -105,7 +111,10 @@ void SelectScene::Update(void)
 	if (isStart_ && (ins.IsTrgDown(KEY_INPUT_SPACE)
 		|| (ins.IsPadBtnTrgDown(jno, InputManager::JOYPAD_BTN::START))
 		|| (ins.IsPadBtnTrgDown(jno2, InputManager::JOYPAD_BTN::START))))
+
 	{
+		FadeManager::GetInstance().ChangeState(FadeManager::SCENE::GAME);
+
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 		return;
 	}
@@ -146,23 +155,72 @@ void SelectScene::Draw(void)
 	//デバック用
 
 
+	const int cx = Application::SCREEN_SIZE_X / 2;
+	const int cy = Application::SCREEN_SIZE_Y / 2;
+
 	//背景
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x00ff00, true);
 
 	//キャラ選択
-	DrawGraph(0, 0, FrameImg_, true);
-	DrawGraph(Application::SCREEN_SIZE_X / 2, 0, FrameImg_, true);
+	DrawRotaGraph(250, 150, 1.0f, 0.0f, FrameImg_, true);
+	DrawRotaGraph(Application::SCREEN_SIZE_X - 250, 150, 1.0f, 0.0f, FrameImg_, true);
 
 
 	BattleManager& BattleSns = BattleManager::GetInstance();
 
-	int ccx = Application::SCREEN_SIZE_X / 4;
 
 	//プレイヤーの更新
 	for (auto& p : playerViews_)
 	{
 		p->Draw();
 	}
+
+	int strx = Application::SCREEN_SIZE_X / 2;
+
+
+	int RATE_GAGE = 20;
+
+	int hp = (1 * RATE_GAGE);
+	int atk = (1 * RATE_GAGE);
+	int def = (1 * RATE_GAGE);
+	int spd = (1 * RATE_GAGE);
+
+	//HPバー
+	int sy = cy - 100;
+	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
+	DrawBox(cx, sy, cx + hp, sy + 32, 0x00ff00, true);
+
+	std::string msg = "弾の多さ";
+	int len = (int)strlen(msg.c_str());
+	int width = GetDrawStringWidth(msg.c_str(), len);
+	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
+
+	//ATKバー
+	sy += 50;
+	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
+	DrawBox(cx, sy, cx + atk, sy + 32, 0xff0000, true);
+
+	msg = "吹っ飛ばし力";
+	len = (int)strlen(msg.c_str());
+	width = GetDrawStringWidth(msg.c_str(), len);
+	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
+
+	//DEFバー
+	sy += 50;
+	DrawBox(cx - 1, sy - 1, cx + (6 * RATE_GAGE) + 1, sy + 32 + 1, 0x000000, true);
+	DrawBox(cx, sy, cx + def, sy + 32, 0x0000ff, true);
+
+	msg = "吹き飛び耐性";
+	len = (int)strlen(msg.c_str());
+	width = GetDrawStringWidth(msg.c_str(), len);
+	DrawFormatString(strx - (width / 2), sy, 0x000000, msg.c_str());
+	
+
+
+
+	DrawCenterString("キャラ決定", SceneManager::GetInstance().GetFont(), cx, 400);
+	DrawCenterString("カラー変更", SceneManager::GetInstance().GetFont(), cx, 475);
+
 	for (auto& p : players_)
 	{
 		p->Draw();
@@ -170,11 +228,23 @@ void SelectScene::Draw(void)
 
 	if (isStart_)
 	{
-		DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0f, 0.0f, startImg_, true);
+		DrawRotaGraph(cx, cy, 1.0f, 0.0f, startImg_, true);
+		DrawCenterString("PUSH  START", SceneManager::GetInstance().GetFont(), cx, 50);
 	}
+
+	DrawLine(cx, 0, cx, Application::SCREEN_SIZE_Y, 0xf0000);
+
 }
 
 void SelectScene::Release(void)
 {
 	SoundManager::GetInstance().AllStop();
+}
+
+void SelectScene::DrawCenterString(std::string msg, int font, int posX, int posY)
+{
+	int width = GetDrawStringWidthToHandle(msg.c_str(), -1, font); //使用するフォントで幅取得
+
+	DrawStringToHandle(posX - (width / 2), posY, msg.c_str(), 0xffffff, font);
+
 }

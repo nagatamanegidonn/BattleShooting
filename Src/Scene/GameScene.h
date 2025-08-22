@@ -49,6 +49,11 @@ private:
 
 	float hitStop_;
 
+	//Ÿ”sŠÖŒW
+	int winnerImg_;;
+	bool isVictory_;
+	float vTime_;
+	float goalRot_;
 
 	void Collision(void);
 

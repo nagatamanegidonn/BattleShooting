@@ -13,6 +13,8 @@ SelectPlayer::SelectPlayer()
 	selectUpdate_ = std::bind(&SelectPlayer::CursorUpdate, this);
 
 	isReady_ = false;
+
+
 }
 
 SelectPlayer::~SelectPlayer()
@@ -22,6 +24,14 @@ SelectPlayer::~SelectPlayer()
 	{
 		DeleteGraph(charImg_[i]);
 	}
+
+
+	for (int i = 0; i < 2; i++)
+	{
+		DeleteGraph(padImgs_[i]);
+		DeleteGraph(keyImgs_[i]);
+	}
+
 }
 
 void SelectPlayer::Init(const VECTOR startPos, int playerNo, int pryId)
@@ -36,17 +46,29 @@ void SelectPlayer::Init(const VECTOR startPos, int playerNo, int pryId)
 	charImg_[3] = ResourceManager::GetInstance().Load(ResourceManager::SRC::P4_IMAGE).handleId_;
 
 
+	padImgs_[0] = LoadGraph((Application::PATH_IMAGE + "SelectScene/xbox_button_color_y.png").c_str());
+	padImgs_[1] = LoadGraph((Application::PATH_IMAGE + "SelectScene/xbox_button_color_b.png").c_str());
+
+
 	//１番目のプレイヤー
 	if (playerNo_ == 0)
 	{
-		DrawPos_ = { Application::SCREEN_SIZE_X / 4 ,(Application::SCREEN_SIZE_Y / 4) * 3 ,0.0f};
+		DrawPos_ = { Application::SCREEN_SIZE_X / 5 ,(Application::SCREEN_SIZE_Y / 4) * 3 ,0.0f};
 		DrawDir_ = false;
+
+		keyImgs_[0] = LoadGraph((Application::PATH_IMAGE + "SelectScene/keyboard_q.png").c_str());
+		keyImgs_[1] = LoadGraph((Application::PATH_IMAGE + "SelectScene/keyboard_space.png").c_str());
+
 	}
 	//２番目のプレイヤー
 	else if (playerNo_ == 1)
 	{
-		DrawPos_ = { (Application::SCREEN_SIZE_X / 4) * 3 ,(Application::SCREEN_SIZE_Y / 4) * 3 ,0.0f };
+		DrawPos_ = { Application::SCREEN_SIZE_X - (Application::SCREEN_SIZE_X / 5) ,(Application::SCREEN_SIZE_Y / 4) * 3 ,0.0f };
 		DrawDir_ = true;
+
+		keyImgs_[0] = LoadGraph((Application::PATH_IMAGE + "SelectScene/keyboard_slash_back.png").c_str());
+		keyImgs_[1] = LoadGraph((Application::PATH_IMAGE + "SelectScene/keyboard_shift.png").c_str());
+
 	}
 
 	//コントローラーの登録
@@ -55,6 +77,9 @@ void SelectPlayer::Init(const VECTOR startPos, int playerNo, int pryId)
 
 	//カーソル
 	cursorPos_ = startPos;
+
+	selectDraw_ = std::bind(&SelectPlayer::DrawKeyBord, this);
+
 }
 
 void SelectPlayer::Update()
@@ -62,6 +87,19 @@ void SelectPlayer::Update()
 	inputController_->Update();
 
 	selectUpdate_();
+
+	if (inputController_->IsPeripheralTriggered(InputController::PeripheralType::GAME_PAD)
+		|| inputController_->IsPeripheralTriggered(InputController::PeripheralType::GAME_PAD_INS)
+		|| inputController_->IsPeripheralTriggered(InputController::PeripheralType::GAME_PAD_STICK)
+		)
+	{
+		selectDraw_ = std::bind(&SelectPlayer::DrawPad, this);
+	}
+	else if(inputController_->IsPeripheralTriggered(InputController::PeripheralType::KEYBOARD))
+	{
+		selectDraw_ = std::bind(&SelectPlayer::DrawKeyBord, this);
+	}
+
 }
 
 void SelectPlayer::Draw()
@@ -76,6 +114,9 @@ void SelectPlayer::Draw()
 	{
 		DrawRotaGraph(cursorPos_.x, cursorPos_.y, 1.0f, 0.0f, CursorImg_, true);
 	}
+
+	selectDraw_();
+
 }
 
 void SelectPlayer::CursorUpdate(void)
@@ -149,7 +190,7 @@ void SelectPlayer::CursorUpdate(void)
 	}
 
 
-	if (inputController_->IsNew(InputController::KEY::OK) && BattleManager::GetInstance().GetCharId(playerNo_) != -1)
+	if (inputController_->IsTriggered(InputController::KEY::OK) && BattleManager::GetInstance().GetCharId(playerNo_) != -1)
 	{
 		isReady_ = true;
 		selectUpdate_ = std::bind(&SelectPlayer::StartUpdate, this);
@@ -157,5 +198,71 @@ void SelectPlayer::CursorUpdate(void)
 }
 void SelectPlayer::StartUpdate(void)
 {
+	if (inputController_->IsTriggered(InputController::KEY::BACK) && BattleManager::GetInstance().GetCharId(playerNo_) != -1)
+	{
+		isReady_ = false;
+		selectUpdate_ = std::bind(&SelectPlayer::CursorUpdate, this);
+	}
 	//BattleManagerの状態によってはここから
+}
+
+void SelectPlayer::DrawKeyBord(void)
+{
+	int plyNum = -1;//右か左か
+	
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+	int cx2 = Application::SCREEN_SIZE_X / 2;
+
+	if (playerNo_ == 0)
+	{
+		plyNum = -1;
+	}
+	else
+	{
+		plyNum = 1;
+	}
+	//プレーヤーアイコンの描画
+	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, keyImgs_[1], true);
+	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, keyImgs_[0], true);
+
+
+
+
+	if (!isReady_)
+	{
+		//DrawRotaGraph(cursorPos_.x + 64, cursorPos_.y + 64, 1.0f, 0.0f, enterImg_, true);
+	}
+}
+
+void SelectPlayer::DrawPad(void)
+{
+	int plyNum = -1;//右か左か
+
+	int cx = Application::SCREEN_SIZE_X / 2;
+	int cy = Application::SCREEN_SIZE_Y / 2;
+
+	int cx2 = Application::SCREEN_SIZE_X / 2;
+
+	if (playerNo_ == 0)
+	{
+		plyNum = -1;
+	}
+	else
+	{
+		plyNum = 1;
+	}
+	//プレーヤーアイコンの描画
+	DrawRotaGraph(cx + (plyNum * 120), 400 + 25, 1.0f, 0.0f, padImgs_[1], true);
+	DrawRotaGraph(cx + (plyNum * 120), 475 + 25, 1.0f, 0.0f, padImgs_[0], true);
+
+
+
+
+	if (!isReady_)
+	{
+		//DrawRotaGraph(cursorPos_.x + 64, cursorPos_.y + 64, 1.0f, 0.0f, enterImg_, true);
+	}
+
 }
